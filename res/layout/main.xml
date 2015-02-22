@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:weightSum="1">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/searchBox" android:inputType="text" android:layout_gravity="left|top"
+                android:editable="false" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+                android:layout_alignRight="@+id/spinner" android:layout_alignBottom="@+id/searchButton"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/spinner" android:layout_gravity="center_horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/searchBox" android:layout_toLeftOf="@+id/searchButton"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_button_text"
+                android:id="@+id/searchButton" android:layout_alignParentTop="true" android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/listView"/>
+</LinearLayout>
