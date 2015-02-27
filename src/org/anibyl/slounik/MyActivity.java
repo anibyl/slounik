@@ -26,6 +26,7 @@ public class MyActivity extends Activity {
     private Button searchButton;
     private ProgressBar spinner;
     private ListView listView;
+    private volatile ListEntry[] list;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,8 @@ public class MyActivity extends Activity {
                                     list[i++] = new ListEntry(e);
                                 }
 
+                                setList(list);
+
                                 return new SlounikAdapter<String>(MyActivity.this, R.layout.list_item, R.id.description, list);
                             }
 
@@ -94,6 +97,12 @@ public class MyActivity extends Activity {
                                 super.onPostExecute(adapter);
                                 resetControls();
                                 listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Toast.makeText(MyActivity.this, "onItemClick.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         }.execute();
                     }
@@ -112,5 +121,9 @@ public class MyActivity extends Activity {
     private void resetControls() {
         spinner.setVisibility(View.INVISIBLE);
         searchButton.setEnabled(true);
+    }
+
+    private synchronized void setList(ListEntry[] list) {
+        this.list = list;
     }
 }
