@@ -1,5 +1,6 @@
 package org.anibyl.slounik;
 
+import android.text.Html;
 import android.text.Spanned;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -22,6 +23,13 @@ public class ListEntry {
             Elements elements = element.select("a.tsb");
             if (elements != null && elements.size() != 0) {
                 title = elements.first().html();
+
+                if (title != null) {
+                    elements = element.select("a.ts");
+                    if (elements != null && elements.size() != 0) {
+                        description = Html.fromHtml(elements.first().html());
+                    }
+                }
             }
 
 //            if (title == null) {
@@ -35,12 +43,21 @@ public class ListEntry {
                 elements = element.select("b");
                 if (elements != null && elements.size() != 0) {
                     title = elements.first().html();
+
+                    if (title != null) {
+                        description = Html.fromHtml(element.html());
+                    }
                 }
             }
 
             if (title != null) {
                 title = title.replaceAll("<u>", "");
                 title = title.replaceAll("</u>", "́");
+            }
+
+            elements = element.select("a.la1");
+            if (elements != null && elements.size() != 0) {
+                dictionary = elements.first().html();
             }
         }
         // TODO

@@ -29,19 +29,25 @@ public class SlounikAdapter<String> extends ArrayAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.title);
+            holder.title = (TextView) convertView.findViewById(R.id.title);
+            holder.description = (TextView) convertView.findViewById(R.id.description);
+            holder.dicName = (TextView) convertView.findViewById(R.id.dicName);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.text.setText(list[position].getTitle());
+        holder.title.setText(list[position].getTitle());
+        holder.description.setText(list[position].getDescription());
+        holder.dicName.setText(list[position].getDictionary());
 
         return convertView;
     }
 
     static class ViewHolder {
-        TextView text;
+        TextView title;
+        TextView description;
+        TextView dicName;
     }
 }
