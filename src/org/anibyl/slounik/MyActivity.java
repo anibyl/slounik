@@ -62,22 +62,15 @@ public class MyActivity extends Activity {
                                     Toast.makeText(MyActivity.this, "Response received.", Toast.LENGTH_SHORT).show();
 
                                     Document page = Jsoup.parse(response);
-                                    Elements headers = page.select("a.tsb");
-                                    Elements bodies = page.select("a.ts");
+                                    Elements bodies = page.select("li#li_poszuk");
 
-                                    String[] headersArr = new String[headers.size()], bodiesArr = new String[bodies.size()];
+                                    ListEntry[] list = new ListEntry[bodies.size()];
                                     int i = 0;
-                                    for (Element e : headers) {
-                                        headersArr[i++] = e.text();
-                                    }
-                                    i = 0;
                                     for (Element e : bodies) {
-                                        bodiesArr[i++] = e.text();
+                                        list[i++] = new ListEntry(e);
                                     }
 
-                                    final ArrayAdapter<String> headersAdapter = new ArrayAdapter<String>(MyActivity.this, R.layout.list_item, R.id.firstLine, headersArr);
-                                    final ArrayAdapter<String> bodiesAdapter = new ArrayAdapter<String>(MyActivity.this, R.layout.list_item, R.id.secondLine, bodiesArr);
-                                    listView.setAdapter(headersAdapter);
+                                    final SlounikAdapter<String> bodiesAdapter = new SlounikAdapter<String>(MyActivity.this, R.layout.list_item, R.id.description, list);
                                     listView.setAdapter(bodiesAdapter);
                                 }
                             },
