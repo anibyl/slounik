@@ -1,8 +1,11 @@
 package org.anibyl.slounik;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,47 +47,70 @@ public class MyActivity extends Activity {
                     Toast.makeText(MyActivity.this, "Nothing to search.", Toast.LENGTH_SHORT).show();
                 } else {
                     spinner.setVisibility(View.VISIBLE);
+                    searchButton.setEnabled(false);
 
-                    RequestQueue queue = Volley.newRequestQueue(MyActivity.this);
-                    final String requestStr;
-                    try {
-                        requestStr = "http://slounik.org/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
-                    } catch (UnsupportedEncodingException e) {
-                        spinner.setVisibility(View.INVISIBLE);
-                        Toast.makeText(MyActivity.this, "Can not encode.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    StringRequest request = new StringRequest(requestStr,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    spinner.setVisibility(View.INVISIBLE);
-                                    Toast.makeText(MyActivity.this, "Response received.", Toast.LENGTH_SHORT).show();
+                    InputMethodManager imm = (InputMethodManager)getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
-                                    Document page = Jsoup.parse(response);
-                                    Elements bodies = page.select("li#li_poszuk");
-
-                                    ListEntry[] list = new ListEntry[bodies.size()];
-                                    int i = 0;
-                                    for (Element e : bodies) {
-                                        list[i++] = new ListEntry(e);
-                                    }
-
-                                    final SlounikAdapter<String> bodiesAdapter = new SlounikAdapter<String>(MyActivity.this, R.layout.list_item, R.id.description, list);
-                                    listView.setAdapter(bodiesAdapter);
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    spinner.setVisibility(View.INVISIBLE);
-                                    Toast.makeText(MyActivity.this, "Error.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                    queue.add(request);
+                    getInfo(wordToSearch);
                 }
             }
         });
+    }
+
+    private void getInfo(String wordToSearch) {
+        RequestQueue queue = Volley.newRequestQueue(MyActivity.this);
+        final String requestStr;
+        try {
+            requestStr = "http://slounik.org/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
+        } catch (UnsupportedEncodingException e) {resetControls();
+            Toast.makeText(MyActivity.this, "Can not encode.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        StringRequest request = new StringRequest(requestStr,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        Toast.makeText(MyActivity.this, "Response received.", Toast.LENGTH_SHORT).show();
+
+                        new AsyncTask<String, SlounikAdapter<String>, SlounikAdapter<String>>() {
+                            @Override
+                            protected SlounikAdapter<String> doInBackground(String... params) {
+                                Document page = Jsoup.parse(response);
+                                Elements bodies = page.select("li#li_poszuk");
+
+                                ListEntry[] list = new ListEntry[bodies.size()];
+                                int i = 0;
+                                for (Element e : bodies) {
+                                    list[i++] = new ListEntry(e);
+                                }
+
+                                return new SlounikAdapter<String>(MyActivity.this, R.layout.list_item, R.id.description, list);
+                            }
+
+                            @Override
+                            protected void onPostExecute(SlounikAdapter<String> adapter) {
+                                super.onPostExecute(adapter);
+                                resetControls();
+                                listView.setAdapter(adapter);
+                            }
+                        }.execute();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MyActivity.this, "Error.", Toast.LENGTH_SHORT).show();
+                        resetControls();
+                    }
+                });
+
+        queue.add(request);
+    }
+
+    private void resetControls() {
+        spinner.setVisibility(View.INVISIBLE);
+        searchButton.setEnabled(true);
     }
 }
