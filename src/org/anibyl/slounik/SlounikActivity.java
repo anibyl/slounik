@@ -21,19 +21,25 @@ import org.jsoup.select.Elements;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class MyActivity extends Activity {
+/**
+ * The main activity.
+ *
+ * Created by Usievaład Čorny on 21.02.2015 11:00.
+ */
+public class SlounikActivity extends Activity {
     private EditText searchBox;
-    private Button searchButton;
+    private ImageButton searchButton;
     private ProgressBar spinner;
     private ListView listView;
-    private volatile ListEntry[] list;
+    private volatile Article[] list;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        searchBox = (EditText) findViewById(R.id.searchBox);
-        searchButton = (Button) findViewById(R.id.searchButton);
+        searchBox = (EditText) findViewById(R.id.search_box);
+        searchButton = (ImageButton) findViewById(R.id.search_button);
         spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
 
@@ -45,7 +51,7 @@ public class MyActivity extends Activity {
                 final String wordToSearch = searchBox.getText().toString();
 
                 if (wordToSearch == null || wordToSearch.equals("")) {
-                    Toast.makeText(MyActivity.this, "Nothing to search.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SlounikActivity.this, "Nothing to search.", Toast.LENGTH_SHORT).show();
                 } else {
                     spinner.setVisibility(View.VISIBLE);
                     searchButton.setEnabled(false);
@@ -61,19 +67,19 @@ public class MyActivity extends Activity {
     }
 
     private void getInfo(String wordToSearch) {
-        RequestQueue queue = Volley.newRequestQueue(MyActivity.this);
+        RequestQueue queue = Volley.newRequestQueue(SlounikActivity.this);
         final String requestStr;
         try {
             requestStr = "http://slounik.org/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
         } catch (UnsupportedEncodingException e) {resetControls();
-            Toast.makeText(MyActivity.this, "Can not encode.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SlounikActivity.this, "Can not encode.", Toast.LENGTH_SHORT).show();
             return;
         }
         StringRequest request = new StringRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                        Toast.makeText(MyActivity.this, "Response received.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SlounikActivity.this, "Response received.", Toast.LENGTH_SHORT).show();
 
                         new AsyncTask<String, SlounikAdapter<String>, SlounikAdapter<String>>() {
                             @Override
@@ -81,15 +87,15 @@ public class MyActivity extends Activity {
                                 Document page = Jsoup.parse(response);
                                 Elements bodies = page.select("li#li_poszuk");
 
-                                ListEntry[] list = new ListEntry[bodies.size()];
+                                Article[] list = new Article[bodies.size()];
                                 int i = 0;
                                 for (Element e : bodies) {
-                                    list[i++] = new ListEntry(e);
+                                    list[i++] = new Article(e);
                                 }
 
                                 setList(list);
 
-                                return new SlounikAdapter<String>(MyActivity.this, R.layout.list_item, R.id.description, list);
+                                return new SlounikAdapter<String>(SlounikActivity.this, R.layout.list_item, R.id.description, list);
                             }
 
                             @Override
@@ -100,7 +106,7 @@ public class MyActivity extends Activity {
                                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        Toast.makeText(MyActivity.this, "onItemClick.", Toast.LENGTH_SHORT).show();
+                                        new ArticleDialog(SlounikActivity.this, list[position]).show();
                                     }
                                 });
                             }
@@ -110,7 +116,7 @@ public class MyActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MyActivity.this, "Error.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SlounikActivity.this, "Error.", Toast.LENGTH_SHORT).show();
                         resetControls();
                     }
                 });
@@ -123,7 +129,7 @@ public class MyActivity extends Activity {
         searchButton.setEnabled(true);
     }
 
-    private synchronized void setList(ListEntry[] list) {
+    private synchronized void setList(Article[] list) {
         this.list = list;
     }
 }

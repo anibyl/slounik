@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/dicName"
-            android:layout_toEndOf="@id/title"
             android:typeface="serif"
             android:text="Long Dictionary Nameeeeee"
             android:singleLine="true"
@@ -31,9 +30,6 @@
             android:enabled="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="false"
-            android:textAlignment="gravity"
             android:layout_above="@+id/description"
             android:gravity="right"/>
 
@@ -47,7 +43,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:typeface="serif"
-            android:text="description description description description description description description description description description description description "
-            android:layout_below="@+id/title"/>
+            android:text="description description description description description description description description description description description description aosdeh iewheoif soehf sus khef suhefsh fshef sheofihsf hs"
+            android:layout_below="@+id/title" android:lines="2"/>
 
 </RelativeLayout>

@@ -9,14 +9,14 @@ import android.widget.TextView;
 
 /**
  * Adapter used to fill the list.
- *
- * Created by Usievaład Čorny on 26.2.15 13.28.
+ * <p/>
+ * Created by Usievaład Čorny on 26.02.2015 13:28.
  */
 public class SlounikAdapter<String> extends ArrayAdapter {
     private LayoutInflater inflater;
-    private ListEntry[] list;
+    private Article[] list;
 
-    public SlounikAdapter(Activity activity, int resource, int textViewResourceId, ListEntry[] list) {
+    public SlounikAdapter(Activity activity, int resource, int textViewResourceId, Article[] list) {
         super(activity, resource, textViewResourceId, list);
 
         inflater = LayoutInflater.from(activity);
@@ -38,9 +38,10 @@ public class SlounikAdapter<String> extends ArrayAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setText(list[position].getTitle());
-        holder.description.setText(list[position].getDescription());
-        holder.dicName.setText(list[position].getDictionary());
+        Article article = list[position];
+        holder.title.setText(article.getTitle());
+        holder.description.setText(article.getDescription());
+        holder.dicName.setText(article.getDictionary());
 
         return convertView;
     }
