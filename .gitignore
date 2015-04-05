@@ -2,6 +2,7 @@
 /bin/
 /gen/
 /out/
+/key/
 *.iml
 proguard-project.txt
 /Slounik.apk
