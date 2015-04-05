@@ -36,6 +36,9 @@ public class SlounikActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Util.initialize(this);
+
         setContentView(R.layout.main);
 
         searchBox = (EditText) findViewById(R.id.search_box);
@@ -51,7 +54,8 @@ public class SlounikActivity extends Activity {
                 final String wordToSearch = searchBox.getText().toString();
 
                 if (wordToSearch == null || wordToSearch.equals("")) {
-                    Toast.makeText(SlounikActivity.this, "Nothing to search.", Toast.LENGTH_SHORT).show();
+                    // TODO Make it visible for everyone.
+                    Notifier.toast(SlounikActivity.this, "Nothing to search.");
                 } else {
                     spinner.setVisibility(View.VISIBLE);
                     searchButton.setEnabled(false);
@@ -71,15 +75,16 @@ public class SlounikActivity extends Activity {
         final String requestStr;
         try {
             requestStr = "http://slounik.org/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
-        } catch (UnsupportedEncodingException e) {resetControls();
-            Toast.makeText(SlounikActivity.this, "Can not encode.", Toast.LENGTH_SHORT).show();
+        } catch (UnsupportedEncodingException e) {
+            resetControls();
+            Notifier.toast(this, "Can not encode.");
             return;
         }
         StringRequest request = new StringRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                        Toast.makeText(SlounikActivity.this, "Response received.", Toast.LENGTH_SHORT).show();
+                        Notifier.toast(SlounikActivity.this, "Response received.");
 
                         new AsyncTask<String, SlounikAdapter<String>, SlounikAdapter<String>>() {
                             @Override
@@ -116,7 +121,7 @@ public class SlounikActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(SlounikActivity.this, "Error.", Toast.LENGTH_SHORT).show();
+                        Notifier.toast(SlounikActivity.this, "Error response.");
                         resetControls();
                     }
                 });
