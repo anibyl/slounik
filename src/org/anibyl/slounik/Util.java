@@ -1,6 +1,6 @@
 package org.anibyl.slounik;
 
-import android.app.Activity;
+import android.content.Context;
 import android.provider.Settings;
 
 /**
@@ -11,22 +11,26 @@ import android.provider.Settings;
 public class Util {
     private static Boolean testDevice;
 
-    public static void initialize(Activity activity) {
-        getTestDevice(activity);
+    public static void initialize(Context context) {
+        getTestDevice(context);
     }
 
     public static Boolean isTestDevice() {
         return testDevice;
     }
 
-    private static void getTestDevice(Activity activity) {
-        Server.getTestDevice(Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID),
+    public static String getAndroidId(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    private static void getTestDevice(Context context) {
+        Server.getTestDevice(getAndroidId(context),
                 new Server.BooleanCallback() {
                     @Override
                     public void invoke(Boolean bool) {
                         testDevice = bool;
                     }
                 },
-                activity);
+                context);
     }
 }

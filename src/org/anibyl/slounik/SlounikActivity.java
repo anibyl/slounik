@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
@@ -12,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import org.anibyl.slounik.dialogs.About;
 import org.apache.http.protocol.HTTP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,9 +31,11 @@ import java.net.URLEncoder;
 public class SlounikActivity extends Activity {
     private EditText searchBox;
     private ImageButton searchButton;
+    private ImageButton settingsButton;
     private ProgressBar spinner;
     private ListView listView;
     private volatile Article[] list;
+    private About about;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +47,11 @@ public class SlounikActivity extends Activity {
 
         searchBox = (EditText) findViewById(R.id.search_box);
         searchButton = (ImageButton) findViewById(R.id.search_button);
+        settingsButton = (ImageButton) findViewById(R.id.settings_button);
         spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
+
+        about = new About(SlounikActivity.this, getString(R.string.about_title));
 
         spinner.setVisibility(View.INVISIBLE);
 
@@ -68,6 +75,23 @@ public class SlounikActivity extends Activity {
                 }
             }
         });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                about.show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                about.show();
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void getInfo(String wordToSearch) {

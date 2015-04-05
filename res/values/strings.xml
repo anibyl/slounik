@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Slounik</string>
+    <string name="url_name">slounik.org</string>
+    <string name="about_title">About</string>
+    <string name="about_text">Slounik — the client application for slounik.org website.</string>
+    <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
+    <string name="about_android_id">Android ID: %s</string>
 </resources>

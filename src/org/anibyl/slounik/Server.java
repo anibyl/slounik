@@ -1,6 +1,6 @@
 package org.anibyl.slounik;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,13 +25,13 @@ public class Server {
         public abstract void invoke(Boolean bool);
     }
 
-    public static void getTestDevice(final String androidId, final BooleanCallback callback, Activity activity) {
+    public static void getTestDevice(final String androidId, final BooleanCallback callback, Context context) {
         assert androidId != null;
         assert callback != null;
-        assert activity != null;
+        assert context != null;
 
-        String requestStr = activity.getString(R.string.server) + "testDevices.json";
-        RequestQueue queue = Volley.newRequestQueue(activity);
+        String requestStr = context.getString(R.string.server) + "testDevices.json";
+        RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest request = new StringRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
