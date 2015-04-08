@@ -2,27 +2,14 @@ package org.anibyl.slounik;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
-import org.apache.http.protocol.HTTP;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import org.anibyl.slounik.network.SlounikOrg;
 
 /**
  * The main activity.
@@ -35,7 +22,6 @@ public class SlounikActivity extends Activity {
     private ImageButton settingsButton;
     private ProgressBar spinner;
     private ListView listView;
-    private volatile Article[] list;
     private AboutDialog aboutDialog;
 
     @Override
@@ -72,7 +58,25 @@ public class SlounikActivity extends Activity {
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
-                    getInfo(wordToSearch);
+                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallBack() {
+                        @Override
+                        public void invoke(final Article[] list) {
+                            resetControls();
+
+                            if (list != null) {
+                                SlounikAdapter<String> adapter = new SlounikAdapter<String>(SlounikActivity.this,
+                                        R.layout.list_item, R.id.description, list);
+
+                                listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        new ArticleDialog(SlounikActivity.this, list[position]).show();
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -95,71 +99,8 @@ public class SlounikActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void getInfo(String wordToSearch) {
-        RequestQueue queue = Volley.newRequestQueue(SlounikActivity.this);
-        final String requestStr;
-        try {
-            requestStr = "http://slounik.org/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            resetControls();
-            Notifier.toast(this, "Can not encode.");
-            return;
-        }
-        StringRequest request = new StringRequest(requestStr,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String response) {
-                        Notifier.toast(SlounikActivity.this, "Response received.");
-
-                        new AsyncTask<String, SlounikAdapter<String>, SlounikAdapter<String>>() {
-                            @Override
-                            protected SlounikAdapter<String> doInBackground(String... params) {
-                                Document page = Jsoup.parse(response);
-                                Elements bodies = page.select("li#li_poszuk");
-
-                                Article[] list = new Article[bodies.size()];
-                                int i = 0;
-                                for (Element e : bodies) {
-                                    list[i++] = new Article(e);
-                                }
-
-                                setList(list);
-
-                                return new SlounikAdapter<String>(SlounikActivity.this, R.layout.list_item, R.id.description, list);
-                            }
-
-                            @Override
-                            protected void onPostExecute(SlounikAdapter<String> adapter) {
-                                super.onPostExecute(adapter);
-                                resetControls();
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        new ArticleDialog(SlounikActivity.this, list[position]).show();
-                                    }
-                                });
-                            }
-                        }.execute();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Notifier.toast(SlounikActivity.this, "Error response.");
-                        resetControls();
-                    }
-                });
-
-        queue.add(request);
-    }
-
     private void resetControls() {
         spinner.setVisibility(View.INVISIBLE);
         searchButton.setEnabled(true);
-    }
-
-    private synchronized void setList(Article[] list) {
-        this.list = list;
     }
 }

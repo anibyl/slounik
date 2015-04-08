@@ -1,6 +1,6 @@
 package org.anibyl.slounik;
 
-import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
 
 /**
@@ -9,13 +9,13 @@ import android.widget.Toast;
  * Created by Usievaład Čorny on 05.04.2015 5:14.
  */
 public class Notifier {
-    public static void toast(Activity activity, String text) {
-        toast(activity, text, Toast.LENGTH_SHORT);
+    public static void toast(Context context, String text) {
+        toast(context, text, Toast.LENGTH_SHORT);
     }
 
-    public static void toast(Activity activity, String text, int length) {
+    public static void toast(Context context, String text, int length) {
         if (Util.isTestDevice()) {
-            Toast.makeText(activity, text, length).show();
+            Toast.makeText(context, text, length).show();
         }
     }
 }

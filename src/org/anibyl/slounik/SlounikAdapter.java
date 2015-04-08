@@ -1,6 +1,6 @@
 package org.anibyl.slounik;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +16,10 @@ public class SlounikAdapter<String> extends ArrayAdapter {
     private LayoutInflater inflater;
     private Article[] list;
 
-    public SlounikAdapter(Activity activity, int resource, int textViewResourceId, Article[] list) {
-        super(activity, resource, textViewResourceId, list);
+    public SlounikAdapter(Context context, int resource, int textViewResourceId, Article[] list) {
+        super(context, resource, textViewResourceId, list);
 
-        inflater = LayoutInflater.from(activity);
+        inflater = LayoutInflater.from(context);
         this.list = list;
     }
 
