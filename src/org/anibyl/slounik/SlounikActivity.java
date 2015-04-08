@@ -11,6 +11,8 @@ import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.SlounikOrg;
 
+import java.util.ArrayList;
+
 /**
  * The main activity.
  *
@@ -58,9 +60,9 @@ public class SlounikActivity extends Activity {
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
-                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallBack() {
+                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallback() {
                         @Override
-                        public void invoke(final Article[] list) {
+                        public void invoke(final ArrayList<Article> list) {
                             resetControls();
 
                             if (list != null) {
@@ -71,7 +73,7 @@ public class SlounikActivity extends Activity {
                                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        new ArticleDialog(SlounikActivity.this, list[position]).show();
+                                        new ArticleDialog(SlounikActivity.this, list.get(position)).show();
                                     }
                                 });
                             }
