@@ -12,11 +12,11 @@ import org.anibyl.slounik.Util;
  *
  * Created by Usievaład Čorny on 05.04.2015 9:36.
  */
-public class About extends Dialog {
+public class AboutDialog extends Dialog {
     private final String title;
     private final Context context;
 
-    public About(Context context, String title) {
+    public AboutDialog(Context context, String title) {
         super(context);
 
         this.title = title;

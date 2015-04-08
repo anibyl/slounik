@@ -1,10 +1,12 @@
-package org.anibyl.slounik;
+package org.anibyl.slounik.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
+import org.anibyl.slounik.Article;
+import org.anibyl.slounik.R;
 
 /**
  * Dialog for the text of an article.

@@ -13,7 +13,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import org.anibyl.slounik.dialogs.About;
+import org.anibyl.slounik.dialogs.AboutDialog;
+import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.apache.http.protocol.HTTP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,7 +36,7 @@ public class SlounikActivity extends Activity {
     private ProgressBar spinner;
     private ListView listView;
     private volatile Article[] list;
-    private About about;
+    private AboutDialog aboutDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class SlounikActivity extends Activity {
         spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
 
-        about = new About(SlounikActivity.this, getString(R.string.about_title));
+        aboutDialog = new AboutDialog(SlounikActivity.this, getString(R.string.about_title));
 
         spinner.setVisibility(View.INVISIBLE);
 
@@ -79,7 +80,7 @@ public class SlounikActivity extends Activity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                about.show();
+                aboutDialog.show();
             }
         });
     }
@@ -88,7 +89,7 @@ public class SlounikActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_MENU:
-                about.show();
+                aboutDialog.show();
                 return true;
         }
         return super.onKeyDown(keyCode, event);

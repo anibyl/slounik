@@ -1,4 +1,4 @@
-package org.anibyl.slounik;
+package org.anibyl.slounik.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import org.anibyl.slounik.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

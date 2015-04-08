@@ -2,6 +2,7 @@ package org.anibyl.slounik;
 
 import android.content.Context;
 import android.provider.Settings;
+import org.anibyl.slounik.network.Server;
 
 /**
  * General application utility class.
