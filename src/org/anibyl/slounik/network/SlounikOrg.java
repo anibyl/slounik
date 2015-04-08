@@ -76,24 +76,34 @@ public class SlounikOrg {
                                         StringRequest eachDicRequest = new StringRequest(dicRequestStr,
                                                 new Response.Listener<String>() {
                                                     @Override
-                                                    public void onResponse(String response) {
-                                                        Notifier.log("Response received.");
-                                                        Document dicPage = Jsoup.parse(response);
-                                                        Elements articleElements = dicPage.select("li#li_poszuk");
+                                                    public void onResponse(final String response) {
+                                                        new AsyncTask<Void, Void, ArrayList<Article>>() {
+                                                            @Override
+                                                            protected ArrayList<Article> doInBackground(Void... params) {
+                                                                Notifier.log("Response received.");
+                                                                Document dicPage = Jsoup.parse(response);
+                                                                Elements articleElements = dicPage.select("li#li_poszuk");
 
-                                                        String dictionaryTitle = null;
-                                                        Elements dictionaryTitles = dicPage.select("a.t3");
-                                                        if (dictionaryTitles != null && dictionaryTitles.size() != 0) {
-                                                            dictionaryTitle = dictionaryTitles.first().html();
-                                                        }
+                                                                String dictionaryTitle = null;
+                                                                Elements dictionaryTitles = dicPage.select("a.t3");
+                                                                if (dictionaryTitles != null && dictionaryTitles.size() != 0) {
+                                                                    dictionaryTitle = dictionaryTitles.first().html();
+                                                                }
 
-                                                        ArrayList<Article> list = new ArrayList<Article>();
-                                                        for (Element e : articleElements) {
-                                                            Notifier.log("Element: " + e.html());
-                                                            list.add(new Article(e).setDictionary(dictionaryTitle));
-                                                        }
+                                                                ArrayList<Article> list = new ArrayList<Article>();
+                                                                for (Element e : articleElements) {
+                                                                    Notifier.log("Element: " + e.html());
+                                                                    list.add(new Article(e).setDictionary(dictionaryTitle));
+                                                                }
 
-                                                        setArticleList(list);
+                                                                return list;
+                                                            }
+
+                                                            @Override
+                                                            protected void onPostExecute(ArrayList<Article> articles) {
+                                                                setArticleList(articles);
+                                                            }
+                                                        }.execute();
                                                     }
                                                 },
                                                 new Response.ErrorListener() {
