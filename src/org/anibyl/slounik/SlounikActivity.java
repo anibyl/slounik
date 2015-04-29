@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
+import org.anibyl.slounik.network.ArticlesInfo;
 import org.anibyl.slounik.network.SlounikOrg;
 
 import java.util.ArrayList;
@@ -62,8 +63,10 @@ public class SlounikActivity extends Activity {
 
                     SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallback() {
                         @Override
-                        public void invoke(final ArrayList<Article> list) {
+                        public void invoke(final ArticlesInfo articles) {
                             resetControls();
+
+                            final ArrayList<Article> list = articles.getArticles();
 
                             if (list != null) {
                                 SlounikAdapter<String> adapter = new SlounikAdapter<String>(SlounikActivity.this,

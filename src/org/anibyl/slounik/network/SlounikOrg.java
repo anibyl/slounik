@@ -29,8 +29,7 @@ public class SlounikOrg {
     private static RequestQueue queue;
 
     public static abstract class ArticlesCallback {
-        // TODO create callback data object.
-        public abstract void invoke(ArrayList<Article> articles);
+        public abstract void invoke(ArticlesInfo articles);
     }
 
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
@@ -43,7 +42,7 @@ public class SlounikOrg {
             requestStr = URL + "/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
         } catch (UnsupportedEncodingException e) {
             Notifier.toast(context, "Can not encode.");
-            callBack.invoke(null);
+            callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
             return;
         }
 
@@ -63,6 +62,10 @@ public class SlounikOrg {
                                 Elements dicsElements = page.select("a.treeSearchDict");
                                 dicsAmount = dicsElements.size();
 
+                                if (dicsAmount == 0) {
+                                    return null;
+                                }
+
                                 for (Element e : dicsElements) {
                                     String dicRequestStr = e.attr("href");
                                     if (dicRequestStr != null) {
@@ -71,7 +74,8 @@ public class SlounikOrg {
                                                     HTTP.UTF_8);
                                         } catch (UnsupportedEncodingException e1) {
                                             Notifier.log("UnsupportedEncodingException");
-                                            // TODO handle it.
+                                            setArticleList(null);
+                                            continue;
                                         }
                                         StringRequest eachDicRequest = new StringRequest(dicRequestStr,
                                                 new Response.Listener<String>() {
@@ -110,7 +114,7 @@ public class SlounikOrg {
                                                     @Override
                                                     public void onErrorResponse(VolleyError error) {
                                                         Notifier.log("Response error: " + error.getMessage());
-                                                        setArticleList(new ArrayList<Article>());
+                                                        setArticleList(null);
                                                     }
                                                 });
 
@@ -122,12 +126,22 @@ public class SlounikOrg {
                                 return null;
                             }
 
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                if (dicsAmount == 0) {
+                                    Notifier.log("Callback invoked: no dictionaries.");
+                                    callBack.invoke(new ArticlesInfo(articles));
+                                }
+                            }
+
                             private void setArticleList(ArrayList<Article> list) {
-                                articles.addAll(list);
+                                if (list != null) {
+                                    articles.addAll(list);
+                                }
 
                                 if (--dicsAmount == 0) {
                                     Notifier.log("Callback invoked.");
-                                    callBack.invoke(articles);
+                                    callBack.invoke(new ArticlesInfo(articles));
                                 }
                             }
                         }.execute();
@@ -137,7 +151,7 @@ public class SlounikOrg {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Notifier.toast(context, "Error response.");
-                        callBack.invoke(null);
+                        callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });
 
