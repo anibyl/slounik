@@ -63,10 +63,10 @@ public class SlounikActivity extends Activity {
 
                     SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallback() {
                         @Override
-                        public void invoke(final ArticlesInfo articles) {
+                        public void invoke(final ArticlesInfo info) {
                             resetControls();
 
-                            final ArrayList<Article> list = articles.getArticles();
+                            final ArrayList<Article> list = info.getArticles();
 
                             if (list != null) {
                                 SlounikAdapter<String> adapter = new SlounikAdapter<String>(SlounikActivity.this,

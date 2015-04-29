@@ -29,7 +29,7 @@ public class SlounikOrg {
     private static RequestQueue queue;
 
     public static abstract class ArticlesCallback {
-        public abstract void invoke(ArticlesInfo articles);
+        public abstract void invoke(ArticlesInfo info);
     }
 
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
@@ -46,7 +46,14 @@ public class SlounikOrg {
             return;
         }
 
-        StringRequest request = new StringRequest(requestStr,
+        StringRequest request = getInitialLoadRequest(requestStr, context, callBack);
+
+        queue.add(request);
+    }
+
+    private static StringRequest getInitialLoadRequest(final String requestStr, final Context context,
+            final ArticlesCallback callBack) {
+        return new StringRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -77,46 +84,13 @@ public class SlounikOrg {
                                             setArticleList(null);
                                             continue;
                                         }
-                                        StringRequest eachDicRequest = new StringRequest(dicRequestStr,
-                                                new Response.Listener<String>() {
-                                                    @Override
-                                                    public void onResponse(final String response) {
-                                                        new AsyncTask<Void, Void, ArrayList<Article>>() {
-                                                            @Override
-                                                            protected ArrayList<Article> doInBackground(Void... params) {
-                                                                Notifier.log("Response received.");
-                                                                Document dicPage = Jsoup.parse(response);
-                                                                Elements articleElements = dicPage.select("li#li_poszuk");
-
-                                                                String dictionaryTitle = null;
-                                                                Elements dictionaryTitles = dicPage.select("a.t3");
-                                                                if (dictionaryTitles != null && dictionaryTitles.size() != 0) {
-                                                                    dictionaryTitle = dictionaryTitles.first().html();
-                                                                }
-
-                                                                ArrayList<Article> list = new ArrayList<Article>();
-                                                                for (Element e : articleElements) {
-                                                                    Notifier.log("Element: " + e.html());
-                                                                    list.add(new Article(e).setDictionary(dictionaryTitle));
-                                                                }
-
-                                                                return list;
-                                                            }
-
-                                                            @Override
-                                                            protected void onPostExecute(ArrayList<Article> articles) {
-                                                                setArticleList(articles);
-                                                            }
-                                                        }.execute();
-                                                    }
-                                                },
-                                                new Response.ErrorListener() {
-                                                    @Override
-                                                    public void onErrorResponse(VolleyError error) {
-                                                        Notifier.log("Response error: " + error.getMessage());
-                                                        setArticleList(null);
-                                                    }
-                                                });
+                                        StringRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
+                                                new ArticlesCallback() {
+                                            @Override
+                                            public void invoke(ArticlesInfo info) {
+                                                setArticleList(info.getArticles());
+                                            }
+                                        });
 
                                         queue.add(eachDicRequest);
                                         Notifier.log("Request added to queue: " + eachDicRequest);
@@ -154,7 +128,49 @@ public class SlounikOrg {
                         callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });
+    }
 
-        queue.add(request);
+    private static StringRequest getPerDicLoadingRequest(String dicRequestStr,
+            final ArticlesCallback callback) {
+        return new StringRequest(dicRequestStr,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        new AsyncTask<Void, Void, ArrayList<Article>>() {
+                            @Override
+                            protected ArrayList<Article> doInBackground(Void... params) {
+                                Notifier.log("Response received.");
+                                Document dicPage = Jsoup.parse(response);
+                                Elements articleElements = dicPage.select("li#li_poszuk");
+
+                                String dictionaryTitle = null;
+                                Elements dictionaryTitles = dicPage.select("a.t3");
+                                if (dictionaryTitles != null && dictionaryTitles.size() != 0) {
+                                    dictionaryTitle = dictionaryTitles.first().html();
+                                }
+
+                                ArrayList<Article> list = new ArrayList<Article>();
+                                for (Element e : articleElements) {
+                                    Notifier.log("Element: " + e.html());
+                                    list.add(new Article(e).setDictionary(dictionaryTitle));
+                                }
+
+                                return list;
+                            }
+
+                            @Override
+                            protected void onPostExecute(ArrayList<Article> articles) {
+                                callback.invoke(new ArticlesInfo(articles));
+                            }
+                        }.execute();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Notifier.log("Response error: " + error.getMessage());
+                        callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
+                    }
+                });
     }
 }
