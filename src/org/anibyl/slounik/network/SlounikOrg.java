@@ -106,7 +106,7 @@ public class SlounikOrg {
                             private void setArticleList(ArrayList<Article> list) {
                                 ArticlesInfo.Status status = --dicsAmount == 0 ?
                                         ArticlesInfo.Status.SUCCESS : ArticlesInfo.Status.IN_PROCESS;
-                                Notifier.log("Callback invoked, " + list.size() + "articles added.");
+                                Notifier.log("Callback invoked, " + list.size() + " articles added.");
                                 callback.invoke(new ArticlesInfo(list, status));
                             }
                         }.execute();
@@ -121,7 +121,7 @@ public class SlounikOrg {
                 });
     }
 
-    private static StringRequest getPerDicLoadingRequest(String dicRequestStr,
+    private static StringRequest getPerDicLoadingRequest(final String dicRequestStr,
             final ArticlesCallback callback) {
         return new StringRequest(dicRequestStr,
                 new Response.Listener<String>() {
@@ -130,7 +130,7 @@ public class SlounikOrg {
                         new AsyncTask<Void, Void, ArrayList<Article>>() {
                             @Override
                             protected ArrayList<Article> doInBackground(Void... params) {
-                                Notifier.log("Response received.");
+                                Notifier.log("Response received for " + dicRequestStr + ".");
                                 Document dicPage = Jsoup.parse(response);
                                 Elements articleElements = dicPage.select("li#li_poszuk");
 

@@ -29,6 +29,7 @@ public class SlounikActivity extends Activity {
     private AboutDialog aboutDialog;
     private TextView dicAmountCounter;
     private ArrayList<Article> articles;
+    private SlounikAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +50,20 @@ public class SlounikActivity extends Activity {
 
         spinner.setVisibility(View.INVISIBLE);
 
+        articles = new ArrayList<Article>();
+        adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new ArticleDialog(SlounikActivity.this, articles.get(position)).show();
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dicAmountCounter.setText("");
-                articles = new ArrayList<Article>();
+                resetArticles();
 
                 final String wordToSearch = searchBox.getText().toString();
 
@@ -77,21 +87,7 @@ public class SlounikActivity extends Activity {
                                 resetControls();
                             }
 
-
-                            final ArrayList<Article> list = articles;
-
-                            if (list != null) {
-                                SlounikAdapter adapter = new SlounikAdapter(SlounikActivity.this,
-                                        R.layout.list_item, R.id.description, list);
-
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        new ArticleDialog(SlounikActivity.this, list.get(position)).show();
-                                    }
-                                });
-                            }
+                            adapter.notifyDataSetChanged();
 
                             dicAmountCounter.setText(String.valueOf(articles.size()));
                         }
@@ -121,5 +117,11 @@ public class SlounikActivity extends Activity {
     private void resetControls() {
         spinner.setVisibility(View.INVISIBLE);
         searchButton.setEnabled(true);
+    }
+
+    private void resetArticles() {
+        dicAmountCounter.setText("");
+        articles.clear();
+        adapter.notifyDataSetChanged();
     }
 }
