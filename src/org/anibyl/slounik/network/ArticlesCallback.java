@@ -5,7 +5,4 @@ package org.anibyl.slounik.network;
  */
 public abstract class ArticlesCallback {
     public abstract void invoke(ArticlesInfo info);
-
-    public void updateArticlesAmount(int amount) {
-    }
 }

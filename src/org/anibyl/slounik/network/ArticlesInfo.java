@@ -14,11 +14,17 @@ import java.util.ArrayList;
 public class ArticlesInfo {
     public enum Status {
         SUCCESS,
+        IN_PROCESS,
         FAILURE
     }
 
     private ArrayList<Article> articles;
     private Status status;
+
+    public ArticlesInfo(ArrayList<Article> articles, Status status) {
+        this.articles = articles;
+        this.status = status;
+    }
 
     public ArticlesInfo(ArrayList<Article> articles) {
         this.articles = articles;

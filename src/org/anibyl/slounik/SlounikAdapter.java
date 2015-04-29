@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * <p/>
  * Created by Usievaład Čorny on 26.02.2015 13:28.
  */
-public class SlounikAdapter<String> extends ArrayAdapter {
+public class SlounikAdapter extends ArrayAdapter {
     private LayoutInflater inflater;
     private ArrayList<Article> list;
 

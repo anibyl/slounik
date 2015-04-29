@@ -28,6 +28,7 @@ public class SlounikActivity extends Activity {
     private ListView listView;
     private AboutDialog aboutDialog;
     private TextView dicAmountCounter;
+    private ArrayList<Article> articles;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,9 @@ public class SlounikActivity extends Activity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dicAmountCounter.setText("");
+                articles = new ArrayList<Article>();
+
                 final String wordToSearch = searchBox.getText().toString();
 
                 if (wordToSearch == null || wordToSearch.equals("")) {
@@ -67,12 +71,17 @@ public class SlounikActivity extends Activity {
                     SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                         @Override
                         public void invoke(final ArticlesInfo info) {
-                            resetControls();
+                            if (info.getStatus() == ArticlesInfo.Status.IN_PROCESS) {
+                                articles.addAll(info.getArticles());
+                            } else {
+                                resetControls();
+                            }
 
-                            final ArrayList<Article> list = info.getArticles();
+
+                            final ArrayList<Article> list = articles;
 
                             if (list != null) {
-                                SlounikAdapter<String> adapter = new SlounikAdapter<String>(SlounikActivity.this,
+                                SlounikAdapter adapter = new SlounikAdapter(SlounikActivity.this,
                                         R.layout.list_item, R.id.description, list);
 
                                 listView.setAdapter(adapter);
@@ -83,16 +92,11 @@ public class SlounikActivity extends Activity {
                                     }
                                 });
                             }
-                        }
 
-                        @Override
-                        public void updateArticlesAmount(int amount) {
-                            dicAmountCounter.setText(String.valueOf(amount));
+                            dicAmountCounter.setText(String.valueOf(articles.size()));
                         }
                     });
                 }
-
-                dicAmountCounter.setText("");
             }
         });
 

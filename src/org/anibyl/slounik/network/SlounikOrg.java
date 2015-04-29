@@ -56,7 +56,6 @@ public class SlounikOrg {
                         Notifier.toast(context, "Response received.");
 
                         new AsyncTask<Void, Void, Void>() {
-                            private ArrayList<Article> articles = new ArrayList<Article>();
                             private int dicsAmount;
 
                             @Override
@@ -100,21 +99,15 @@ public class SlounikOrg {
                             protected void onPostExecute(Void aVoid) {
                                 if (dicsAmount == 0) {
                                     Notifier.log("Callback invoked: no dictionaries.");
-                                    callback.invoke(new ArticlesInfo(articles));
+                                    callback.invoke(new ArticlesInfo(null, ArticlesInfo.Status.SUCCESS));
                                 }
                             }
 
                             private void setArticleList(ArrayList<Article> list) {
-                                if (list != null) {
-                                    articles.addAll(list);
-                                    callback.updateArticlesAmount(articles.size());
-                                }
-
-                                if (--dicsAmount == 0) {
-                                    Notifier.log("Callback invoked.");
-                                    callback.invoke(new ArticlesInfo(articles));
-                                    callback.updateArticlesAmount(articles.size());
-                                }
+                                ArticlesInfo.Status status = --dicsAmount == 0 ?
+                                        ArticlesInfo.Status.SUCCESS : ArticlesInfo.Status.IN_PROCESS;
+                                Notifier.log("Callback invoked, " + list.size() + "articles added.");
+                                callback.invoke(new ArticlesInfo(list, status));
                             }
                         }.execute();
                     }
@@ -149,7 +142,6 @@ public class SlounikOrg {
 
                                 ArrayList<Article> list = new ArrayList<Article>();
                                 for (Element e : articleElements) {
-                                    Notifier.log("Element: " + e.html());
                                     list.add(new Article(e).setDictionary(dictionaryTitle));
                                 }
 
