@@ -28,10 +28,6 @@ public class SlounikOrg {
     private static final String URL = "http://slounik.org";
     private static RequestQueue queue;
 
-    public static abstract class ArticlesCallback {
-        public abstract void invoke(ArticlesInfo info);
-    }
-
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
         if (queue == null) {
             queue = Volley.newRequestQueue(context);
@@ -111,11 +107,13 @@ public class SlounikOrg {
                             private void setArticleList(ArrayList<Article> list) {
                                 if (list != null) {
                                     articles.addAll(list);
+                                    callback.updateArticlesAmount(articles.size());
                                 }
 
                                 if (--dicsAmount == 0) {
                                     Notifier.log("Callback invoked.");
                                     callback.invoke(new ArticlesInfo(articles));
+                                    callback.updateArticlesAmount(articles.size());
                                 }
                             }
                         }.execute();

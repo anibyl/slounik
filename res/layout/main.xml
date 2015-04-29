@@ -23,6 +23,21 @@
                 android:id="@+id/spinner" android:layout_gravity="center_horizontal"
                 android:layout_alignParentTop="true"
                 android:layout_alignBottom="@+id/search_box" android:layout_toLeftOf="@+id/search_button"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dic_amount_counter"
+                android:layout_toStartOf="@+id/search_button"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/search_button"
+                android:layout_alignLeft="@+id/spinner"
+                android:layout_alignStart="@+id/spinner"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:singleLine="true"
+                />
+
         <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,6 +56,7 @@
                      android:baselineAlignBottom="true" android:contentDescription="Settings button"
                      android:cropToPadding="true" android:focusable="false" android:adjustViewBounds="true"
                      android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
+
     </RelativeLayout>
     <ListView
             android:layout_width="wrap_content"
