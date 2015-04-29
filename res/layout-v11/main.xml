@@ -31,6 +31,21 @@
                 android:src="@drawable/ic_action_search" android:baselineAlignBottom="true"
                 android:contentDescription="Search button" android:cropToPadding="true" android:focusable="false"
                 android:adjustViewBounds="true"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dic_amount_counter"
+                android:layout_toStartOf="@+id/search_button"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/search_button"
+                android:layout_alignLeft="@+id/spinner"
+                android:layout_alignStart="@+id/spinner"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:singleLine="true"
+                />
+
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

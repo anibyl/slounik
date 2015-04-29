@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
+import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
 import org.anibyl.slounik.network.SlounikOrg;
 
@@ -26,6 +27,7 @@ public class SlounikActivity extends Activity {
     private ProgressBar spinner;
     private ListView listView;
     private AboutDialog aboutDialog;
+    private TextView dicAmountCounter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class SlounikActivity extends Activity {
         settingsButton = (ImageButton) findViewById(R.id.settings_button);
         spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
+        dicAmountCounter = (TextView) findViewById(R.id.dic_amount_counter);
 
         aboutDialog = new AboutDialog(SlounikActivity.this, getString(R.string.about_title));
 
@@ -61,7 +64,7 @@ public class SlounikActivity extends Activity {
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
-                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallback() {
+                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                         @Override
                         public void invoke(final ArticlesInfo info) {
                             resetControls();
@@ -81,8 +84,15 @@ public class SlounikActivity extends Activity {
                                 });
                             }
                         }
+
+                        @Override
+                        public void updateArticlesAmount(int amount) {
+                            dicAmountCounter.setText(String.valueOf(amount));
+                        }
                     });
                 }
+
+                dicAmountCounter.setText("");
             }
         });
 
