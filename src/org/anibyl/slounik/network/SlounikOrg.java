@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * slounik.org website communication.
@@ -24,50 +25,89 @@ import java.net.URLEncoder;
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
 public class SlounikOrg {
+    private static final String URL = "http://slounik.org";
     private static RequestQueue queue;
-    public static abstract class ArticlesCallBack {
-        // TODO create callback data object.
-        public abstract void invoke(Article[] list);
-    }
 
-    public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallBack callBack) {
+    public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
         if (queue == null) {
             queue = Volley.newRequestQueue(context);
         }
 
         final String requestStr;
         try {
-            requestStr = "http://slounik.org/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
+            requestStr = URL + "/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
         } catch (UnsupportedEncodingException e) {
             Notifier.toast(context, "Can not encode.");
-            callBack.invoke(null);
+            callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
             return;
         }
 
-        StringRequest request = new StringRequest(requestStr,
+        StringRequest request = getInitialLoadRequest(requestStr, context, callBack);
+
+        queue.add(request);
+    }
+
+    private static StringRequest getInitialLoadRequest(final String requestStr, final Context context,
+            final ArticlesCallback callback) {
+        return new StringRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
                         Notifier.toast(context, "Response received.");
 
-                        new AsyncTask<String, Void, Article[]>() {
-                            @Override
-                            protected Article[] doInBackground(String... params) {
-                                Document page = Jsoup.parse(response);
-                                Elements bodies = page.select("li#li_poszuk");
+                        new AsyncTask<Void, Void, Void>() {
+                            private int dicsAmount;
 
-                                Article[] list = new Article[bodies.size()];
-                                int i = 0;
-                                for (Element e : bodies) {
-                                    list[i++] = new Article(e);
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                Document page = Jsoup.parse(response);
+                                Elements dicsElements = page.select("a.treeSearchDict");
+                                dicsAmount = dicsElements.size();
+
+                                if (dicsAmount == 0) {
+                                    return null;
                                 }
 
-                                return list;
+                                for (Element e : dicsElements) {
+                                    String dicRequestStr = e.attr("href");
+                                    if (dicRequestStr != null) {
+                                        try {
+                                            dicRequestStr = URL + "/" + URLEncoder.encode(dicRequestStr.substring(1),
+                                                    HTTP.UTF_8);
+                                        } catch (UnsupportedEncodingException e1) {
+                                            Notifier.log("UnsupportedEncodingException");
+                                            setArticleList(null);
+                                            continue;
+                                        }
+                                        StringRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
+                                                new ArticlesCallback() {
+                                            @Override
+                                            public void invoke(ArticlesInfo info) {
+                                                setArticleList(info.getArticles());
+                                            }
+                                        });
+
+                                        queue.add(eachDicRequest);
+                                        Notifier.log("Request added to queue: " + eachDicRequest);
+                                    }
+                                }
+
+                                return null;
                             }
 
                             @Override
-                            protected void onPostExecute(Article[] list) {
-                                callBack.invoke(list);
+                            protected void onPostExecute(Void aVoid) {
+                                if (dicsAmount == 0) {
+                                    Notifier.log("Callback invoked: no dictionaries.");
+                                    callback.invoke(new ArticlesInfo(null, ArticlesInfo.Status.SUCCESS));
+                                }
+                            }
+
+                            private void setArticleList(ArrayList<Article> list) {
+                                ArticlesInfo.Status status = --dicsAmount == 0 ?
+                                        ArticlesInfo.Status.SUCCESS : ArticlesInfo.Status.IN_PROCESS;
+                                Notifier.log("Callback invoked, " + list.size() + " articles added.");
+                                callback.invoke(new ArticlesInfo(list, status));
                             }
                         }.execute();
                     }
@@ -76,10 +116,51 @@ public class SlounikOrg {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Notifier.toast(context, "Error response.");
-                        callBack.invoke(null);
+                        callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });
+    }
 
-        queue.add(request);
+    private static StringRequest getPerDicLoadingRequest(final String dicRequestStr,
+            final ArticlesCallback callback) {
+        return new StringRequest(dicRequestStr,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        new AsyncTask<Void, Void, ArrayList<Article>>() {
+                            @Override
+                            protected ArrayList<Article> doInBackground(Void... params) {
+                                Notifier.log("Response received for " + dicRequestStr + ".");
+                                Document dicPage = Jsoup.parse(response);
+                                Elements articleElements = dicPage.select("li#li_poszuk");
+
+                                String dictionaryTitle = null;
+                                Elements dictionaryTitles = dicPage.select("a.t3");
+                                if (dictionaryTitles != null && dictionaryTitles.size() != 0) {
+                                    dictionaryTitle = dictionaryTitles.first().html();
+                                }
+
+                                ArrayList<Article> list = new ArrayList<Article>();
+                                for (Element e : articleElements) {
+                                    list.add(new Article(e).setDictionary(dictionaryTitle));
+                                }
+
+                                return list;
+                            }
+
+                            @Override
+                            protected void onPostExecute(ArrayList<Article> articles) {
+                                callback.invoke(new ArticlesInfo(articles));
+                            }
+                        }.execute();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Notifier.log("Response error: " + error.getMessage());
+                        callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
+                    }
+                });
     }
 }

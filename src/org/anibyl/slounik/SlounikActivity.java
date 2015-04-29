@@ -9,7 +9,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
+import org.anibyl.slounik.network.ArticlesCallback;
+import org.anibyl.slounik.network.ArticlesInfo;
 import org.anibyl.slounik.network.SlounikOrg;
+
+import java.util.ArrayList;
 
 /**
  * The main activity.
@@ -23,6 +27,9 @@ public class SlounikActivity extends Activity {
     private ProgressBar spinner;
     private ListView listView;
     private AboutDialog aboutDialog;
+    private TextView dicAmountCounter;
+    private ArrayList<Article> articles;
+    private SlounikAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,14 +44,27 @@ public class SlounikActivity extends Activity {
         settingsButton = (ImageButton) findViewById(R.id.settings_button);
         spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
+        dicAmountCounter = (TextView) findViewById(R.id.dic_amount_counter);
 
         aboutDialog = new AboutDialog(SlounikActivity.this, getString(R.string.about_title));
 
         spinner.setVisibility(View.INVISIBLE);
 
+        articles = new ArrayList<Article>();
+        adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new ArticleDialog(SlounikActivity.this, articles.get(position)).show();
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                resetArticles();
+
                 final String wordToSearch = searchBox.getText().toString();
 
                 if (wordToSearch == null || wordToSearch.equals("")) {
@@ -58,23 +78,18 @@ public class SlounikActivity extends Activity {
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
-                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new SlounikOrg.ArticlesCallBack() {
+                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                         @Override
-                        public void invoke(final Article[] list) {
-                            resetControls();
-
-                            if (list != null) {
-                                SlounikAdapter<String> adapter = new SlounikAdapter<String>(SlounikActivity.this,
-                                        R.layout.list_item, R.id.description, list);
-
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        new ArticleDialog(SlounikActivity.this, list[position]).show();
-                                    }
-                                });
+                        public void invoke(final ArticlesInfo info) {
+                            if (info.getStatus() == ArticlesInfo.Status.IN_PROCESS) {
+                                articles.addAll(info.getArticles());
+                            } else {
+                                resetControls();
                             }
+
+                            adapter.notifyDataSetChanged();
+
+                            dicAmountCounter.setText(String.valueOf(articles.size()));
                         }
                     });
                 }
@@ -102,5 +117,11 @@ public class SlounikActivity extends Activity {
     private void resetControls() {
         spinner.setVisibility(View.INVISIBLE);
         searchButton.setEnabled(true);
+    }
+
+    private void resetArticles() {
+        dicAmountCounter.setText("");
+        articles.clear();
+        adapter.notifyDataSetChanged();
     }
 }

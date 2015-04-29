@@ -7,16 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Adapter used to fill the list.
  * <p/>
  * Created by Usievaład Čorny on 26.02.2015 13:28.
  */
-public class SlounikAdapter<String> extends ArrayAdapter {
+public class SlounikAdapter extends ArrayAdapter {
     private LayoutInflater inflater;
-    private Article[] list;
+    private ArrayList<Article> list;
 
-    public SlounikAdapter(Context context, int resource, int textViewResourceId, Article[] list) {
+    public SlounikAdapter(Context context, int resource, int textViewResourceId, ArrayList<Article> list) {
         super(context, resource, textViewResourceId, list);
 
         inflater = LayoutInflater.from(context);
@@ -38,7 +40,7 @@ public class SlounikAdapter<String> extends ArrayAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Article article = list[position];
+        Article article = list.get(position);
         holder.title.setText(article.getTitle());
         holder.description.setText(article.getDescription());
         holder.dicName.setText(article.getDictionary());
