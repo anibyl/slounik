@@ -52,7 +52,7 @@ public class SlounikOrg {
     }
 
     private static StringRequest getInitialLoadRequest(final String requestStr, final Context context,
-            final ArticlesCallback callBack) {
+            final ArticlesCallback callback) {
         return new StringRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -104,7 +104,7 @@ public class SlounikOrg {
                             protected void onPostExecute(Void aVoid) {
                                 if (dicsAmount == 0) {
                                     Notifier.log("Callback invoked: no dictionaries.");
-                                    callBack.invoke(new ArticlesInfo(articles));
+                                    callback.invoke(new ArticlesInfo(articles));
                                 }
                             }
 
@@ -115,7 +115,7 @@ public class SlounikOrg {
 
                                 if (--dicsAmount == 0) {
                                     Notifier.log("Callback invoked.");
-                                    callBack.invoke(new ArticlesInfo(articles));
+                                    callback.invoke(new ArticlesInfo(articles));
                                 }
                             }
                         }.execute();
@@ -125,7 +125,7 @@ public class SlounikOrg {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Notifier.toast(context, "Error response.");
-                        callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
+                        callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });
     }
