@@ -10,13 +10,13 @@ import org.anibyl.slounik.network.Server;
  * Created by Usievaład Čorny on 05.04.2015 4:13.
  */
 public class Util {
-    private static Boolean testDevice;
+    private static boolean testDevice;
 
     public static void initialize(Context context) {
         getTestDevice(context);
     }
 
-    public static Boolean isTestDevice() {
+    public static boolean isTestDevice() {
         return testDevice;
     }
 
