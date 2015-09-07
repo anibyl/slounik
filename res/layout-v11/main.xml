@@ -3,33 +3,52 @@
 <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
-        android:weightSum="1" android:background="#ee000000">
+        android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:weightSum="1"
+        android:background="#ee000000">
+
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                     android:id="@+id/settings_button"
-                     android:src="@drawable/ic_action_settings"
-                     android:baselineAlignBottom="true" android:contentDescription="Settings button"
-                     android:cropToPadding="true" android:focusable="false" android:adjustViewBounds="true"
-                     android:layout_centerVertical="true"
-                     android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
-        <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="text" android:layout_gravity="left|top"
-                android:layout_alignParentTop="true"
-                android:layout_alignBottom="@+id/search_button"
-                android:id="@+id/search_box" android:layout_toLeftOf="@+id/search_button"
-                android:layout_toRightOf="@+id/settings_button" android:hint="@string/url_name"/>
+
         <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_button" android:layout_alignParentTop="true"
+                android:id="@+id/settings_button"
+                android:src="@drawable/ic_action_settings"
+                android:baselineAlignBottom="true"
+                android:contentDescription="Settings button"
+                android:cropToPadding="true"
+                android:focusable="false"
+                android:adjustViewBounds="true"
+                android:layout_centerVertical="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_gravity="left|top"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/search_button"
+                android:id="@+id/search_box"
+                android:layout_toLeftOf="@+id/search_button"
+                android:layout_toRightOf="@+id/settings_button"
+                android:hint="@string/url_name"/>
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_button"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_action_search" android:baselineAlignBottom="true"
-                android:contentDescription="Search button" android:cropToPadding="true" android:focusable="false"
+                android:src="@drawable/ic_action_search"
+                android:baselineAlignBottom="true"
+                android:contentDescription="Search button"
+                android:cropToPadding="true"
+                android:focusable="false"
                 android:adjustViewBounds="true"/>
 
         <TextView
@@ -50,8 +69,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner"
-                android:layout_alignParentTop="true" android:layout_toLeftOf="@+id/search_button"/>
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/search_button"/>
     </RelativeLayout>
+
     <ListView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
