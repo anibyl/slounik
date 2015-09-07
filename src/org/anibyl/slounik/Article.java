@@ -15,6 +15,8 @@ public class Article {
     private String title;
     private Spanned description;
     private String dictionary;
+    private String linkToFullDescription;
+    private Spanned fullDescription;
 
     public Article() {
     }
@@ -23,7 +25,9 @@ public class Article {
         if (element != null) {
             Elements elements = element.select("a.tsb");
             if (elements != null && elements.size() != 0) {
-                title = elements.first().html();
+                Element link = elements.first();
+                title = link.html();
+                linkToFullDescription = link.attr("href");
 
                 if (title != null) {
                     elements = element.select("a.ts");
@@ -32,13 +36,6 @@ public class Article {
                     }
                 }
             }
-
-//            if (title == null) {
-//                final String html = element.outerHtml();
-//                if (html != null) {
-//                    title = html.substring(html.indexOf("<b>"), html.indexOf("<br>"));
-//                }
-//            }
 
             if (title == null) {
                 elements = element.select("b");
@@ -92,5 +89,21 @@ public class Article {
 
     public String getDictionary() {
         return dictionary;
+    }
+
+    public String getLinkToFullDescription() {
+        return linkToFullDescription;
+    }
+
+    public void setLinkToFullDescription(String linkToFullDescription) {
+        this.linkToFullDescription = linkToFullDescription;
+    }
+
+    public Spanned getFullDescription() {
+        return fullDescription;
+    }
+
+    public void setFullDescription(Spanned fullDescription) {
+        this.fullDescription = fullDescription;
     }
 }

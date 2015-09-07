@@ -2,6 +2,7 @@ package org.anibyl.slounik.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.Html;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,10 +30,6 @@ public class SlounikOrg {
     private static RequestQueue queue;
 
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
-        if (queue == null) {
-            queue = Volley.newRequestQueue(context);
-        }
-
         final String requestStr;
         try {
             requestStr = URL + "/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
@@ -44,7 +41,23 @@ public class SlounikOrg {
 
         StringRequest request = getInitialLoadRequest(requestStr, context, callBack);
 
-        queue.add(request);
+        getQueue(context).add(request);
+    }
+
+    public static void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
+        final String requestStr = URL + article.getLinkToFullDescription();
+
+        StringRequest request = getArticleDescriptionLoadRequest(requestStr, article, callBack);
+
+        getQueue(context).add(request);
+    }
+
+    private static RequestQueue getQueue(final Context context) {
+        if (queue == null) {
+            queue = Volley.newRequestQueue(context);
+        }
+
+        return queue;
     }
 
     private static StringRequest getInitialLoadRequest(final String requestStr, final Context context,
@@ -144,6 +157,43 @@ public class SlounikOrg {
                                 for (Element e : articleElements) {
                                     list.add(new Article(e).setDictionary(dictionaryTitle));
                                 }
+
+                                return list;
+                            }
+
+                            @Override
+                            protected void onPostExecute(ArrayList<Article> articles) {
+                                callback.invoke(new ArticlesInfo(articles));
+                            }
+                        }.execute();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Notifier.log("Response error: " + error.getMessage());
+                        callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
+                    }
+                });
+    }
+
+    private static StringRequest getArticleDescriptionLoadRequest(final String requestStr, final Article article,
+            final ArticlesCallback callback) {
+        return new StringRequest(requestStr,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        new AsyncTask<Void, Void, ArrayList<Article>>() {
+                            @Override
+                            protected ArrayList<Article> doInBackground(Void... params) {
+                                Notifier.log("Response received for " + requestStr + ".");
+                                Document articlePage = Jsoup.parse(response);
+                                Element articleElement = articlePage.select("td.n12").first();
+
+                                article.setFullDescription(Html.fromHtml(articleElement.html()));
+
+                                ArrayList<Article> list = new ArrayList<Article>();
+                                list.add(article);
 
                                 return list;
                             }

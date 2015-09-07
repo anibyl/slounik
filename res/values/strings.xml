@@ -6,4 +6,5 @@
     <string name="about_text">Slounik — the client application for slounik.org website.</string>
     <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
     <string name="about_android_id">Android ID: %s</string>
+    <string name="article_button_load_full_article">Load full article</string>
 </resources>

@@ -123,10 +123,13 @@ public class SlounikActivity extends Activity {
             SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                 @Override
                 public void invoke(final ArticlesInfo info) {
-                    if (info.getStatus() == ArticlesInfo.Status.IN_PROCESS) {
-                        articles.addAll(info.getArticles());
-                    } else {
-                        resetControls();
+                    articles.addAll(info.getArticles());
+
+                    switch (info.getStatus()) {
+                        case SUCCESS:
+                        case FAILURE:
+                            resetControls();
+                            break;
                     }
 
                     adapter.notifyDataSetChanged();
