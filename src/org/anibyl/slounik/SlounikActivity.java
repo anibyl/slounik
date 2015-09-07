@@ -5,8 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
@@ -60,39 +66,23 @@ public class SlounikActivity extends Activity {
             }
         });
 
+        searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE
+                    || (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    search();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetArticles();
-
-                final String wordToSearch = searchBox.getText().toString();
-
-                if (wordToSearch == null || wordToSearch.equals("")) {
-                    // TODO Make it visible for everyone.
-                    Notifier.toast(SlounikActivity.this, "Nothing to search.");
-                } else {
-                    spinner.setVisibility(View.VISIBLE);
-                    searchButton.setEnabled(false);
-
-                    InputMethodManager imm = (InputMethodManager)getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
-
-                    SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
-                        @Override
-                        public void invoke(final ArticlesInfo info) {
-                            if (info.getStatus() == ArticlesInfo.Status.IN_PROCESS) {
-                                articles.addAll(info.getArticles());
-                            } else {
-                                resetControls();
-                            }
-
-                            adapter.notifyDataSetChanged();
-
-                            dicAmountCounter.setText(String.valueOf(articles.size()));
-                        }
-                    });
-                }
+                search();
             }
         });
 
@@ -112,6 +102,39 @@ public class SlounikActivity extends Activity {
                 return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void search() {
+        resetArticles();
+
+        final String wordToSearch = searchBox.getText().toString();
+
+        if (wordToSearch == null || wordToSearch.equals("")) {
+            // TODO Make it visible for everyone.
+            Notifier.toast(SlounikActivity.this, "Nothing to search.");
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+            searchButton.setEnabled(false);
+
+            InputMethodManager imm = (InputMethodManager)getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+
+            SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
+                @Override
+                public void invoke(final ArticlesInfo info) {
+                    if (info.getStatus() == ArticlesInfo.Status.IN_PROCESS) {
+                        articles.addAll(info.getArticles());
+                    } else {
+                        resetControls();
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    dicAmountCounter.setText(String.valueOf(articles.size()));
+                }
+            });
+        }
     }
 
     private void resetControls() {

@@ -36,7 +36,9 @@
                 android:id="@+id/search_box"
                 android:layout_toLeftOf="@+id/search_button"
                 android:layout_toRightOf="@+id/settings_button"
-                android:hint="@string/url_name"/>
+                android:hint="@string/url_name"
+                android:imeActionId="6"
+                android:singleLine="true"/>
 
         <ImageButton
                 android:layout_width="wrap_content"

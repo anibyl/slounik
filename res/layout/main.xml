@@ -20,7 +20,9 @@
                 android:layout_alignBottom="@+id/search_button"
                 android:id="@+id/search_box"
                 android:layout_toRightOf="@+id/imageButton"
-                android:hint="@string/url_name"/>
+                android:hint="@string/url_name"
+                android:imeActionId="6"
+                android:singleLine="true"/>
         <ProgressBar
                 style="@android:style/Widget.ProgressBar"
                 android:layout_width="wrap_content"
