@@ -5,4 +5,5 @@
 /key/
 *.iml
 proguard-project.txt
+local.properties
 /Slounik.apk
