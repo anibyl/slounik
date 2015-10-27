@@ -94,7 +94,7 @@ public class SlounikOrg {
                                             setArticleList(null);
                                             continue;
                                         }
-                                        StringRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
+                                        SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
                                                 new ArticlesCallback() {
                                                     @Override
                                                     public void invoke(ArticlesInfo info) {
@@ -137,9 +137,9 @@ public class SlounikOrg {
                 });
     }
 
-    private static StringRequest getPerDicLoadingRequest(final String dicRequestStr,
+    private static SlounikOrgRequest getPerDicLoadingRequest(final String dicRequestStr,
                                                          final ArticlesCallback callback) {
-        return new StringRequest(dicRequestStr,
+        return new SlounikOrgRequest(dicRequestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
