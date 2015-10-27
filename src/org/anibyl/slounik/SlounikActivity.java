@@ -7,12 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.*;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
@@ -123,7 +118,10 @@ public class SlounikActivity extends Activity {
             SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                 @Override
                 public void invoke(final ArticlesInfo info) {
-                    articles.addAll(info.getArticles());
+                    ArrayList<Article> loadedArticles = info.getArticles();
+                    if (loadedArticles != null) {
+                        articles.addAll(loadedArticles);
+                    }
 
                     switch (info.getStatus()) {
                         case SUCCESS:
