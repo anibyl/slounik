@@ -119,7 +119,8 @@ public class SlounikOrg {
                             private void setArticleList(ArrayList<Article> list) {
                                 ArticlesInfo.Status status = --dicsAmount == 0 ?
                                         ArticlesInfo.Status.SUCCESS : ArticlesInfo.Status.IN_PROCESS;
-                                Notifier.log("Callback invoked, " + list.size() + " articles added.");
+                                Notifier.log("Callback invoked, " + (list != null ? list.size() : 0)
+                                        + " articles added.");
                                 callback.invoke(new ArticlesInfo(list, status));
                             }
                         }.execute();
