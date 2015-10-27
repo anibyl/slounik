@@ -3,11 +3,13 @@ package org.anibyl.slounik.network;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
+import com.android.volley.NetworkResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.android.volley.VolleyError;
 import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
 import org.apache.http.protocol.HTTP;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  * slounik.org website communication.
- *
+ * <p/>
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
 public class SlounikOrg {
@@ -39,7 +41,7 @@ public class SlounikOrg {
             return;
         }
 
-        StringRequest request = getInitialLoadRequest(requestStr, context, callBack);
+        SlounikOrgRequest request = getInitialLoadRequest(requestStr, context, callBack);
 
         getQueue(context).add(request);
     }
@@ -47,7 +49,7 @@ public class SlounikOrg {
     public static void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
         final String requestStr = URL + article.getLinkToFullDescription();
 
-        StringRequest request = getArticleDescriptionLoadRequest(requestStr, article, callBack);
+        SlounikOrgRequest request = getArticleDescriptionLoadRequest(requestStr, article, callBack);
 
         getQueue(context).add(request);
     }
@@ -60,9 +62,9 @@ public class SlounikOrg {
         return queue;
     }
 
-    private static StringRequest getInitialLoadRequest(final String requestStr, final Context context,
-            final ArticlesCallback callback) {
-        return new StringRequest(requestStr,
+    private static SlounikOrgRequest getInitialLoadRequest(final String requestStr, final Context context,
+                                                           final ArticlesCallback callback) {
+        return new SlounikOrgRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -94,11 +96,11 @@ public class SlounikOrg {
                                         }
                                         StringRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
                                                 new ArticlesCallback() {
-                                            @Override
-                                            public void invoke(ArticlesInfo info) {
-                                                setArticleList(info.getArticles());
-                                            }
-                                        });
+                                                    @Override
+                                                    public void invoke(ArticlesInfo info) {
+                                                        setArticleList(info.getArticles());
+                                                    }
+                                                });
 
                                         queue.add(eachDicRequest);
                                         Notifier.log("Request added to queue: " + eachDicRequest);
@@ -136,7 +138,7 @@ public class SlounikOrg {
     }
 
     private static StringRequest getPerDicLoadingRequest(final String dicRequestStr,
-            final ArticlesCallback callback) {
+                                                         final ArticlesCallback callback) {
         return new StringRequest(dicRequestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -178,9 +180,9 @@ public class SlounikOrg {
                 });
     }
 
-    private static StringRequest getArticleDescriptionLoadRequest(final String requestStr, final Article article,
-            final ArticlesCallback callback) {
-        return new StringRequest(requestStr,
+    private static SlounikOrgRequest getArticleDescriptionLoadRequest(final String requestStr, final Article article,
+                                                                      final ArticlesCallback callback) {
+        return new SlounikOrgRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -213,5 +215,22 @@ public class SlounikOrg {
                         callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });
+    }
+
+    private static class SlounikOrgRequest extends StringRequest {
+        public SlounikOrgRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+            super(url, listener, errorListener);
+        }
+
+        @Override
+        protected Response<String> parseNetworkResponse(NetworkResponse response) {
+            String parsed;
+            try {
+                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers, HTTP.UTF_8));
+            } catch (UnsupportedEncodingException e) {
+                parsed = new String(response.data);
+            }
+            return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+        }
     }
 }
