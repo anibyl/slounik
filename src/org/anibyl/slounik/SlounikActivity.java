@@ -104,7 +104,7 @@ public class SlounikActivity extends Activity {
 
         final String wordToSearch = searchBox.getText().toString();
 
-        if (wordToSearch == null || wordToSearch.equals("")) {
+        if (wordToSearch.equals("")) {
             // TODO Make it visible for everyone.
             Notifier.toast(SlounikActivity.this, "Nothing to search.");
         } else {
