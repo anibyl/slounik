@@ -4,10 +4,12 @@
           package="org.anibyl.slounik">
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application android:label="@string/app_name" android:icon="@drawable/icon">
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/icon"
+                 android:allowBackup="true">
         <activity android:name=".SlounikActivity"
                   android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Wallpaper.NoTitleBar" tools:ignore="NewApi">
+                  android:theme="@style/SlounikTheme" tools:ignore="NewApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
