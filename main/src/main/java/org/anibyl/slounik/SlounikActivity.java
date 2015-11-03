@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import org.anibyl.slounik.core.Preferences;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
@@ -29,10 +30,6 @@ import java.util.ArrayList;
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
 public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-//    private EditText searchBox;
-//    private ImageButton searchButton;
-//    private ImageButton settingsButton;
-//    private ProgressBar spinner;
     private ListView listView;
     //    private TextView dicAmountCounter;
     private ArrayList<Article> articles;
@@ -45,9 +42,12 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Preferences.initialize(this);
         Util.initialize(this);
 
         setContentView(R.layout.main);
+
+        LanguageSwitcher.initialize(this);
 
         progress = (SmoothProgressBar) findViewById(R.id.progress);
         progress.setVisibility(View.INVISIBLE);
@@ -99,6 +99,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        setTitle(R.string.app_name);
         mTitle = getTitle();
 
         // Set up the drawer.

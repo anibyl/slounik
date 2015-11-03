@@ -14,6 +14,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -94,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUp(final int fragmentId, final DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
@@ -160,6 +166,27 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        Spinner languageSwitcher = (Spinner) getActivity().findViewById(R.id.language_switcher);
+        List<String> list = new ArrayList<String>();
+        for (LanguageSwitcher.Language language : LanguageSwitcher.languages) {
+            list.add(language.getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, list);
+        languageSwitcher.setAdapter(adapter);
+        languageSwitcher.setSelection(LanguageSwitcher.getPreferredNo());
+        languageSwitcher.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                LanguageSwitcher.set(getActivity(), position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Notifier.log("");
+            }
+        });
     }
 
     private void selectItem(int position) {
