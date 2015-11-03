@@ -26,13 +26,13 @@ import java.util.ArrayList;
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
 public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
-    private EditText searchBox;
-    private ImageButton searchButton;
-    private ImageButton settingsButton;
-    private ProgressBar spinner;
+//    private EditText searchBox;
+//    private ImageButton searchButton;
+//    private ImageButton settingsButton;
+//    private ProgressBar spinner;
     private ListView listView;
     private AboutDialog aboutDialog;
-    private TextView dicAmountCounter;
+//    private TextView dicAmountCounter;
     private ArrayList<Article> articles;
     private SlounikAdapter adapter;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -50,7 +50,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 //        searchButton = (ImageButton) findViewById(R.id.search_button);
 //        settingsButton = (ImageButton) findViewById(R.id.settings_button);
 //        spinner = (ProgressBar) findViewById(R.id.spinner);
-//        listView = (ListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
 //        dicAmountCounter = (TextView) findViewById(R.id.dic_amount_counter);
 
         aboutDialog = new AboutDialog(SlounikActivity.this, getString(R.string.about_title));
@@ -59,13 +59,13 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         articles = new ArrayList<Article>();
         adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
-//        listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                new ArticleDialog(SlounikActivity.this, articles.get(position)).show();
-//            }
-//        });
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new ArticleDialog(SlounikActivity.this, articles.get(position)).show();
+            }
+        });
 
 //        searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
@@ -156,21 +156,21 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         }
     }
 
-    private void search() {
+    public void search(final String wordToSearch) {
         resetArticles();
 
-        final String wordToSearch = searchBox.getText().toString();
+//        final String wordToSearch = searchBox.getText().toString();
 
         if (wordToSearch.equals("")) {
             // TODO Make it visible for everyone.
             Notifier.toast(SlounikActivity.this, "Nothing to search.");
         } else {
-            spinner.setVisibility(View.VISIBLE);
-            searchButton.setEnabled(false);
+//            spinner.setVisibility(View.VISIBLE);
+//            searchButton.setEnabled(false);
 
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+//            imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
             SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                 @Override
@@ -189,19 +189,19 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
                     adapter.notifyDataSetChanged();
 
-                    dicAmountCounter.setText(String.valueOf(articles.size()));
+//                    dicAmountCounter.setText(String.valueOf(articles.size()));
                 }
             });
         }
     }
 
     private void resetControls() {
-        spinner.setVisibility(View.INVISIBLE);
-        searchButton.setEnabled(true);
+//        spinner.setVisibility(View.INVISIBLE);
+//        searchButton.setEnabled(true);
     }
 
     private void resetArticles() {
-        dicAmountCounter.setText("");
+//        dicAmountCounter.setText("");
         articles.clear();
         adapter.notifyDataSetChanged();
     }
