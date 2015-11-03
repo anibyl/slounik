@@ -16,10 +16,10 @@
             android:padding="@dimen/padding"
             android:contentDescription="@string/about_image_description"/>
     <TextView
+            android:id="@+id/about_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:id="@+id/textView"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/imageView"
             android:layout_toEndOf="@+id/imageView"
@@ -28,9 +28,9 @@
             android:textSize="@dimen/font_large"
             android:padding="@dimen/padding"/>
     <TextView
+            android:id="@+id/about_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
             android:layout_below="@+id/imageView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -38,12 +38,12 @@
             android:padding="@dimen/padding"
             android:autoLink="web"/>
     <TextView
+            android:id="@+id/about_contacts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView3"
             android:text="@string/about_author"
             android:padding="@dimen/padding"
-            android:layout_below="@+id/textView2"
+            android:layout_below="@+id/about_description"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:autoLink="email"/>
