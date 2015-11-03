@@ -12,6 +12,7 @@ import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
@@ -37,6 +38,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     private SlounikAdapter adapter;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
+    private SmoothProgressBar progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         setContentView(R.layout.main);
 
+        progress = (SmoothProgressBar) findViewById(R.id.progress);
+        progress.setVisibility(View.INVISIBLE);
 //        searchBox = (EditText) findViewById(R.id.search_box);
 //        searchButton = (ImageButton) findViewById(R.id.search_button);
 //        settingsButton = (ImageButton) findViewById(R.id.settings_button);
@@ -153,6 +157,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         } else {
             mTitle = wordToSearch;
             restoreActionBar();
+            progress.setVisibility(View.VISIBLE);
+            progress.progressiveStart();
 //            spinner.setVisibility(View.VISIBLE);
 //            searchButton.setEnabled(false);
 
@@ -184,6 +190,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     }
 
     private void resetControls() {
+        progress.progressiveStop();
+        progress.setVisibility(View.INVISIBLE);
 //        spinner.setVisibility(View.INVISIBLE);
 //        searchButton.setEnabled(true);
     }
