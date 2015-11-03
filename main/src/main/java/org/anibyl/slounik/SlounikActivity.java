@@ -8,12 +8,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.*;
-import android.view.inputmethod.EditorInfo;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import org.anibyl.slounik.dialogs.AboutDialog;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
@@ -23,17 +25,16 @@ import java.util.ArrayList;
 
 /**
  * The main activity.
- *
+ * <p/>
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
-public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 //    private EditText searchBox;
 //    private ImageButton searchButton;
 //    private ImageButton settingsButton;
 //    private ProgressBar spinner;
     private ListView listView;
-    private AboutDialog aboutDialog;
-//    private TextView dicAmountCounter;
+    //    private TextView dicAmountCounter;
     private ArrayList<Article> articles;
     private SlounikAdapter adapter;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -56,8 +57,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 //        spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
 //        dicAmountCounter = (TextView) findViewById(R.id.dic_amount_counter);
-
-        aboutDialog = new AboutDialog(SlounikActivity.this, getString(R.string.about_title));
 
 //        spinner.setVisibility(View.INVISIBLE);
 
@@ -109,16 +108,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_MENU:
-                aboutDialog.show();
-                return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -126,6 +115,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -162,7 +152,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 //            spinner.setVisibility(View.VISIBLE);
 //            searchButton.setEnabled(false);
 
-            InputMethodManager imm = (InputMethodManager)getSystemService(
+            InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
 //            imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 

@@ -5,6 +5,5 @@
     <string name="about_title">О программе</string>
     <string name="about_text">Слоуник — клиентское приложение для сайта slounik.org.</string>
     <string name="about_author">Автор: Усевалад Чёрный (anibyl@riseup.net)</string>
-    <string name="about_android_id">Android ID: %s</string>
     <string name="article_button_load_full_article">Показать всю статью</string>
 </resources>

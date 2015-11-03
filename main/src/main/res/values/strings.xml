@@ -3,10 +3,11 @@
     <string name="app_name">Slounik</string>
     <string name="url_name">slounik.org</string>
     <string name="about_title">About</string>
-    <string name="about_text">Slounik — the client application for slounik.org website.</string>
+    <string name="about_text">Slounik is the client application for slounik.org website.</string>
     <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
-    <string name="about_android_id">Android ID: %s</string>
     <string name="article_button_load_full_article">Load full article</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="about_image_description">Application icon.</string>
 </resources>
