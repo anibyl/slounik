@@ -234,13 +234,14 @@ public class NavigationDrawerFragment extends Fragment {
             showGlobalContextActionBar();
         }
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 ((SlounikActivity) getActivity()).search(s);
+                MenuItemCompat.collapseActionView(searchItem);
                 return false;
             }
 

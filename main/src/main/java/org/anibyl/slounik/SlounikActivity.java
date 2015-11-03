@@ -142,20 +142,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         actionBar.setTitle(mTitle);
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = "first title";
-                break;
-            case 2:
-                mTitle = "second title";
-                break;
-            case 3:
-                mTitle = "third title";
-                break;
-        }
-    }
-
     public void search(final String wordToSearch) {
         resetArticles();
 
@@ -165,6 +151,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
             // TODO Make it visible for everyone.
             Notifier.toast(SlounikActivity.this, "Nothing to search.");
         } else {
+            mTitle = wordToSearch;
+            restoreActionBar();
 //            spinner.setVisibility(View.VISIBLE);
 //            searchButton.setEnabled(false);
 
@@ -241,8 +229,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((SlounikActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+            // Do smth with selected getArguments().getInt(ARG_SECTION_NUMBER);
         }
     }
 }
