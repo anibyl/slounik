@@ -186,7 +186,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
     private void resetControls() {
         progress.progressiveStop();
-        progress.setVisibility(View.INVISIBLE);
 //        spinner.setVisibility(View.INVISIBLE);
 //        searchButton.setEnabled(true);
     }
