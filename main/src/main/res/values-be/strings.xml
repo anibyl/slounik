@@ -6,4 +6,10 @@
     <string name="about_text">Слоўнік — кліенцкая праграма для сайта slounik.org.</string>
     <string name="about_author">Аўтар: Усевалад Чорны (anibyl@riseup.net)</string>
     <string name="article_button_load_full_article">Паказаць увесь артыкул</string>
+
+    <string-array name="languages">
+        <item>Беларуская</item>
+        <item>Расейская</item>
+        <item>Ангельская</item>
+    </string-array>
 </resources>

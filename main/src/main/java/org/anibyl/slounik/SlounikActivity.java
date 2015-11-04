@@ -45,10 +45,12 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         Preferences.initialize(this);
         Util.initialize(this);
+        if (LanguageSwitcher.initialize(this)) {
+            return;
+        }
+
 
         setContentView(R.layout.main);
-
-        LanguageSwitcher.initialize(this);
 
         progress = (SmoothProgressBar) findViewById(R.id.progress);
         progress.setVisibility(View.INVISIBLE);
