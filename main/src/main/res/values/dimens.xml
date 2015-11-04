@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding">10sp</dimen>
+    <dimen name="font_title_16">16sp</dimen>
     <dimen name="font_large">40sp</dimen>
     <dimen name="font_large_200">200sp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
