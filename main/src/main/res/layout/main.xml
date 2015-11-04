@@ -35,6 +35,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/listView"/>
+        <TextView
+                android:id="@+id/articles_amount"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textSize="@dimen/font_large_200"
+                android:gravity="center"
+                android:textColor="@color/transparent_white"/>
+
     </RelativeLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import org.anibyl.slounik.core.Preferences;
 import org.anibyl.slounik.dialogs.ArticleDialog;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
  */
 public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private ListView listView;
-    //    private TextView dicAmountCounter;
+    private TextView articlesAmount;
     private ArrayList<Article> articles;
     private SlounikAdapter adapter;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -56,7 +57,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 //        settingsButton = (ImageButton) findViewById(R.id.settings_button);
 //        spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
-//        dicAmountCounter = (TextView) findViewById(R.id.dic_amount_counter);
+        articlesAmount = (TextView) findViewById(R.id.articles_amount);
 
 //        spinner.setVisibility(View.INVISIBLE);
 
@@ -175,7 +176,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
                     adapter.notifyDataSetChanged();
 
-//                    dicAmountCounter.setText(String.valueOf(articles.size()));
+                    articlesAmount.setText(String.valueOf(articles.size()));
                 }
             });
         }
@@ -189,7 +190,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     }
 
     private void resetArticles() {
-//        dicAmountCounter.setText("");
+        articlesAmount.setText("");
         articles.clear();
         adapter.notifyDataSetChanged();
     }
