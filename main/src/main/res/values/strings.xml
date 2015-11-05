@@ -6,13 +6,13 @@
     <string name="about_text">Slounik is the client application for slounik.org website.</string>
     <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
     <string name="article_button_load_full_article">Load full article</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="about_image_description">Application icon.</string>
-    <string name="about_language_icon_description">Language switcher icon.</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="about_image_description" translatable="false">Application icon.</string>
+    <string name="about_language_icon_description" translatable="false">Language switcher icon.</string>
 
-    <string-array name="languages">
+    <string-array name="languages" translatable="false">
         <item>Беларуская</item>
         <item>Русский</item>
         <item>English</item>
