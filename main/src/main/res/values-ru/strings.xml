@@ -6,10 +6,4 @@
     <string name="about_text">Слоуник — клиентское приложение для сайта slounik.org.</string>
     <string name="about_author">Автор: Усевалад Чёрный (anibyl@riseup.net)</string>
     <string name="article_button_load_full_article">Показать всю статью</string>
-
-    <string-array name="languages">
-        <item>Белорусский</item>
-        <item>Русский</item>
-        <item>Английский</item>
-    </string-array>
 </resources>
