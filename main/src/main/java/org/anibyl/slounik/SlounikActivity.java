@@ -47,7 +47,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
             return;
         }
 
-
         setContentView(R.layout.main);
 
         progress = (SmoothProgressBar) findViewById(R.id.progress);
