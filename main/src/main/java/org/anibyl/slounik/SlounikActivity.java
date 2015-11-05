@@ -1,14 +1,21 @@
 package org.anibyl.slounik;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
-import org.anibyl.slounik.dialogs.AboutDialog;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import org.anibyl.slounik.core.Preferences;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
@@ -18,38 +25,35 @@ import java.util.ArrayList;
 
 /**
  * The main activity.
- *
+ * <p>
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
-public class SlounikActivity extends Activity {
-    private EditText searchBox;
-    private ImageButton searchButton;
-    private ImageButton settingsButton;
-    private ProgressBar spinner;
+public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private ListView listView;
-    private AboutDialog aboutDialog;
-    private TextView dicAmountCounter;
+    private TextView articlesAmount;
     private ArrayList<Article> articles;
     private SlounikAdapter adapter;
+    private NavigationDrawerFragment navigationDrawerFragment;
+    private CharSequence title;
+    private SmoothProgressBar progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Preferences.initialize(this);
         Util.initialize(this);
+        if (LanguageSwitcher.initialize(this)) {
+            return;
+        }
+
 
         setContentView(R.layout.main);
 
-        searchBox = (EditText) findViewById(R.id.search_box);
-        searchButton = (ImageButton) findViewById(R.id.search_button);
-        settingsButton = (ImageButton) findViewById(R.id.settings_button);
-        spinner = (ProgressBar) findViewById(R.id.spinner);
+        progress = (SmoothProgressBar) findViewById(R.id.progress);
+        progress.setVisibility(View.INVISIBLE);
         listView = (ListView) findViewById(R.id.listView);
-        dicAmountCounter = (TextView) findViewById(R.id.dic_amount_counter);
-
-        aboutDialog = new AboutDialog(SlounikActivity.this, getString(R.string.about_title));
-
-        spinner.setVisibility(View.INVISIBLE);
+        articlesAmount = (TextView) findViewById(R.id.articles_amount);
 
         articles = new ArrayList<Article>();
         adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
@@ -61,59 +65,59 @@ public class SlounikActivity extends Activity {
             }
         });
 
-        searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                    || (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN)) {
-                    search();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
+        navigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                search();
-            }
-        });
+        setTitle(R.string.app_name);
+        title = getTitle();
 
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aboutDialog.show();
-            }
-        });
+        // Set up the drawer.
+        navigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_MENU:
-                aboutDialog.show();
-                return true;
-        }
-        return super.onKeyDown(keyCode, event);
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .commit();
     }
 
-    private void search() {
-        resetArticles();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!navigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        final String wordToSearch = searchBox.getText().toString();
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(title);
+    }
+
+    public void search(final String wordToSearch) {
+        resetArticles();
 
         if (wordToSearch.equals("")) {
             // TODO Make it visible for everyone.
             Notifier.toast(SlounikActivity.this, "Nothing to search.");
         } else {
-            spinner.setVisibility(View.VISIBLE);
-            searchButton.setEnabled(false);
-
-            InputMethodManager imm = (InputMethodManager)getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+            title = wordToSearch;
+            restoreActionBar();
+            progress.setVisibility(View.VISIBLE);
+            progress.progressiveStart();
+            navigationDrawerFragment.setSearchEnabled(false);
 
             SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                 @Override
@@ -132,20 +136,59 @@ public class SlounikActivity extends Activity {
 
                     adapter.notifyDataSetChanged();
 
-                    dicAmountCounter.setText(String.valueOf(articles.size()));
+                    articlesAmount.setText(String.valueOf(articles.size()));
                 }
             });
         }
     }
 
     private void resetControls() {
-        spinner.setVisibility(View.INVISIBLE);
-        searchButton.setEnabled(true);
+        progress.progressiveStop();
+        navigationDrawerFragment.setSearchEnabled(true);
     }
 
     private void resetArticles() {
-        dicAmountCounter.setText("");
+        articlesAmount.setText("");
         articles.clear();
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            // Do smth with selected getArguments().getInt(ARG_SECTION_NUMBER);
+        }
     }
 }
