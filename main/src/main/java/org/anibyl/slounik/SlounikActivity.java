@@ -1,7 +1,6 @@
 package org.anibyl.slounik;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 
 /**
  * The main activity.
- * <p/>
+ * <p>
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
 public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -35,8 +33,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     private TextView articlesAmount;
     private ArrayList<Article> articles;
     private SlounikAdapter adapter;
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private CharSequence mTitle;
+    private NavigationDrawerFragment navigationDrawerFragment;
+    private CharSequence title;
     private SmoothProgressBar progress;
 
     @Override
@@ -54,14 +52,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         progress = (SmoothProgressBar) findViewById(R.id.progress);
         progress.setVisibility(View.INVISIBLE);
-//        searchBox = (EditText) findViewById(R.id.search_box);
-//        searchButton = (ImageButton) findViewById(R.id.search_button);
-//        settingsButton = (ImageButton) findViewById(R.id.settings_button);
-//        spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
         articlesAmount = (TextView) findViewById(R.id.articles_amount);
-
-//        spinner.setVisibility(View.INVISIBLE);
 
         articles = new ArrayList<Article>();
         adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
@@ -73,41 +65,14 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
             }
         });
 
-//        searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE
-//                    || (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN)) {
-//                    search();
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//        });
-
-//        searchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                search();
-//            }
-//        });
-
-//        settingsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                aboutDialog.show();
-//            }
-//        });
-
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         setTitle(R.string.app_name);
-        mTitle = getTitle();
+        title = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
+        navigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
@@ -123,7 +88,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!navigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -138,28 +103,21 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(title);
     }
 
     public void search(final String wordToSearch) {
         resetArticles();
 
-//        final String wordToSearch = searchBox.getText().toString();
-
         if (wordToSearch.equals("")) {
             // TODO Make it visible for everyone.
             Notifier.toast(SlounikActivity.this, "Nothing to search.");
         } else {
-            mTitle = wordToSearch;
+            title = wordToSearch;
             restoreActionBar();
             progress.setVisibility(View.VISIBLE);
             progress.progressiveStart();
-//            spinner.setVisibility(View.VISIBLE);
-//            searchButton.setEnabled(false);
-
-            InputMethodManager imm = (InputMethodManager) getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+            navigationDrawerFragment.setSearchEnabled(false);
 
             SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                 @Override
@@ -186,8 +144,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
     private void resetControls() {
         progress.progressiveStop();
-//        spinner.setVisibility(View.INVISIBLE);
-//        searchButton.setEnabled(true);
+        navigationDrawerFragment.setSearchEnabled(true);
     }
 
     private void resetArticles() {

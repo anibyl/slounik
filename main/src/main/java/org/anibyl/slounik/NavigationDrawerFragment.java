@@ -55,6 +55,7 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private MenuItem searchItem;
 
     public NavigationDrawerFragment() {
     }
@@ -189,6 +190,12 @@ public class NavigationDrawerFragment extends Fragment {
         });
     }
 
+    public void setSearchEnabled(boolean enabled) {
+        if (searchItem != null) {
+            searchItem.setEnabled(enabled);
+        }
+    }
+
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerLayout != null) {
@@ -237,7 +244,7 @@ public class NavigationDrawerFragment extends Fragment {
             showGlobalContextActionBar();
         }
 
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
