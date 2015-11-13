@@ -1,9 +1,6 @@
-/.idea/
-/bin/
-/gen/
-/out/
-/key/
-*.iml
-proguard-project.txt
+/.idea
+/build
+.gradle
 local.properties
-/Slounik.apk
+.DS_Store
+*.iml

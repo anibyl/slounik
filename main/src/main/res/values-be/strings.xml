@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Слоўнік</string>
+    <string name="url_name">slounik.org</string>
+    <string name="about_title">Пра праграму</string>
+    <string name="about_text">Слоўнік — кліенцкая праграма для сайта slounik.org.</string>
+    <string name="about_author">Аўтар: Усевалад Чорны (anibyl@riseup.net)</string>
+    <string name="article_button_load_full_article">Паказаць увесь артыкул</string>
+</resources>
