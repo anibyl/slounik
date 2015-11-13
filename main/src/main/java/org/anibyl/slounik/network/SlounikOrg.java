@@ -21,7 +21,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -30,20 +29,15 @@ import java.util.ArrayList;
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
 public class SlounikOrg {
-    private static final String URL = "http://slounik.org";
+    private static String url = "slounik.org";
     private static RequestQueue queue;
 
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
         final String requestStr;
 
-        String mainDomain = Server.getMainUrl();
-        if (mainDomain == null) {
-            mainDomain = "slounik.org";
-        }
-
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(mainDomain)
+                .authority(url)
                 .appendPath("search")
                 .appendQueryParameter("search", wordToSearch);
 
@@ -59,11 +53,19 @@ public class SlounikOrg {
     }
 
     public static void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
-        final String requestStr = URL + article.getLinkToFullDescription();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority(url)
+                .appendPath(article.getLinkToFullDescription().substring(1));
+        final String requestStr = builder.build().toString();
 
         SlounikOrgRequest request = getArticleDescriptionLoadRequest(requestStr, article, callBack);
 
         getQueue(context).add(request);
+    }
+
+    public static void setMainUrl(String mainUrl) {
+        url = mainUrl;
     }
 
     private static RequestQueue getQueue(final Context context) {
@@ -98,14 +100,11 @@ public class SlounikOrg {
                                 for (Element e : dicsElements) {
                                     String dicRequestStr = e.attr("href");
                                     if (dicRequestStr != null) {
-                                        try {
-                                            dicRequestStr = URL + "/" + URLEncoder.encode(dicRequestStr.substring(1),
-                                                    HTTP.UTF_8);
-                                        } catch (UnsupportedEncodingException e1) {
-                                            Notifier.log("UnsupportedEncodingException");
-                                            setArticleList(null);
-                                            continue;
-                                        }
+                                        Uri.Builder builder = new Uri.Builder();
+                                        builder.scheme("http")
+                                                .authority(url)
+                                                .appendPath(dicRequestStr.substring(1));
+                                        dicRequestStr = builder.build().toString();
                                         SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
                                                 new ArticlesCallback() {
                                                     @Override

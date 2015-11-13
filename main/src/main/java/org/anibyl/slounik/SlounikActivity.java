@@ -43,7 +43,12 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         super.onCreate(savedInstanceState);
 
         Preferences.initialize(this);
-        Server.loadConfig(this);
+        Server.loadConfig(this, new Server.Callback() {
+            @Override
+            public void invoke() {
+                SlounikOrg.setMainUrl(Server.getMainUrl());
+            }
+        });
         if (LanguageSwitcher.initialize(this)) {
             return;
         }
