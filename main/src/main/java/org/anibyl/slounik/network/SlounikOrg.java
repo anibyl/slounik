@@ -36,9 +36,14 @@ public class SlounikOrg {
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
         final String requestStr;
 
+        String mainDomain = Server.getMainUrl();
+        if (mainDomain == null) {
+            mainDomain = "slounik.org";
+        }
+
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority("slounik.org")
+                .authority(mainDomain)
                 .appendPath("search")
                 .appendQueryParameter("search", wordToSearch);
 

@@ -19,6 +19,7 @@ import org.anibyl.slounik.core.Preferences;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
+import org.anibyl.slounik.network.Server;
 import org.anibyl.slounik.network.SlounikOrg;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         super.onCreate(savedInstanceState);
 
         Preferences.initialize(this);
-        Util.initialize(this);
+        Server.loadConfig(this);
         if (LanguageSwitcher.initialize(this)) {
             return;
         }
