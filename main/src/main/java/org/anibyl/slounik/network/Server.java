@@ -47,7 +47,6 @@ public class Server {
                     @Override
                     public void onResponse(final String response) {
                         new AsyncTask<String, Void, Config>() {
-                            private boolean testDevice;
                             @Override
                             protected Config doInBackground(String... params) {
                                 Config config = new Config();
