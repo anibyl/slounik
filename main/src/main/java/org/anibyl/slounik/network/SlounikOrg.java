@@ -1,17 +1,19 @@
 package org.anibyl.slounik.network;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.android.volley.VolleyError;
 import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
+import org.anibyl.slounik.core.Preferences;
 import org.apache.http.protocol.HTTP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,13 +35,18 @@ public class SlounikOrg {
 
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
         final String requestStr;
-        try {
-            requestStr = URL + "/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            Notifier.toast(context, "Can not encode.");
-            callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
-            return;
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("slounik.org")
+                .appendPath("search")
+                .appendQueryParameter("search", wordToSearch);
+
+        if (Preferences.getSearchInTitles()) {
+            builder.appendQueryParameter("un", "1");
         }
+
+        requestStr = builder.build().toString();
 
         SlounikOrgRequest request = getInitialLoadRequest(requestStr, context, callBack);
 
