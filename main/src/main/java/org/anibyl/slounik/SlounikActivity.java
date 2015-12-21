@@ -14,13 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import org.anibyl.slounik.core.Preferences;
 import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
 import org.anibyl.slounik.network.Server;
 import org.anibyl.slounik.network.SlounikOrg;
+import org.anibyl.slounik.ui.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     private SlounikAdapter adapter;
     private NavigationDrawerFragment navigationDrawerFragment;
     private CharSequence title;
-    private SmoothProgressBar progress;
+    private ProgressBar progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,8 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         setContentView(R.layout.main);
 
-        progress = (SmoothProgressBar) findViewById(R.id.progress);
-        progress.setVisibility(View.INVISIBLE);
+        progress = (ProgressBar) findViewById(R.id.progress);
+
         listView = (ListView) findViewById(R.id.listView);
         articlesAmount = (TextView) findViewById(R.id.articles_amount);
 
@@ -120,7 +120,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         } else {
             title = wordToSearch;
             restoreActionBar();
-            progress.setVisibility(View.VISIBLE);
             progress.progressiveStart();
             navigationDrawerFragment.setSearchEnabled(false);
 

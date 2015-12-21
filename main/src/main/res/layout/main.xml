@@ -13,7 +13,7 @@
             android:id="@+id/container"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        <org.anibyl.slounik.ui.ProgressBar
                 android:id="@+id/progress"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
