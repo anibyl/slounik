@@ -1,17 +1,19 @@
 package org.anibyl.slounik.network;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.android.volley.VolleyError;
 import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
+import org.anibyl.slounik.core.Preferences;
 import org.apache.http.protocol.HTTP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +21,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -28,18 +29,23 @@ import java.util.ArrayList;
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
 public class SlounikOrg {
-    private static final String URL = "http://slounik.org";
+    private static String url = "slounik.org";
     private static RequestQueue queue;
 
     public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
         final String requestStr;
-        try {
-            requestStr = URL + "/search?search=" + URLEncoder.encode(wordToSearch, HTTP.UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            Notifier.toast(context, "Can not encode.");
-            callBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
-            return;
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority(url)
+                .appendPath("search")
+                .appendQueryParameter("search", wordToSearch);
+
+        if (Preferences.getSearchInTitles()) {
+            builder.appendQueryParameter("un", "1");
         }
+
+        requestStr = builder.build().toString();
 
         SlounikOrgRequest request = getInitialLoadRequest(requestStr, context, callBack);
 
@@ -47,11 +53,19 @@ public class SlounikOrg {
     }
 
     public static void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
-        final String requestStr = URL + article.getLinkToFullDescription();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority(url)
+                .appendPath(article.getLinkToFullDescription().substring(1));
+        final String requestStr = builder.build().toString();
 
         SlounikOrgRequest request = getArticleDescriptionLoadRequest(requestStr, article, callBack);
 
         getQueue(context).add(request);
+    }
+
+    public static void setMainUrl(String mainUrl) {
+        url = mainUrl;
     }
 
     private static RequestQueue getQueue(final Context context) {
@@ -68,7 +82,7 @@ public class SlounikOrg {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                        Notifier.toast(context, "Response received.");
+                        Notifier.toast(context, "Response received.", true);
 
                         new AsyncTask<Void, Void, Void>() {
                             private int dicsAmount;
@@ -86,14 +100,11 @@ public class SlounikOrg {
                                 for (Element e : dicsElements) {
                                     String dicRequestStr = e.attr("href");
                                     if (dicRequestStr != null) {
-                                        try {
-                                            dicRequestStr = URL + "/" + URLEncoder.encode(dicRequestStr.substring(1),
-                                                    HTTP.UTF_8);
-                                        } catch (UnsupportedEncodingException e1) {
-                                            Notifier.log("UnsupportedEncodingException");
-                                            setArticleList(null);
-                                            continue;
-                                        }
+                                        Uri.Builder builder = new Uri.Builder();
+                                        builder.scheme("http")
+                                                .authority(url)
+                                                .appendPath(dicRequestStr.substring(1));
+                                        dicRequestStr = builder.build().toString();
                                         SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
                                                 new ArticlesCallback() {
                                                     @Override
@@ -131,7 +142,7 @@ public class SlounikOrg {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Notifier.toast(context, "Error response.");
+                        Notifier.toast(context, "Error response.", true);
                         callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });

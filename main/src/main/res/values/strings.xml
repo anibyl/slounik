@@ -6,6 +6,8 @@
     <string name="about_text">Slounik is the client application for slounik.org website.</string>
     <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
     <string name="article_button_load_full_article">Load full article</string>
+    <string name="drawer_checkbox_search_in_title">Search only in title</string>
+    <string name="toast_text_copied">Text copied to clipboard.</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

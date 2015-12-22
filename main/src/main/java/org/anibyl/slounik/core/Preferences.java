@@ -11,22 +11,63 @@ import android.os.Build;
  */
 public class Preferences {
     private static final String LANGUAGE = "language";
+    private static final String SEARCH_IN_TITLES = "search_in_titles";
 
-    private static SharedPreferences sharedPreferences;
+    private static PreferencesManager manager;
 
     public static void initialize(Context context) {
-        sharedPreferences = context.getSharedPreferences("org.anibyl.slounik", Context.MODE_PRIVATE);
+        manager = new PreferencesManager(context.getSharedPreferences("org.anibyl.slounik", Context.MODE_PRIVATE));
     }
 
     public static void setLanguage(String language) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            sharedPreferences.edit().putString(LANGUAGE, language).apply();
-        } else {
-            sharedPreferences.edit().putString(LANGUAGE, language).commit();
-        }
+        manager.save(LANGUAGE, language);
     }
 
     public static String getLanguage() {
-        return sharedPreferences.getString(LANGUAGE, null);
+        return manager.getString(LANGUAGE);
+    }
+
+    public static void setSearchInTitles(boolean searchInTitles) {
+        manager.save(SEARCH_IN_TITLES, searchInTitles);
+    }
+
+    public static boolean getSearchInTitles() {
+        return manager.getBoolean(SEARCH_IN_TITLES);
+    }
+
+    private static class PreferencesManager {
+        private SharedPreferences sharedPreferences;
+
+        public PreferencesManager(SharedPreferences sharedPreferences) {
+            this.sharedPreferences = sharedPreferences;
+        }
+
+        private void save(String key, boolean value) {
+            apply(edit().putBoolean(key, value));
+        }
+
+        private void save(String key, String value) {
+            apply(edit().putString(key, value));
+        }
+
+        private boolean getBoolean(String key) {
+            return sharedPreferences.getBoolean(key, false);
+        }
+
+        private String getString(String key) {
+            return sharedPreferences.getString(key, null);
+        }
+
+        private SharedPreferences.Editor edit() {
+            return sharedPreferences.edit();
+        }
+
+        private static void apply(SharedPreferences.Editor editor) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                editor.apply();
+            } else {
+                editor.commit();
+            }
+        }
     }
 }

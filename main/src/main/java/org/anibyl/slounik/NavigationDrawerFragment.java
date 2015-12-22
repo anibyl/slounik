@@ -14,9 +14,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.*;
+import org.anibyl.slounik.core.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.about, container, false);
+        return inflater.inflate(R.layout.drawer, container, false);
     }
 
     public boolean isDrawerOpen() {
@@ -166,6 +165,15 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        CheckBox checkBoxSearchInTitle = (CheckBox) getActivity().findViewById(R.id.checkbox_search_in_title);
+        checkBoxSearchInTitle.setChecked(Preferences.getSearchInTitles());
+        checkBoxSearchInTitle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Preferences.setSearchInTitles(isChecked);
+            }
+        });
 
         Spinner languageSwitcher = (Spinner) getActivity().findViewById(R.id.language_switcher);
         List<String> list = new ArrayList<String>();
