@@ -2,6 +2,7 @@ package org.anibyl.slounik;
 
 import android.text.Html;
 import android.text.Spanned;
+import org.anibyl.slounik.network.DictionarySiteCommunicator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -12,16 +13,16 @@ import org.jsoup.select.Elements;
  * Created by Usievaład Čorny on 26.02.2015 14:06.
  */
 public class Article {
+    private final DictionarySiteCommunicator communicator;
     private String title;
     private Spanned description;
     private String dictionary;
     private String linkToFullDescription;
     private Spanned fullDescription;
 
-    public Article() {
-    }
+    public Article(DictionarySiteCommunicator communicator, Element element) {
+        this.communicator = communicator;
 
-    public Article(Element element) {
         if (element != null) {
             Elements elements = element.select("a.tsb");
             if (elements != null && elements.size() != 0) {
@@ -105,5 +106,9 @@ public class Article {
 
     public void setFullDescription(Spanned fullDescription) {
         this.fullDescription = fullDescription;
+    }
+
+    public DictionarySiteCommunicator getCommunicator() {
+        return communicator;
     }
 }

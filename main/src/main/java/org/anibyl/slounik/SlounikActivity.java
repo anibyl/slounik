@@ -19,6 +19,7 @@ import org.anibyl.slounik.dialogs.ArticleDialog;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
 import org.anibyl.slounik.network.Server;
+import org.anibyl.slounik.network.Skarnik;
 import org.anibyl.slounik.network.SlounikOrg;
 import org.anibyl.slounik.ui.ProgressBar;
 
@@ -38,15 +39,22 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     private CharSequence title;
     private ProgressBar progress;
 
+    private SlounikOrg slounikOrg;
+    private Skarnik skarnik;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        slounikOrg = new SlounikOrg();
+        skarnik = new Skarnik();
 
         Preferences.initialize(this);
         Server.loadConfig(this, new Server.Callback() {
             @Override
             public void invoke() {
-                SlounikOrg.setMainUrl(Server.getMainUrl());
+                slounikOrg.setUrl(Server.getMainUrl());
+                skarnik.setUrl(Server.getSkarnikUrl());
             }
         });
         if (LanguageSwitcher.initialize(this)) {
@@ -122,7 +130,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
             progress.progressiveStart();
             navigationDrawerFragment.setSearchEnabled(false);
 
-            SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
+            slounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
                 @Override
                 public void invoke(final ArticlesInfo info) {
                     ArrayList<Article> loadedArticles = info.getArticles();

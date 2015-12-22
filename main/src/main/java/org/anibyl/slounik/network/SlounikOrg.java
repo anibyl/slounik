@@ -5,12 +5,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
 import com.android.volley.NetworkResponse;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.core.Preferences;
@@ -28,16 +26,18 @@ import java.util.ArrayList;
  * <p/>
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
-public class SlounikOrg {
-    private static String url = "slounik.org";
-    private static RequestQueue queue;
+public class SlounikOrg extends DictionarySiteCommunicator {
 
-    public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
+    public SlounikOrg() {
+        setUrl("slounik.org");
+    }
+
+    public void loadArticles(final String wordToSearch, final Context context, final ArticlesCallback callBack) {
         final String requestStr;
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(url)
+                .authority(getUrl())
                 .appendPath("search")
                 .appendQueryParameter("search", wordToSearch);
 
@@ -47,15 +47,15 @@ public class SlounikOrg {
 
         requestStr = builder.build().toString();
 
-        SlounikOrgRequest request = getInitialLoadRequest(requestStr, context, callBack);
+        SlounikOrgRequest request = getLoadRequest(requestStr, context, callBack);
 
         getQueue(context).add(request);
     }
 
-    public static void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
+    public void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(url)
+                .authority(getUrl())
                 .appendPath(article.getLinkToFullDescription().substring(1));
         final String requestStr = builder.build().toString();
 
@@ -64,20 +64,8 @@ public class SlounikOrg {
         getQueue(context).add(request);
     }
 
-    public static void setMainUrl(String mainUrl) {
-        url = mainUrl;
-    }
-
-    private static RequestQueue getQueue(final Context context) {
-        if (queue == null) {
-            queue = Volley.newRequestQueue(context);
-        }
-
-        return queue;
-    }
-
-    private static SlounikOrgRequest getInitialLoadRequest(final String requestStr, final Context context,
-                                                           final ArticlesCallback callback) {
+    protected SlounikOrgRequest getLoadRequest(final String requestStr, final Context context,
+            final ArticlesCallback callback) {
         return new SlounikOrgRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -102,7 +90,7 @@ public class SlounikOrg {
                                     if (dicRequestStr != null) {
                                         Uri.Builder builder = new Uri.Builder();
                                         builder.scheme("http")
-                                                .authority(url)
+                                                .authority(getUrl())
                                                 .appendPath(dicRequestStr.substring(1));
                                         dicRequestStr = builder.build().toString();
                                         SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
@@ -113,7 +101,7 @@ public class SlounikOrg {
                                                     }
                                                 });
 
-                                        queue.add(eachDicRequest);
+                                        getQueue(context).add(eachDicRequest);
                                         Notifier.log("Request added to queue: " + eachDicRequest);
                                     }
                                 }
@@ -148,8 +136,7 @@ public class SlounikOrg {
                 });
     }
 
-    private static SlounikOrgRequest getPerDicLoadingRequest(final String dicRequestStr,
-                                                         final ArticlesCallback callback) {
+    private SlounikOrgRequest getPerDicLoadingRequest(final String dicRequestStr, final ArticlesCallback callback) {
         return new SlounikOrgRequest(dicRequestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -169,7 +156,7 @@ public class SlounikOrg {
 
                                 ArrayList<Article> list = new ArrayList<Article>();
                                 for (Element e : articleElements) {
-                                    list.add(new Article(e).setDictionary(dictionaryTitle));
+                                    list.add(new Article(SlounikOrg.this, e).setDictionary(dictionaryTitle));
                                 }
 
                                 return list;

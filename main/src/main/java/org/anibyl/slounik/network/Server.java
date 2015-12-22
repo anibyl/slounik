@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.R;
 import org.anibyl.slounik.Util;
 import org.json.JSONArray;
@@ -56,6 +57,9 @@ public class Server {
                                     String mainUrl = json.getString("mainUrl");
                                     config.setMainUrl(mainUrl);
 
+                                    String skarnikUrl = json.getString("skarnikUrl");
+                                    config.setSkarnikUrl(skarnikUrl);
+
                                     JSONArray array = json.getJSONArray("testDevices");
                                     JSONObject device;
                                     for (int i = 0; i < array.length(); ++i) {
@@ -65,6 +69,7 @@ public class Server {
                                         }
                                     }
                                 } catch (JSONException ignored) {
+                                    Notifier.log("Config can not be read.");
                                 }
                                 return config;
                             }
@@ -100,6 +105,15 @@ public class Server {
         }
     }
 
+    @Nullable
+    public static String getSkarnikUrl() {
+        if (config != null) {
+            return config.getSkarnikUrl();
+        } else {
+            return null;
+        }
+    }
+
     public static boolean isTestDevice() {
         return config != null && config.isTestDevice();
     }
@@ -107,6 +121,7 @@ public class Server {
     private static class Config {
         private boolean testDevice;
         private String mainUrl;
+        private String skarnikUrl;
 
         public Config() {
         }
@@ -125,6 +140,14 @@ public class Server {
 
         public void setMainUrl(String mainUrl) {
             this.mainUrl = mainUrl;
+        }
+
+        public String getSkarnikUrl() {
+            return skarnikUrl;
+        }
+
+        public void setSkarnikUrl(String skarnikUrl) {
+            this.skarnikUrl = skarnikUrl;
         }
     }
 }
