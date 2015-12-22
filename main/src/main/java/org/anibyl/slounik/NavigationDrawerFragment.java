@@ -5,16 +5,25 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
 import org.anibyl.slounik.core.Preferences;
 
 import java.util.ArrayList;
@@ -96,7 +105,7 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Users of this fragment must call this method to set up the navigation drawer interactions.
      *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
+     * @param fragmentId The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
     public void setUp(final int fragmentId, final DrawerLayout drawerLayout) {
@@ -116,7 +125,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
