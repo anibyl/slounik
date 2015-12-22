@@ -5,7 +5,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_black">
+        android:background="@color/transparent_black"
+        >
 
     <TextView
             android:layout_width="match_parent"
@@ -13,16 +14,19 @@
             android:id="@+id/dictionary"
             android:typeface="serif"
             android:padding="@dimen/padding"
-            android:textSize="@dimen/font_title_16"/>
+            android:textSize="@dimen/font_title_16"
+            />
 
     <TextView
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            android:id="@+id/description"
             android:typeface="serif"
-            android:padding="@dimen/padding"/>
-
+            android:padding="@dimen/padding"
+            android:textIsSelectable="true"
+            android:longClickable="true"
+            />
 
     <org.anibyl.slounik.ui.ProgressBar
             android:id="@+id/article_progress"
@@ -48,5 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/article_button_load_full_article"
-            android:id="@+id/load"/>
+            android:id="@+id/load"
+            />
 </LinearLayout>

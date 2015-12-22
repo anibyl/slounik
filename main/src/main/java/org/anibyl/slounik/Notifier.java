@@ -12,11 +12,19 @@ import org.anibyl.slounik.network.Server;
  */
 public class Notifier {
     public static void toast(Context context, String text) {
-        toast(context, text, Toast.LENGTH_SHORT);
+        toast(context, text, false);
     }
 
-    public static void toast(Context context, String text, int length) {
-        if (Server.isTestDevice()) {
+    public static void toast(Context context, int id) {
+        toast(context, context.getResources().getString(id), false);
+    }
+
+    public static void toast(Context context, String text, boolean developerMode) {
+        toast(context, text, developerMode, Toast.LENGTH_SHORT);
+    }
+
+    public static void toast(Context context, String text, boolean developerMode, int length) {
+        if (!developerMode || Server.isTestDevice()) {
             Toast.makeText(context, text, length).show();
         }
     }

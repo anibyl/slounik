@@ -82,7 +82,7 @@ public class SlounikOrg {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                        Notifier.toast(context, "Response received.");
+                        Notifier.toast(context, "Response received.", true);
 
                         new AsyncTask<Void, Void, Void>() {
                             private int dicsAmount;
@@ -142,7 +142,7 @@ public class SlounikOrg {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Notifier.toast(context, "Error response.");
+                        Notifier.toast(context, "Error response.", true);
                         callback.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
                     }
                 });

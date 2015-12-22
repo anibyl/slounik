@@ -116,7 +116,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
         if (wordToSearch.equals("")) {
             // TODO Make it visible for everyone.
-            Notifier.toast(SlounikActivity.this, "Nothing to search.");
+            Notifier.toast(SlounikActivity.this, "Nothing to search.", true);
         } else {
             title = wordToSearch;
             restoreActionBar();
