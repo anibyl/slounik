@@ -1,7 +1,5 @@
 package org.anibyl.slounik.network;
 
-import org.anibyl.slounik.Article;
-
 import java.util.ArrayList;
 
 /**
@@ -46,5 +44,10 @@ public class ArticlesInfo {
 
     public Status getStatus() {
         return status;
+    }
+
+    ArticlesInfo setStatus(Status status) {
+        this.status = status;
+        return this;
     }
 }

@@ -9,7 +9,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.core.Preferences;
 import org.apache.http.protocol.HTTP;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
 public class SlounikOrg extends DictionarySiteCommunicator {
-
     public SlounikOrg() {
         setUrl("slounik.org");
     }
@@ -70,8 +68,6 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                        Notifier.toast(context, "Response received.", true);
-
                         new AsyncTask<Void, Void, Void>() {
                             private int dicsAmount;
 
@@ -136,6 +132,56 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                 });
     }
 
+    @Override
+    protected Article parseElement(final Element element) {
+        return new Article(this) {
+            @Override
+            Article fill() {
+                if (element != null) {
+                    Elements elements = element.select("a.tsb");
+                    if (elements != null && elements.size() != 0) {
+                        Element link = elements.first();
+                        setTitle(link.html());
+                        setLinkToFullDescription(link.attr("href"));
+
+                        if (getTitle() != null) {
+                            elements = element.select("a.ts");
+                            if (elements != null && elements.size() != 0) {
+                                setDescription(Html.fromHtml(elements.first().html()));
+                            }
+                        }
+                    }
+
+                    if (getTitle() == null) {
+                        elements = element.select("b");
+                        if (elements != null && elements.size() != 0) {
+                            setTitle(elements.first().html());
+
+                            if (getTitle() != null) {
+                                setDescription(Html.fromHtml(element.html()));
+                            }
+                        }
+                    }
+
+                    if (getTitle() != null) {
+                        setTitle(getTitle().replaceAll("<u>", ""));
+                        setTitle(getTitle().replaceAll("</u>", "́"));
+
+                        // Escape all other HTML tags, e.g. second <b>.
+                        setTitle(Jsoup.parse(getTitle()).text());
+                    }
+
+                    elements = element.select("a.la1");
+                    if (elements != null && elements.size() != 0) {
+                        setDictionary(elements.first().html());
+                    }
+                }
+
+                return this;
+            }
+        }.fill();
+    }
+
     private SlounikOrgRequest getPerDicLoadingRequest(final String dicRequestStr, final ArticlesCallback callback) {
         return new SlounikOrgRequest(dicRequestStr,
                 new Response.Listener<String>() {
@@ -154,9 +200,9 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                                     dictionaryTitle = dictionaryTitles.first().html();
                                 }
 
-                                ArrayList<Article> list = new ArrayList<Article>();
+                                ArrayList<Article> list = new ArrayList<>();
                                 for (Element e : articleElements) {
-                                    list.add(new Article(SlounikOrg.this, e).setDictionary(dictionaryTitle));
+                                    list.add(parseElement(e).setDictionary(dictionaryTitle));
                                 }
 
                                 return list;
@@ -193,7 +239,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
 
                                 article.setFullDescription(Html.fromHtml(articleElement.html()));
 
-                                ArrayList<Article> list = new ArrayList<Article>();
+                                ArrayList<Article> list = new ArrayList<>();
                                 list.add(article);
 
                                 return list;

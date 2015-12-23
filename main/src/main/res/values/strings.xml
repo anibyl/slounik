@@ -9,6 +9,10 @@
     <string name="drawer_checkbox_search_in_title">Search only in title</string>
     <string name="toast_text_copied">Text copied to clipboard.</string>
 
+    <string name="skarnik_dictionary_rus_bel">Russian-Belarusian Dictionary</string>
+    <string name="skarnik_dictionary_bel_rus">Belarusian-Russian Dictionary</string>
+    <string name="skarnik_dictionary_explanatory">Belarusian Explanatory Dictionary</string>
+
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="about_image_description" translatable="false">Application icon.</string>
