@@ -15,6 +15,7 @@ public abstract class DictionarySiteCommunicator implements ArticlesLoader {
     private RequestQueue queue;
 
     public abstract void loadArticleDescription(Article article, Context context, ArticlesCallback callBack);
+    public abstract boolean enabled();
 
     public void setUrl(final String mainUrl) {
         url = mainUrl;

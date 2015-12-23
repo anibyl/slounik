@@ -62,6 +62,11 @@ public class SlounikOrg extends DictionarySiteCommunicator {
         getQueue(context).add(request);
     }
 
+    @Override
+    public boolean enabled() {
+        return Preferences.getUseSlounikOrg();
+    }
+
     protected SlounikOrgRequest getLoadRequest(final String requestStr, final Context context,
             final ArticlesCallback callback) {
         return new SlounikOrgRequest(requestStr,

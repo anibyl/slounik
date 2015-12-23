@@ -11,6 +11,8 @@ import android.os.Build;
  */
 public class Preferences {
     private static final String LANGUAGE = "language";
+    private static final String USE_SLOUNIK_ORG = "use_slounik_org";
+    private static final String USE_SKARNIK = "use_skarnik";
     private static final String SEARCH_IN_TITLES = "search_in_titles";
 
     private static PreferencesManager manager;
@@ -25,6 +27,22 @@ public class Preferences {
 
     public static String getLanguage() {
         return manager.getString(LANGUAGE);
+    }
+
+    public static void setUseSlounikOrg(boolean useSlounikOrg) {
+        manager.save(USE_SLOUNIK_ORG, useSlounikOrg);
+    }
+
+    public static boolean getUseSlounikOrg() {
+        return manager.getBoolean(USE_SLOUNIK_ORG, true);
+    }
+
+    public static void setUseSkarnik(boolean useSkarnik) {
+        manager.save(USE_SKARNIK, useSkarnik);
+    }
+
+    public static boolean getUseSkarnik() {
+        return manager.getBoolean(USE_SKARNIK, true);
     }
 
     public static void setSearchInTitles(boolean searchInTitles) {
@@ -52,6 +70,10 @@ public class Preferences {
 
         private boolean getBoolean(String key) {
             return sharedPreferences.getBoolean(key, false);
+        }
+
+        private boolean getBoolean(String key, boolean defaultValue) {
+            return sharedPreferences.getBoolean(key, defaultValue);
         }
 
         private String getString(String key) {

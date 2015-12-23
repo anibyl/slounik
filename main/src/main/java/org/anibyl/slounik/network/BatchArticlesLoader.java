@@ -18,15 +18,24 @@ public class BatchArticlesLoader implements ArticlesLoader {
 
     @Override
     public void loadArticles(String wordToSearch, Context context, final ArticlesCallback communicatorCallBack) {
+        int activeCommunicators = 0;
+
         for (DictionarySiteCommunicator communicator : communicators) {
-            ArticlesCallback callback = new ArticlesCallback() {
-                @Override
-                public void invoke(ArticlesInfo info) {
-                    ((BatchArticlesCallback)communicatorCallBack).invoke(this, info);
-                }
-            };
-            ((BatchArticlesCallback)communicatorCallBack).addCallback(callback);
-            communicator.loadArticles(wordToSearch, context, callback);
+            if (communicator.enabled()) {
+                activeCommunicators++;
+                ArticlesCallback callback = new ArticlesCallback() {
+                    @Override
+                    public void invoke(ArticlesInfo info) {
+                        ((BatchArticlesCallback) communicatorCallBack).invoke(this, info);
+                    }
+                };
+                ((BatchArticlesCallback) communicatorCallBack).addCallback(callback);
+                communicator.loadArticles(wordToSearch, context, callback);
+            }
+        }
+
+        if (activeCommunicators == 0) {
+            communicatorCallBack.invoke(new ArticlesInfo(ArticlesInfo.Status.FAILURE));
         }
     }
 

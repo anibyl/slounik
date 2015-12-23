@@ -63,6 +63,8 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private MenuItem searchItem;
+    private CheckBox checkBoxSlounikOrg;
+    private CheckBox checkBoxSkarnik;
 
     public NavigationDrawerFragment() {
     }
@@ -173,6 +175,26 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        checkBoxSlounikOrg = (CheckBox) getActivity().findViewById(R.id.checkbox_slounik_org);
+        checkBoxSlounikOrg.setChecked(Preferences.getUseSlounikOrg());
+        checkBoxSlounikOrg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Preferences.setUseSlounikOrg(isChecked);
+                checkBoxSkarnik.setEnabled(isChecked);
+            }
+        });
+
+        checkBoxSkarnik = (CheckBox) getActivity().findViewById(R.id.checkbox_skarnik);
+        checkBoxSkarnik.setChecked(Preferences.getUseSkarnik());
+        checkBoxSkarnik.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Preferences.setUseSkarnik(isChecked);
+                checkBoxSlounikOrg.setEnabled(isChecked);
+            }
+        });
 
         CheckBox checkBoxSearchInTitle = (CheckBox) getActivity().findViewById(R.id.checkbox_search_in_title);
         checkBoxSearchInTitle.setChecked(Preferences.getSearchInTitles());

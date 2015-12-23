@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.R;
+import org.anibyl.slounik.core.Preferences;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -49,6 +50,11 @@ public class Skarnik extends DictionarySiteCommunicator {
     @Override
     public void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
         // Skarnik has no loadable descriptions.
+    }
+
+    @Override
+    public boolean enabled() {
+        return Preferences.getUseSkarnik();
     }
 
     protected StringRequest getLoadRequest(final String requestStr, final String wordToSearch, final Context context,
