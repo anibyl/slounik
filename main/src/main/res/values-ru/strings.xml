@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Слоуник</string>
     <string name="about_title">О программе</string>
-    <string name="about_text">Слоуник — клиентское приложение для сайта slounik.org.</string>
+    <string name="about_text">Слоуник — клиентское приложение для белорусских словарных сайтов.</string>
     <string name="about_author">Автор: Всеволод Чёрный (anibyl@riseup.net)</string>
     <string name="article_button_load_full_article">Показать всю статью</string>
     <string name="drawer_checkbox_search_in_title">Искать только в названиях</string>

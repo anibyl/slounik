@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Слоўнік</string>
     <string name="about_title">Пра праграму</string>
-    <string name="about_text">Слоўнік — кліенцкая праграма для сайта slounik.org.</string>
+    <string name="about_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
     <string name="about_author">Аўтар: Усевалад Чорны (anibyl@riseup.net)</string>
     <string name="article_button_load_full_article">Паказаць увесь артыкул</string>
     <string name="drawer_checkbox_search_in_title">Шукаць толькі ў назвах</string>
