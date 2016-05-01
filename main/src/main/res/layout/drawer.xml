@@ -37,7 +37,6 @@
             android:layout_alignParentStart="true"
             android:text="@string/about_text"
             android:padding="@dimen/padding"
-            android:autoLink="web"
             />
     <TextView
             android:id="@+id/about_contacts"
@@ -53,9 +52,29 @@
     <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/drawer_checkbox_slounik_org"
+            android:id="@+id/checkbox_slounik_org"
+            android:padding="@dimen/padding"
+            android:layout_below="@+id/about_contacts"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            />
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/drawer_checkbox_skarnik"
+            android:id="@+id/checkbox_skarnik"
+            android:padding="@dimen/padding"
+            android:layout_below="@+id/checkbox_slounik_org"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            />
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/drawer_checkbox_search_in_title"
             android:id="@+id/checkbox_search_in_title"
-            android:layout_below="@+id/about_contacts"
+            android:layout_below="@+id/checkbox_skarnik"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:padding="@dimen/padding"

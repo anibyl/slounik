@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Слоўнік</string>
-    <string name="url_name">slounik.org</string>
     <string name="about_title">Пра праграму</string>
-    <string name="about_text">Слоўнік — кліенцкая праграма для сайта slounik.org.</string>
+    <string name="about_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
     <string name="about_author">Аўтар: Усевалад Чорны (anibyl@riseup.net)</string>
     <string name="article_button_load_full_article">Паказаць увесь артыкул</string>
     <string name="drawer_checkbox_search_in_title">Шукаць толькі ў назвах</string>
     <string name="toast_text_copied">Тэкст скапіяваны ў кішэню.</string>
+
+    <string name="skarnik_dictionary_rus_bel">Расейска-беларускі слоўнік</string>
+    <string name="skarnik_dictionary_bel_rus">Беларуска-расейскі слоўнік</string>
+    <string name="skarnik_dictionary_explanatory">Тлумачальны слоўнік</string>
 </resources>

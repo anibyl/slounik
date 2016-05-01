@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Slounik</string>
-    <string name="url_name">slounik.org</string>
     <string name="about_title">About</string>
-    <string name="about_text">Slounik is the client application for slounik.org website.</string>
+    <string name="about_text">Slounik is the client application for belarusian dictionary websites.</string>
     <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
     <string name="article_button_load_full_article">Load full article</string>
     <string name="drawer_checkbox_search_in_title">Search only in title</string>
     <string name="toast_text_copied">Text copied to clipboard.</string>
+
+    <string name="skarnik_dictionary_rus_bel">Russian-Belarusian Dictionary</string>
+    <string name="skarnik_dictionary_bel_rus">Belarusian-Russian Dictionary</string>
+    <string name="skarnik_dictionary_explanatory">Belarusian Explanatory Dictionary</string>
+
+    <string name="drawer_checkbox_slounik_org" translatable="false">slounik.org</string>
+    <string name="drawer_checkbox_skarnik" translatable="false">skarnik.by</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

@@ -8,12 +8,11 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.R;
+import org.anibyl.slounik.network.Article;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
-import org.anibyl.slounik.network.SlounikOrg;
 import org.anibyl.slounik.ui.ProgressBar;
 
 /**
@@ -79,7 +78,7 @@ public class ArticleDialog extends AlertDialog {
 
                     if (article.getFullDescription() == null) {
                         progressBar.progressiveStart();
-                        SlounikOrg.loadArticleDescription(article, context, new ArticlesCallback() {
+                        article.getCommunicator().loadArticleDescription(article, context, new ArticlesCallback() {
                             @Override
                             public void invoke(ArticlesInfo info) {
                                 switch (info.getStatus()) {

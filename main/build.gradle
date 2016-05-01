@@ -20,13 +20,13 @@ android {
         applicationId "org.anibyl.slounik"
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 7
-        versionName "0.4.1"
+        versionCode 9
+        versionName "0.5.0"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
         release {

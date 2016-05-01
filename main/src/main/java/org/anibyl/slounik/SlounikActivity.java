@@ -16,9 +16,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.anibyl.slounik.core.Preferences;
 import org.anibyl.slounik.dialogs.ArticleDialog;
-import org.anibyl.slounik.network.ArticlesCallback;
+import org.anibyl.slounik.network.Article;
 import org.anibyl.slounik.network.ArticlesInfo;
+import org.anibyl.slounik.network.BatchArticlesLoader;
 import org.anibyl.slounik.network.Server;
+import org.anibyl.slounik.network.Skarnik;
 import org.anibyl.slounik.network.SlounikOrg;
 import org.anibyl.slounik.ui.ProgressBar;
 
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 
 /**
  * The main activity.
- * <p>
+ * <p/>
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
 public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -38,15 +40,24 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
     private CharSequence title;
     private ProgressBar progress;
 
+    private BatchArticlesLoader loader;
+    private SlounikOrg slounikOrg;
+    private Skarnik skarnik;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        slounikOrg = new SlounikOrg();
+        skarnik = new Skarnik();
+        loader = new BatchArticlesLoader(slounikOrg, skarnik);
 
         Preferences.initialize(this);
         Server.loadConfig(this, new Server.Callback() {
             @Override
             public void invoke() {
-                SlounikOrg.setMainUrl(Server.getMainUrl());
+                slounikOrg.setUrl(Server.getMainUrl());
+                skarnik.setUrl(Server.getSkarnikUrl());
             }
         });
         if (LanguageSwitcher.initialize(this)) {
@@ -60,7 +71,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         listView = (ListView) findViewById(R.id.listView);
         articlesAmount = (TextView) findViewById(R.id.articles_amount);
 
-        articles = new ArrayList<Article>();
+        articles = new ArrayList<>();
         adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,7 +117,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(title);
     }
@@ -123,7 +133,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
             progress.progressiveStart();
             navigationDrawerFragment.setSearchEnabled(false);
 
-            SlounikOrg.loadArticles(wordToSearch, SlounikActivity.this, new ArticlesCallback() {
+            loader.loadArticles(wordToSearch, SlounikActivity.this, new BatchArticlesLoader.BatchArticlesCallback() {
                 @Override
                 public void invoke(final ArticlesInfo info) {
                     ArrayList<Article> loadedArticles = info.getArticles();
@@ -185,8 +195,7 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override

@@ -5,16 +5,25 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
 import org.anibyl.slounik.core.Preferences;
 
 import java.util.ArrayList;
@@ -54,6 +63,8 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private MenuItem searchItem;
+    private CheckBox checkBoxSlounikOrg;
+    private CheckBox checkBoxSkarnik;
 
     public NavigationDrawerFragment() {
     }
@@ -96,7 +107,7 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Users of this fragment must call this method to set up the navigation drawer interactions.
      *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
+     * @param fragmentId The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
     public void setUp(final int fragmentId, final DrawerLayout drawerLayout) {
@@ -116,7 +127,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -165,6 +175,26 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        checkBoxSlounikOrg = (CheckBox) getActivity().findViewById(R.id.checkbox_slounik_org);
+        checkBoxSlounikOrg.setChecked(Preferences.getUseSlounikOrg());
+        checkBoxSlounikOrg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Preferences.setUseSlounikOrg(isChecked);
+                checkBoxSkarnik.setEnabled(isChecked);
+            }
+        });
+
+        checkBoxSkarnik = (CheckBox) getActivity().findViewById(R.id.checkbox_skarnik);
+        checkBoxSkarnik.setChecked(Preferences.getUseSkarnik());
+        checkBoxSkarnik.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Preferences.setUseSkarnik(isChecked);
+                checkBoxSlounikOrg.setEnabled(isChecked);
+            }
+        });
 
         CheckBox checkBoxSearchInTitle = (CheckBox) getActivity().findViewById(R.id.checkbox_search_in_title);
         checkBoxSearchInTitle.setChecked(Preferences.getSearchInTitles());
@@ -291,7 +321,6 @@ public class NavigationDrawerFragment extends Fragment {
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
     }
 
@@ -302,7 +331,7 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */

@@ -5,13 +5,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
 import com.android.volley.NetworkResponse;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import org.anibyl.slounik.Article;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.core.Preferences;
 import org.apache.http.protocol.HTTP;
@@ -28,16 +25,17 @@ import java.util.ArrayList;
  * <p/>
  * Created by Usievaład Kimajeŭ on 8.4.15 14.17.
  */
-public class SlounikOrg {
-    private static String url = "slounik.org";
-    private static RequestQueue queue;
+public class SlounikOrg extends DictionarySiteCommunicator {
+    public SlounikOrg() {
+        setUrl("slounik.org");
+    }
 
-    public static void loadArticles(String wordToSearch, final Context context, final ArticlesCallback callBack) {
+    public void loadArticles(final String wordToSearch, final Context context, final ArticlesCallback callBack) {
         final String requestStr;
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(url)
+                .authority(getUrl())
                 .appendPath("search")
                 .appendQueryParameter("search", wordToSearch);
 
@@ -47,15 +45,15 @@ public class SlounikOrg {
 
         requestStr = builder.build().toString();
 
-        SlounikOrgRequest request = getInitialLoadRequest(requestStr, context, callBack);
+        SlounikOrgRequest request = getLoadRequest(requestStr, context, callBack);
 
         getQueue(context).add(request);
     }
 
-    public static void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
+    public void loadArticleDescription(final Article article, final Context context, final ArticlesCallback callBack) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(url)
+                .authority(getUrl())
                 .appendPath(article.getLinkToFullDescription().substring(1));
         final String requestStr = builder.build().toString();
 
@@ -64,26 +62,17 @@ public class SlounikOrg {
         getQueue(context).add(request);
     }
 
-    public static void setMainUrl(String mainUrl) {
-        url = mainUrl;
+    @Override
+    public boolean enabled() {
+        return Preferences.getUseSlounikOrg();
     }
 
-    private static RequestQueue getQueue(final Context context) {
-        if (queue == null) {
-            queue = Volley.newRequestQueue(context);
-        }
-
-        return queue;
-    }
-
-    private static SlounikOrgRequest getInitialLoadRequest(final String requestStr, final Context context,
-                                                           final ArticlesCallback callback) {
+    protected SlounikOrgRequest getLoadRequest(final String requestStr, final Context context,
+            final ArticlesCallback callback) {
         return new SlounikOrgRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                        Notifier.toast(context, "Response received.", true);
-
                         new AsyncTask<Void, Void, Void>() {
                             private int dicsAmount;
 
@@ -102,7 +91,7 @@ public class SlounikOrg {
                                     if (dicRequestStr != null) {
                                         Uri.Builder builder = new Uri.Builder();
                                         builder.scheme("http")
-                                                .authority(url)
+                                                .authority(getUrl())
                                                 .appendPath(dicRequestStr.substring(1));
                                         dicRequestStr = builder.build().toString();
                                         SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
@@ -113,7 +102,7 @@ public class SlounikOrg {
                                                     }
                                                 });
 
-                                        queue.add(eachDicRequest);
+                                        getQueue(context).add(eachDicRequest);
                                         Notifier.log("Request added to queue: " + eachDicRequest);
                                     }
                                 }
@@ -148,8 +137,57 @@ public class SlounikOrg {
                 });
     }
 
-    private static SlounikOrgRequest getPerDicLoadingRequest(final String dicRequestStr,
-                                                         final ArticlesCallback callback) {
+    @Override
+    protected Article parseElement(final Element element) {
+        return new Article(this) {
+            @Override
+            Article fill() {
+                if (element != null) {
+                    Elements elements = element.select("a.tsb");
+                    if (elements != null && elements.size() != 0) {
+                        Element link = elements.first();
+                        setTitle(link.html());
+                        setLinkToFullDescription(link.attr("href"));
+
+                        if (getTitle() != null) {
+                            elements = element.select("a.ts");
+                            if (elements != null && elements.size() != 0) {
+                                setDescription(Html.fromHtml(elements.first().html()));
+                            }
+                        }
+                    }
+
+                    if (getTitle() == null) {
+                        elements = element.select("b");
+                        if (elements != null && elements.size() != 0) {
+                            setTitle(elements.first().html());
+
+                            if (getTitle() != null) {
+                                setDescription(Html.fromHtml(element.html()));
+                            }
+                        }
+                    }
+
+                    if (getTitle() != null) {
+                        setTitle(getTitle().replaceAll("<u>", ""));
+                        setTitle(getTitle().replaceAll("</u>", "́"));
+
+                        // Escape all other HTML tags, e.g. second <b>.
+                        setTitle(Jsoup.parse(getTitle()).text());
+                    }
+
+                    elements = element.select("a.la1");
+                    if (elements != null && elements.size() != 0) {
+                        setDictionary(elements.first().html());
+                    }
+                }
+
+                return this;
+            }
+        }.fill();
+    }
+
+    private SlounikOrgRequest getPerDicLoadingRequest(final String dicRequestStr, final ArticlesCallback callback) {
         return new SlounikOrgRequest(dicRequestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -167,9 +205,9 @@ public class SlounikOrg {
                                     dictionaryTitle = dictionaryTitles.first().html();
                                 }
 
-                                ArrayList<Article> list = new ArrayList<Article>();
+                                ArrayList<Article> list = new ArrayList<>();
                                 for (Element e : articleElements) {
-                                    list.add(new Article(e).setDictionary(dictionaryTitle));
+                                    list.add(parseElement(e).setDictionary(dictionaryTitle));
                                 }
 
                                 return list;
@@ -206,7 +244,7 @@ public class SlounikOrg {
 
                                 article.setFullDescription(Html.fromHtml(articleElement.html()));
 
-                                ArrayList<Article> list = new ArrayList<Article>();
+                                ArrayList<Article> list = new ArrayList<>();
                                 list.add(article);
 
                                 return list;
