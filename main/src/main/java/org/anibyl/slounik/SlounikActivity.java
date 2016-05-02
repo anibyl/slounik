@@ -1,12 +1,12 @@
 package org.anibyl.slounik;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -28,13 +28,14 @@ import java.util.ArrayList;
 
 /**
  * The main activity.
- * <p/>
+ * <p>
  * Created by Usievaład Čorny on 21.02.2015 11:00.
  */
-public class SlounikActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class SlounikActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private ListView listView;
     private TextView articlesAmount;
     private ArrayList<Article> articles;
+    private Article currentArticle;
     private SlounikAdapter adapter;
     private NavigationDrawerFragment navigationDrawerFragment;
     private CharSequence title;
@@ -72,12 +73,13 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         articlesAmount = (TextView) findViewById(R.id.articles_amount);
 
         articles = new ArrayList<>();
-        adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.description, articles);
+        adapter = new SlounikAdapter(SlounikActivity.this, R.layout.list_item, R.id.list_item_description, articles);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                new ArticleDialog(SlounikActivity.this, articles.get(position)).show();
+                currentArticle = articles.get(position);
+                new ArticleDialog().show(getSupportFragmentManager(), "article_dialog");
             }
         });
 
@@ -87,7 +89,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         setTitle(R.string.app_name);
         title = getTitle();
 
-        // Set up the drawer.
         navigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -95,7 +96,6 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
@@ -117,8 +117,11 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title);
+
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(title);
+        }
     }
 
     public void search(final String wordToSearch) {
@@ -154,6 +157,10 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
         }
+    }
+
+    public Article getCurrentArticle() {
+        return currentArticle;
     }
 
     private void resetControls() {
@@ -193,14 +200,13 @@ public class SlounikActivity extends ActionBarActivity implements NavigationDraw
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
+        public void onAttach(Context context) {
+            super.onAttach(context);
             // Do smth with selected getArguments().getInt(ARG_SECTION_NUMBER);
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.text.Spanned;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -230,7 +231,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
     }
 
     private static SlounikOrgRequest getArticleDescriptionLoadRequest(final String requestStr, final Article article,
-                                                                      final ArticlesCallback callback) {
+            final ArticlesCallback callback) {
         return new SlounikOrgRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -242,7 +243,10 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                                 Document articlePage = Jsoup.parse(response);
                                 Element articleElement = articlePage.select("td.n12").first();
 
-                                article.setFullDescription(Html.fromHtml(articleElement.html()));
+                                Spanned htmlDescription = Html.fromHtml(articleElement.html());
+                                String descriptionWithOutExtraSpace = htmlDescription.toString().trim();
+
+                                article.setFullDescription((Spanned) htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length()));
 
                                 ArrayList<Article> list = new ArrayList<>();
                                 list.add(article);
