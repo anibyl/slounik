@@ -12,7 +12,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.core.Preferences;
-import org.apache.http.protocol.HTTP;
+import org.anibyl.slounik.core.Versioned;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -93,7 +93,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                                         Uri.Builder builder = new Uri.Builder();
                                         builder.scheme("http")
                                                 .authority(getUrl())
-                                                .appendPath(dicRequestStr.substring(1));
+                                                .appendEncodedPath(dicRequestStr.substring(1));
                                         dicRequestStr = builder.build().toString();
                                         SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
                                                 new ArticlesCallback() {
@@ -279,7 +279,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
         protected Response<String> parseNetworkResponse(NetworkResponse response) {
             String parsed;
             try {
-                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers, HTTP.UTF_8));
+                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers, Versioned.UTF_8));
             } catch (UnsupportedEncodingException e) {
                 parsed = new String(response.data);
             }

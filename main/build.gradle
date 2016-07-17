@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "24"
 
     defaultConfig {
         applicationId "org.anibyl.slounik"
@@ -34,14 +34,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 }
