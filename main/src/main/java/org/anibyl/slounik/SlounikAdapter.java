@@ -32,9 +32,9 @@ public class SlounikAdapter extends ArrayAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
-            holder.title = (TextView) convertView.findViewById(R.id.title);
-            holder.description = (TextView) convertView.findViewById(R.id.description);
-            holder.dicName = (TextView) convertView.findViewById(R.id.dicName);
+            holder.title = (TextView) convertView.findViewById(R.id.list_item_title);
+            holder.description = (TextView) convertView.findViewById(R.id.list_item_description);
+            holder.dicName = (TextView) convertView.findViewById(R.id.list_item_dictionary);
 
             convertView.setTag(holder);
         } else {

@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.1'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -13,15 +13,15 @@ repositories {
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "24"
 
     defaultConfig {
         applicationId "org.anibyl.slounik"
         minSdkVersion 8
-        targetSdkVersion 22
-        versionCode 9
-        versionName "0.5.0"
+        targetSdkVersion 23
+        versionCode 10
+        versionName "0.6.0"
     }
 
     compileOptions {
@@ -37,9 +37,9 @@ android {
 }
 
 dependencies {
-    compile project(':volley')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 }

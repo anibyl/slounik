@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.text.Spanned;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -11,7 +12,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.core.Preferences;
-import org.apache.http.protocol.HTTP;
+import org.anibyl.slounik.core.Versioned;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -92,7 +93,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                                         Uri.Builder builder = new Uri.Builder();
                                         builder.scheme("http")
                                                 .authority(getUrl())
-                                                .appendPath(dicRequestStr.substring(1));
+                                                .appendEncodedPath(dicRequestStr.substring(1));
                                         dicRequestStr = builder.build().toString();
                                         SlounikOrgRequest eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
                                                 new ArticlesCallback() {
@@ -230,7 +231,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
     }
 
     private static SlounikOrgRequest getArticleDescriptionLoadRequest(final String requestStr, final Article article,
-                                                                      final ArticlesCallback callback) {
+            final ArticlesCallback callback) {
         return new SlounikOrgRequest(requestStr,
                 new Response.Listener<String>() {
                     @Override
@@ -242,7 +243,10 @@ public class SlounikOrg extends DictionarySiteCommunicator {
                                 Document articlePage = Jsoup.parse(response);
                                 Element articleElement = articlePage.select("td.n12").first();
 
-                                article.setFullDescription(Html.fromHtml(articleElement.html()));
+                                Spanned htmlDescription = Html.fromHtml(articleElement.html());
+                                String descriptionWithOutExtraSpace = htmlDescription.toString().trim();
+
+                                article.setFullDescription((Spanned) htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length()));
 
                                 ArrayList<Article> list = new ArrayList<>();
                                 list.add(article);
@@ -275,7 +279,7 @@ public class SlounikOrg extends DictionarySiteCommunicator {
         protected Response<String> parseNetworkResponse(NetworkResponse response) {
             String parsed;
             try {
-                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers, HTTP.UTF_8));
+                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers, Versioned.UTF_8));
             } catch (UnsupportedEncodingException e) {
                 parsed = new String(response.data);
             }

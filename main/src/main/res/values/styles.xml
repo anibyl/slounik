@@ -1,4 +1,8 @@
 <resources>
     <style name="SlounikTheme" parent="Theme.AppCompat">
     </style>
+
+    <style name="SlounikButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/button_text</item>
+    </style>
 </resources>

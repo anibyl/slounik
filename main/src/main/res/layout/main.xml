@@ -5,14 +5,13 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SlounikActivity">
-
-    <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions. -->
+        tools:context=".SlounikActivity"
+>
     <RelativeLayout
             android:id="@+id/container"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+    >
         <org.anibyl.slounik.ui.ProgressBar
                 android:id="@+id/progress"
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,28 +29,21 @@
                 app:spb_progressiveStart_activated="true"
                 app:spb_progressiveStart_speed="1.0"
                 app:spb_progressiveStop_speed="2.5"
-                />
+        />
         <ListView
+                android:id="@+id/listView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/listView"/>
+        />
         <TextView
                 android:id="@+id/articles_amount"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:textSize="@dimen/font_large_200"
                 android:gravity="center"
-                android:textColor="@color/transparent_white"/>
-
+                android:textColor="@color/transparent_white"
+        />
     </RelativeLayout>
-
-    <!-- android:layout_gravity="start" tells DrawerLayout to treat
-         this as a sliding drawer on the left side for left-to-right
-         languages and on the right side for right-to-left languages.
-         If you're not building against API 17 or higher, use
-         android:layout_gravity="left" instead. -->
-    <!-- The drawer is given a fixed width in dp and extends the full height of
-         the container. -->
     <fragment
             android:id="@+id/navigation_drawer"
             android:layout_width="@dimen/navigation_drawer_width"
@@ -59,6 +51,5 @@
             android:layout_gravity="start"
             android:name="org.anibyl.slounik.NavigationDrawerFragment"
             tools:layout="@layout/drawer"
-            />
-
+    />
 </android.support.v4.widget.DrawerLayout>

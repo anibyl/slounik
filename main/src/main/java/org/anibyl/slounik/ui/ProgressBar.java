@@ -2,7 +2,6 @@ package org.anibyl.slounik.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
@@ -12,7 +11,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
  * Created by Usievaład Kimajeŭ on 21.12.15.
  */
 public class ProgressBar extends SmoothProgressBar {
-    private boolean visible;
+    private boolean invisible;
 
     public ProgressBar(Context context) {
         super(context);
@@ -31,31 +30,31 @@ public class ProgressBar extends SmoothProgressBar {
 
     @Override
     public void progressiveStart() {
-        visible = true;
+        invisible = false;
         super.progressiveStart();
     }
 
     @Override
     public void progressiveStop() {
-        visible = false;
+        invisible = true;
         super.progressiveStop();
     }
 
     private void init() {
-        setVisibility(View.INVISIBLE);
+        setVisibility(INVISIBLE);
 
         setSmoothProgressDrawableCallbacks(new SmoothProgressDrawable.Callbacks() {
             @Override
             public void onStop() {
-                if (!visible) {
-                    setVisibility(View.INVISIBLE);
+                if (invisible) {
+                    setVisibility(INVISIBLE);
                 }
             }
 
             @Override
             public void onStart() {
-                if (visible) {
-                    setVisibility(View.VISIBLE);
+                if (!invisible) {
+                    setVisibility(VISIBLE);
                 }
             }
         });

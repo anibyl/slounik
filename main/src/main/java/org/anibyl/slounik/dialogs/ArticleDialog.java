@@ -1,15 +1,22 @@
 package org.anibyl.slounik.dialogs;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import org.anibyl.slounik.Notifier;
 import org.anibyl.slounik.R;
+import org.anibyl.slounik.SlounikActivity;
 import org.anibyl.slounik.network.Article;
 import org.anibyl.slounik.network.ArticlesCallback;
 import org.anibyl.slounik.network.ArticlesInfo;
@@ -20,29 +27,30 @@ import org.anibyl.slounik.ui.ProgressBar;
  * <p/>
  * Created by Usievaład Čorny on 01.03.2015 10:54.
  */
-public class ArticleDialog extends AlertDialog {
-    private final Context context;
-    private final Article article;
+public class ArticleDialog extends DialogFragment {
+    private Context context;
+    private Article article;
 
-    public ArticleDialog(Context context, Article article) {
-        super(context);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        this.context = context;
-        this.article = article;
+        context = getActivity();
+        article = ((SlounikActivity) getActivity()).getCurrentArticle();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.article, container, false);
 
         final boolean isLoadable = article.getLinkToFullDescription() != null;
 
-        setContentView(isLoadable ? R.layout.article_with_loading : R.layout.article);
-
-        setTitle(article.getTitle());
-
-        TextView dictionary = (TextView) findViewById(R.id.dictionary);
-        final TextView description = (TextView) findViewById(R.id.description);
+        final TextView dictionary = (TextView) view.findViewById(R.id.dictionary);
+        final TextView description = (TextView) view.findViewById(R.id.list_item_description);
+        final Button closeButton = (Button) view.findViewById(R.id.article_button_close);
+        final Button loadButton = (Button) view.findViewById(R.id.article_button_load);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.article_progress);
 
         dictionary.setText(article.getDictionary());
         description.setText(article.getDescription());
@@ -68,9 +76,14 @@ public class ArticleDialog extends AlertDialog {
             }
         });
 
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         if (isLoadable) {
-            final Button loadButton = (Button) findViewById(R.id.load);
-            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.article_progress);
             loadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,8 +111,23 @@ public class ArticleDialog extends AlertDialog {
                     }
                 }
             });
+        } else {
+            loadButton.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
 
         setCancelable(true);
+
+        return view;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        return dialog;
     }
 }
