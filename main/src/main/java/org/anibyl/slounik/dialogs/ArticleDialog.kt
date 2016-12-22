@@ -22,20 +22,20 @@ import org.anibyl.slounik.ui.ProgressBar
 /**
  * Dialog for the text of an article.
  *
- * Created by Usievaład Čorny on 01.03.2015 10:54.
+ * @author Usievaład Kimajeŭ
+ * @created 01.03.2015
  */
-class ArticleDialog:DialogFragment() {
-	private var article:Article? = null
+class ArticleDialog : DialogFragment() {
+	private var article: Article? = null
 
-	override fun onCreate(savedInstanceState:Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		article = arguments.getSerializable("article") as Article?
 				?: savedInstanceState?.getSerializable("article") as Article?
 	}
 
-	override fun onCreateView(inflater:LayoutInflater?, container:ViewGroup?,
-			savedInstanceState:Bundle?):View? {
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view = inflater!!.inflate(R.layout.article, container, false)
 
 		val isLoadable = article!!.linkToFullDescription != null
@@ -73,8 +73,8 @@ class ArticleDialog:DialogFragment() {
 
 				if (article!!.fullDescription == null) {
 					progressBar.progressiveStart()
-					article!!.communicator.loadArticleDescription(article!!, context, object:ArticlesCallback {
-						override fun invoke(info:ArticlesInfo) {
+					article!!.communicator.loadArticleDescription(article!!, context, object : ArticlesCallback {
+						override fun invoke(info: ArticlesInfo) {
 							when (info.status) {
 								ArticlesInfo.Status.SUCCESS -> description.text = article!!.fullDescription
 
@@ -97,7 +97,7 @@ class ArticleDialog:DialogFragment() {
 		return view
 	}
 
-	override fun onCreateDialog(savedInstanceState:Bundle?):Dialog {
+	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val dialog = super.onCreateDialog(savedInstanceState)
 
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -106,7 +106,7 @@ class ArticleDialog:DialogFragment() {
 	}
 }
 
-fun newArticleDialog(article:Article):ArticleDialog {
+fun newArticleDialog(article: Article): ArticleDialog {
 	val instance = ArticleDialog()
 
 	val args = Bundle()

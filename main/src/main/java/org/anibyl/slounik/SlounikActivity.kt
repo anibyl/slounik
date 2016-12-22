@@ -26,24 +26,22 @@ import java.util.ArrayList
 /**
  * The main activity.
  *
- * Created by Usievaład Čorny on 21.02.2015 11:00.
+ * @author Usievaład Kimajeŭ
+ * @created 21.02.2015
  */
-class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDrawerCallbacks {
-	private var listView:ListView? = null
-	private var articlesAmount:TextView? = null
-	private var articles:ArrayList<Article>? = null
-	var currentArticle:Article? = null
-		private set
-	private var adapter:SlounikAdapter? = null
-	private var navigationDrawerFragment:NavigationDrawerFragment? = null
-	private var titleStr:CharSequence? = null
-	private var progress:ProgressBar? = null
+class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.NavigationDrawerCallbacks {
+	private var listView: ListView? = null
+	private var articlesAmount: TextView? = null
+	private var articles: ArrayList<Article>? = null
+	private var adapter: SlounikAdapter? = null
+	private var navigationDrawerFragment: NavigationDrawerFragment? = null
+	private var titleStr: CharSequence? = null
+	private var progress: ProgressBar? = null
+	private var loader: BatchArticlesLoader? = null
+	private var slounikOrg: SlounikOrg? = null
+	private var skarnik: Skarnik? = null
 
-	private var loader:BatchArticlesLoader? = null
-	private var slounikOrg:SlounikOrg? = null
-	private var skarnik:Skarnik? = null
-
-	public override fun onCreate(savedInstanceState:Bundle?) {
+	public override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		slounikOrg = SlounikOrg()
@@ -52,7 +50,7 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 		loader = BatchArticlesLoader(slounikOrg!!, skarnik!!)
 
 		Preferences.initialize(this)
-		Server.loadConfig(this, object:Server.Callback() {
+		Server.loadConfig(this, object : Server.Callback() {
 			override fun invoke() {
 				slounikOrg?.url = Server.mainUrl
 				skarnik?.url = Server.skarnikUrl
@@ -74,10 +72,11 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 		adapter = SlounikAdapter(this, R.layout.list_item, R.id.list_item_description, articles)
 		listView!!.adapter = adapter
 		listView!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-			newArticleDialog(articles!![position]).show(supportFragmentManager, "article_dialog")
+			newArticleDialog(articles[position]).show(supportFragmentManager, "article_dialog")
 		}
 
-		navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment
+		navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer)
+				as NavigationDrawerFragment
 
 		setTitle(R.string.app_name)
 		titleStr = title
@@ -87,13 +86,13 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 				findViewById(R.id.drawer_layout) as DrawerLayout)
 	}
 
-	override fun onNavigationDrawerItemSelected(position:Int) {
+	override fun onNavigationDrawerItemSelected(position: Int) {
 		val fragmentManager = supportFragmentManager
 		fragmentManager.beginTransaction().replace(R.id.container,
 				PlaceholderFragment.newInstance(position + 1)).commit()
 	}
 
-	override fun onCreateOptionsMenu(menu:Menu):Boolean {
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		if (!navigationDrawerFragment!!.isDrawerOpen) {
 			// Only show items in the action bar relevant to this screen
 			// if the drawer is not showing. Otherwise, let the drawer
@@ -110,7 +109,7 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 		supportActionBar?.title = titleStr
 	}
 
-	fun search(wordToSearch:String) {
+	fun search(wordToSearch: String) {
 		resetArticles()
 
 		if (wordToSearch == "") {
@@ -122,8 +121,8 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 			progress!!.progressiveStart()
 			navigationDrawerFragment!!.setSearchEnabled(false)
 
-			loader!!.loadArticles(wordToSearch, this, object:BatchArticlesLoader.BatchArticlesCallback() {
-				override fun invoke(info:ArticlesInfo) {
+			loader!!.loadArticles(wordToSearch, this, object : BatchArticlesLoader.BatchArticlesCallback() {
+				override fun invoke(info: ArticlesInfo) {
 					val loadedArticles = info.articles
 					if (loadedArticles != null) {
 						articles!!.addAll(loadedArticles)
@@ -155,12 +154,12 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	class PlaceholderFragment:Fragment() {
-		override fun onCreateView(inflater:LayoutInflater?, container:ViewGroup?, savedInstanceState:Bundle?):View? {
+	class PlaceholderFragment : Fragment() {
+		override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 			return inflater?.inflate(R.layout.fragment_main, container, false)
 		}
 
-		override fun onAttach(context:Context?) {
+		override fun onAttach(context: Context?) {
 			super.onAttach(context)
 			// Do smth with selected getArguments().getInt(ARG_SECTION_NUMBER);
 		}
@@ -176,7 +175,7 @@ class SlounikActivity:AppCompatActivity(), NavigationDrawerFragment.NavigationDr
 			 * Returns a new instance of this fragment for the given section
 			 * number.
 			 */
-			fun newInstance(sectionNumber:Int):PlaceholderFragment {
+			fun newInstance(sectionNumber: Int): PlaceholderFragment {
 				val fragment = PlaceholderFragment()
 				val args = Bundle()
 				args.putInt(ARG_SECTION_NUMBER, sectionNumber)

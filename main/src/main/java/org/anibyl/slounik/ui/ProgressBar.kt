@@ -9,21 +9,21 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable
 /**
  * Slounik's progress bar.
  *
- *
- * Created by Usievaład Čorny on 21.12.15.
+ * @author Usievaład Kimajeŭ
+ * @created 21.12.2015
  */
-class ProgressBar:SmoothProgressBar {
-	private var invisible:Boolean = false
+class ProgressBar : SmoothProgressBar {
+	private var invisible: Boolean = false
 
-	constructor(context:Context):super(context) {
+	constructor(context: Context) : super(context) {
 		init()
 	}
 
-	constructor(context:Context, attrs:AttributeSet):super(context, attrs) {
+	constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
 		init()
 	}
 
-	constructor(context:Context, attrs:AttributeSet, defStyle:Int):super(context, attrs, defStyle) {
+	constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
 		init()
 	}
 
@@ -40,7 +40,7 @@ class ProgressBar:SmoothProgressBar {
 	private fun init() {
 		visibility = View.INVISIBLE
 
-		setSmoothProgressDrawableCallbacks(object:SmoothProgressDrawable.Callbacks {
+		setSmoothProgressDrawableCallbacks(object : SmoothProgressDrawable.Callbacks {
 			override fun onStop() {
 				if (invisible) {
 					visibility = View.INVISIBLE

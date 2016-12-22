@@ -6,5 +6,5 @@ import android.view.View
 /**
  * Created by anibyl on 18.8.16.
  */
-class StubView(context:Context):View(context) {
+class StubView(context: Context) : View(context) {
 }

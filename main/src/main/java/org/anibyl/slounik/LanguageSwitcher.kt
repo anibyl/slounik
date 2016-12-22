@@ -6,12 +6,15 @@ import org.anibyl.slounik.core.Preferences
 import java.util.Locale
 
 /**
+ * TODO Remove me.
+ *
  * Represents language switching logic.
  *
- * Created by Usievaład Čorny on 3.11.2015.
+ * @author Usievaład Kimajeŭ
+ * @created 03.11.2015
  */
 object LanguageSwitcher {
-	var languages:Array<Language> = arrayOf()
+	var languages: Array<Language> = arrayOf()
 
 	/**
 	 * Initializes language switcher and switch the language if it is necessary.
@@ -19,7 +22,7 @@ object LanguageSwitcher {
 	 * @param activity Current activity.
 	 * @return If language is switched.
 	 */
-	fun initialize(activity:Activity):Boolean {
+	fun initialize(activity: Activity): Boolean {
 		val languageNames = activity.resources.getStringArray(R.array.languages)
 
 		languages = arrayOf(Language("be_by", languageNames[0]),
@@ -32,7 +35,7 @@ object LanguageSwitcher {
 
 	}
 
-	val preferredNo:Int
+	val preferredNo: Int
 		get() {
 			val preferredLanguage = Preferences.language
 			if (preferredLanguage != null) {
@@ -61,7 +64,7 @@ object LanguageSwitcher {
 	 * @param languagePosition Language list position.
 	 * @return If language is switched.
 	 */
-	operator fun set(activity:Activity, languagePosition:Int):Boolean {
+	operator fun set(activity: Activity, languagePosition: Int): Boolean {
 		val language = languages[languagePosition].id
 		return set(activity, language)
 	}
@@ -73,7 +76,7 @@ object LanguageSwitcher {
 	 * @param languageId Language ID.
 	 * @return If language is switched.
 	 */
-	operator fun set(activity:Activity, languageId:String):Boolean {
+	operator fun set(activity: Activity, languageId: String): Boolean {
 		if (Locale.getDefault().toString().toLowerCase() != languageId) {
 			setLanguage(activity, languageId)
 			return true
@@ -82,7 +85,7 @@ object LanguageSwitcher {
 		return false
 	}
 
-	private fun setLanguage(activity:Activity, language:String) {
+	private fun setLanguage(activity: Activity, language: String) {
 		val locale = Locale(language)
 		Locale.setDefault(locale)
 		val config = Configuration()
@@ -96,5 +99,5 @@ object LanguageSwitcher {
 		activity.startActivity(intent)
 	}
 
-	class Language(val id:String, val name:String)
+	class Language(val id: String, val name: String)
 }

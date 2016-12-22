@@ -1,47 +1,47 @@
 package org.anibyl.slounik.network
 
 import android.content.Context
-
 import java.util.ArrayList
 
 /**
  * Batch loader of the dictionary site communicators.
  *
- *
- * Created by Usievaład Čorny on 23.12.15.
+ * @author Usievaład Kimajeŭ
+ * @created 23.12.2015
  */
-class BatchArticlesLoader(vararg communicators:DictionarySiteCommunicator):ArticlesLoader {
-	private val communicators:Array<out DictionarySiteCommunicator>
+class BatchArticlesLoader(vararg communicators: DictionarySiteCommunicator<ArticlesCallback>)
+	: ArticlesLoader<BatchArticlesLoader.BatchArticlesCallback> {
+	private val communicators: Array<out DictionarySiteCommunicator<ArticlesCallback>>
 
 	init {
 		this.communicators = communicators
 	}
 
-	override fun loadArticles(wordToSearch:String, context:Context, communicatorCallBack:ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, context: Context, callback: BatchArticlesCallback) {
 		var activeCommunicators = 0
 
 		for (communicator in communicators) {
 			if (communicator.enabled()) {
 				activeCommunicators++
-				val callback = object:ArticlesCallback {
-					override fun invoke(info:ArticlesInfo) {
-						(communicatorCallBack as BatchArticlesCallback).invoke(this, info)
+				val articlesCallback = object : ArticlesCallback {
+					override fun invoke(info: ArticlesInfo) {
+						callback.invoke(this, info)
 					}
 				}
-				(communicatorCallBack as BatchArticlesCallback).addCallback(callback)
-				communicator.loadArticles(wordToSearch, context, callback)
+				callback.addCallback(articlesCallback)
+				communicator.loadArticles(wordToSearch, context, articlesCallback)
 			}
 		}
 
 		if (activeCommunicators == 0) {
-			communicatorCallBack.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
+			callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 		}
 	}
 
-	abstract class BatchArticlesCallback:ArticlesCallback {
+	abstract class BatchArticlesCallback : ArticlesCallback {
 		internal var callbacks = ArrayList<ArticlesCallback>()
 
-		internal operator fun invoke(callback:ArticlesCallback, info:ArticlesInfo) {
+		internal operator fun invoke(callback: ArticlesCallback, info: ArticlesInfo) {
 			if (!callbacks.contains(callback)) {
 				throw RuntimeException("No such callback in batch callback.")
 			}
@@ -60,7 +60,7 @@ class BatchArticlesLoader(vararg communicators:DictionarySiteCommunicator):Artic
 			}
 		}
 
-		fun addCallback(callback:ArticlesCallback) {
+		fun addCallback(callback: ArticlesCallback) {
 			callbacks.add(callback)
 		}
 	}

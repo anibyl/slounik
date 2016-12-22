@@ -8,18 +8,19 @@ import org.jsoup.nodes.Element
 /**
  * Dictionary site communicator.
  *
- * Created by Usievaład Čorny on 22.12.15.
+ * @author Usievaład Kimajeŭ
+ * @created 22.12.2015
  */
-abstract class DictionarySiteCommunicator:ArticlesLoader {
-	var url:String? = "slounik.org"
-	private var queue:RequestQueue? = null
+abstract class DictionarySiteCommunicator<in T> : ArticlesLoader<T> where T : ArticlesCallback {
+	var url: String? = "slounik.org"
+	private var queue: RequestQueue? = null
 
-	abstract fun loadArticleDescription(article:Article, context:Context, callBack:ArticlesCallback)
-	abstract fun enabled():Boolean
+	abstract fun loadArticleDescription(article: Article, context: Context, callBack: T)
+	abstract fun enabled(): Boolean
 
-	protected abstract fun parseElement(element:Element?):Article
+	protected abstract fun parseElement(element: Element?): Article
 
-	protected fun getQueue(context:Context):RequestQueue {
+	protected fun getQueue(context: Context): RequestQueue {
 		if (queue == null) {
 			queue = Volley.newRequestQueue(context)
 		}

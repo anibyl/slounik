@@ -13,7 +13,8 @@ import java.util.ArrayList
 /**
  * Adapter used to fill the list.
  *
- * Created by Usievaład Čorny on 26.02.2015 13:28.
+ * @author Usievaład Kimajeŭ
+ * @created 26.02.2015
  */
 class SlounikAdapter(context:Context, resource:Int, textViewResourceId:Int, private val list:ArrayList<Article>)
 :ArrayAdapter<Article>(context, resource, textViewResourceId, list) {

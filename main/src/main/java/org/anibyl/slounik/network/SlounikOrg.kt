@@ -7,33 +7,28 @@ import android.text.Html
 import android.text.Spanned
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.core.Preferences
-import org.anibyl.slounik.core.Versioned
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-
-import java.io.UnsupportedEncodingException
-import java.util.ArrayList
+import java.util.*
 
 /**
  * slounik.org website communication.
  *
- *
- * Created by Usievaład Čorny on 8.4.15 14.17.
+ * @author Usievaład Kimajeŭ
+ * @created 08.04.2015
  */
-class SlounikOrg:DictionarySiteCommunicator() {
+class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 	init {
 		url = "slounik.org"
 	}
 
-	override fun loadArticles(wordToSearch:String, context:Context, callBack:ArticlesCallback) {
-		val requestStr:String
+	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+		val requestStr: String
 
 		val builder = Uri.Builder()
 		builder.scheme("http").authority(url).appendPath("search").appendQueryParameter("search", wordToSearch)
@@ -44,12 +39,12 @@ class SlounikOrg:DictionarySiteCommunicator() {
 
 		requestStr = builder.build().toString()
 
-		val request = getLoadRequest(requestStr, context, callBack)
+		val request = getLoadRequest(requestStr, context, callback)
 
 		getQueue(context).add(request)
 	}
 
-	override fun loadArticleDescription(article:Article, context:Context, callBack:ArticlesCallback) {
+	override fun loadArticleDescription(article: Article, context: Context, callBack: ArticlesCallback) {
 		val builder = Uri.Builder()
 		builder.scheme("http").authority(url).appendPath(article.linkToFullDescription!!.substring(1))
 		val requestStr = builder.build().toString()
@@ -59,17 +54,17 @@ class SlounikOrg:DictionarySiteCommunicator() {
 		getQueue(context).add(request)
 	}
 
-	override fun enabled():Boolean {
+	override fun enabled(): Boolean {
 		return Preferences.useSlounikOrg
 	}
 
-	private fun getLoadRequest(requestStr:String, context:Context, callback:ArticlesCallback):SlounikOrgRequest {
+	private fun getLoadRequest(requestStr: String, context: Context, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
 				Response.Listener<kotlin.String> { response ->
-					object:AsyncTask<Void, Void, Void>() {
-						private var dicsAmount:Int = 0
+					object : AsyncTask<Void, Void, Void>() {
+						private var dicsAmount: Int = 0
 
-						override fun doInBackground(vararg params:Void):Void? {
+						override fun doInBackground(vararg params: Void): Void? {
 							val page = Jsoup.parse(response)
 							val dicsElements = page.select("a.treeSearchDict")
 							dicsAmount = dicsElements.size
@@ -79,14 +74,14 @@ class SlounikOrg:DictionarySiteCommunicator() {
 							}
 
 							for (e in dicsElements) {
-								var dicRequestStr:String? = e.attr("href")
+								var dicRequestStr: String? = e.attr("href")
 								if (dicRequestStr != null) {
 									val builder = Uri.Builder()
 									builder.scheme("http").authority(url).appendEncodedPath(dicRequestStr.substring(1))
 									dicRequestStr = builder.build().toString()
 									val eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
-											object:ArticlesCallback {
-												override operator fun invoke(info:ArticlesInfo) {
+											object : ArticlesCallback {
+												override operator fun invoke(info: ArticlesInfo) {
 													setArticleList(info.articles)
 												}
 											})
@@ -99,14 +94,14 @@ class SlounikOrg:DictionarySiteCommunicator() {
 							return null
 						}
 
-						override fun onPostExecute(ignored:Void?) {
+						override fun onPostExecute(ignored: Void?) {
 							if (dicsAmount == 0) {
 								Notifier.log("Callback invoked: no dictionaries.")
 								callback.invoke(ArticlesInfo(articles = null, status = ArticlesInfo.Status.SUCCESS))
 							}
 						}
 
-						private fun setArticleList(list:ArrayList<Article>?) {
+						private fun setArticleList(list: ArrayList<Article>?) {
 							val status = if (--dicsAmount == 0)
 								ArticlesInfo.Status.SUCCESS
 							else
@@ -123,11 +118,11 @@ class SlounikOrg:DictionarySiteCommunicator() {
 				})
 	}
 
-	override fun parseElement(element:Element?):Article {
-		return object:Article(this) {
-			override fun fill():Article {
+	override fun parseElement(element: Element?): Article {
+		return object : Article(this) {
+			override fun fill(): Article {
 				if (element != null) {
-					var elements:Elements? = element.select("a.tsb")
+					var elements: Elements? = element.select("a.tsb")
 					if (elements != null && elements.size != 0) {
 						val link = elements.first()
 						title = link.html()
@@ -171,16 +166,16 @@ class SlounikOrg:DictionarySiteCommunicator() {
 		}.fill()
 	}
 
-	private fun getPerDicLoadingRequest(dicRequestStr:String, callback:ArticlesCallback):SlounikOrgRequest {
+	private fun getPerDicLoadingRequest(dicRequestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(dicRequestStr,
 				Response.Listener<kotlin.String> { response ->
-					object:AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params:Void):ArrayList<Article> {
+					object : AsyncTask<Void, Void, ArrayList<Article>>() {
+						override fun doInBackground(vararg params: Void): ArrayList<Article> {
 							Notifier.log("Response received for $dicRequestStr.")
 							val dicPage = Jsoup.parse(response)
 							val articleElements = dicPage.select("li#li_poszuk")
 
-							var dictionaryTitle:String? = null
+							var dictionaryTitle: String? = null
 							val dictionaryTitles = dicPage.select("a.t3")
 							if (dictionaryTitles != null && dictionaryTitles.size != 0) {
 								dictionaryTitle = dictionaryTitles.first().html()
@@ -196,7 +191,7 @@ class SlounikOrg:DictionarySiteCommunicator() {
 							return list
 						}
 
-						override fun onPostExecute(articles:ArrayList<Article>) {
+						override fun onPostExecute(articles: ArrayList<Article>) {
 							callback.invoke(ArticlesInfo(articles))
 						}
 					}.execute()
@@ -207,12 +202,15 @@ class SlounikOrg:DictionarySiteCommunicator() {
 				})
 	}
 
-	private fun getArticleDescriptionLoadRequest(requestStr:String, article:Article,
-			callback:ArticlesCallback):SlounikOrgRequest {
+	private fun getArticleDescriptionLoadRequest(
+			requestStr: String,
+			article: Article,
+			callback: ArticlesCallback
+	): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
 				Response.Listener<kotlin.String> { response ->
-					object:AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params:Void):ArrayList<Article> {
+					object : AsyncTask<Void, Void, ArrayList<Article>>() {
+						override fun doInBackground(vararg params: Void): ArrayList<Article> {
 							Notifier.log("Response received for $requestStr.")
 							val articlePage = Jsoup.parse(response)
 							val articleElement = articlePage.select("td.n12").first()
@@ -231,7 +229,7 @@ class SlounikOrg:DictionarySiteCommunicator() {
 							return list
 						}
 
-						override fun onPostExecute(articles:ArrayList<Article>) {
+						override fun onPostExecute(articles: ArrayList<Article>) {
 							callback.invoke(ArticlesInfo(articles))
 						}
 					}.execute()
@@ -242,15 +240,13 @@ class SlounikOrg:DictionarySiteCommunicator() {
 				})
 	}
 
-	private class SlounikOrgRequest(url:String, listener:Response.Listener<String>, errorListener:Response.ErrorListener)
-			:StringRequest(url, listener, errorListener) {
-		override fun parseNetworkResponse(response:NetworkResponse):Response<String> {
-			val parsed:String
-			try {
-				parsed = String(response.data, charset(HttpHeaderParser.parseCharset(response.headers, Versioned.UTF_8)))
-			} catch (e:UnsupportedEncodingException) {
-				parsed = String(response.data)
-			}
+	private class SlounikOrgRequest(
+			url: String,
+			listener: Response.Listener<String>,
+			errorListener: Response.ErrorListener
+	) : StringRequest(url, listener, errorListener) {
+		override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
+			val parsed: String = String(response.data, Charsets.UTF_8)
 
 			return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response))
 		}

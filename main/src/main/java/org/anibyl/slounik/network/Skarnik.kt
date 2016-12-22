@@ -16,25 +16,46 @@ import java.util.ArrayList
 /**
  * skarnik.by website communication.
  *
- *
- * Created by Usievaład Čorny on 22.12.15.
+ * @author Usievaład Kimajeŭ
+ * @created 22.12.2015
  */
-class Skarnik:DictionarySiteCommunicator() {
-	private var requestCount:Int = 0
+class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
+	private var requestCount: Int = 0
 
 	init {
 		url = "skarnik.by"
 	}
 
-	override fun loadArticles(wordToSearch:String, context:Context, callBack:ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
 		val requests = ArrayList<StringRequest>()
 
-		requests.add(getLoadRequest(getRBRequestStr(wordToSearch), wordToSearch, context, callBack,
-				url + " " + context.resources.getString(R.string.skarnik_dictionary_rus_bel)))
-		requests.add(getLoadRequest(getBRRequestStr(wordToSearch), wordToSearch, context, callBack,
-				url + " " + context.resources.getString(R.string.skarnik_dictionary_bel_rus)))
-		requests.add(getLoadRequest(getExplanatoryRequestStr(wordToSearch), wordToSearch, context, callBack,
-				url + " " + context.resources.getString(R.string.skarnik_dictionary_explanatory)))
+		requests.add(
+				getLoadRequest(
+						getRBRequestStr(wordToSearch),
+						wordToSearch,
+						context,
+						callback,
+						url + " " + context.resources.getString(R.string.skarnik_dictionary_rus_bel)
+				)
+		)
+		requests.add(
+				getLoadRequest(
+						getBRRequestStr(wordToSearch),
+						wordToSearch,
+						context,
+						callback,
+						url + " " + context.resources.getString(R.string.skarnik_dictionary_bel_rus)
+				)
+		)
+		requests.add(
+				getLoadRequest(
+						getExplanatoryRequestStr(wordToSearch),
+						wordToSearch,
+						context,
+						callback,
+						url + " " + context.resources.getString(R.string.skarnik_dictionary_explanatory)
+				)
+		)
 
 		requestCount = requests.size
 
@@ -43,20 +64,35 @@ class Skarnik:DictionarySiteCommunicator() {
 		}
 	}
 
-	override fun loadArticleDescription(article:Article, context:Context, callBack:ArticlesCallback) {
+	override fun loadArticleDescription(article: Article, context: Context, callBack: ArticlesCallback) {
 		// Skarnik has no loadable descriptions.
 	}
 
-	override fun enabled():Boolean {
+	override fun enabled(): Boolean {
 		return Preferences.useSkarnik
 	}
 
-	protected fun getLoadRequest(requestStr:String, wordToSearch:String, context:Context,
-			callback:ArticlesCallback, dictionaryTitle:String):StringRequest {
+	override fun parseElement(element: Element?): Article {
+		return object : Article(this) {
+			override fun fill(): Article {
+				description = Html.fromHtml(element?.html())
+
+				return this
+			}
+		}.fill()
+	}
+
+	private fun getLoadRequest(
+			requestStr: String,
+			wordToSearch: String,
+			context: Context,
+			callback: ArticlesCallback,
+			dictionaryTitle: String
+	): StringRequest {
 		return StringRequest(requestStr,
 				Response.Listener<kotlin.String> { response ->
-					object:AsyncTask<Void, Void, Article>() {
-						override fun doInBackground(vararg params:Void):Article? {
+					object : AsyncTask<Void, Void, Article>() {
+						override fun doInBackground(vararg params: Void): Article? {
 							val page = Jsoup.parse(response)
 							val articleElements = page.select("p#trn")
 
@@ -70,14 +106,14 @@ class Skarnik:DictionarySiteCommunicator() {
 							}
 						}
 
-						override fun onPostExecute(article:Article?) {
+						override fun onPostExecute(article: Article?) {
 							val status = if (--requestCount == 0)
 								ArticlesInfo.Status.SUCCESS
 							else
 								ArticlesInfo.Status.IN_PROCESS
-							val info:ArticlesInfo
+							val info: ArticlesInfo
 							if (article != null) {
-								info = ArticlesInfo(object:ArrayList<Article>() {
+								info = ArticlesInfo(object : ArrayList<Article>() {
 									init {
 										add(article)
 									}
@@ -100,32 +136,26 @@ class Skarnik:DictionarySiteCommunicator() {
 				})
 	}
 
-	override fun parseElement(element:Element?):Article {
-		return object:Article(this) {
-			override fun fill():Article {
-				description = Html.fromHtml(element?.html())
-
-				return this
-			}
-		}.fill()
-	}
-
-	private fun getRBRequestStr(wordToSearch:String):String {
+	private fun getRBRequestStr(wordToSearch: String): String {
 		return getRequestStr(wordToSearch, "rus")
 	}
 
-	private fun getBRRequestStr(wordToSearch:String):String {
+	private fun getBRRequestStr(wordToSearch: String): String {
 		return getRequestStr(wordToSearch, "bel")
 	}
 
-	private fun getExplanatoryRequestStr(wordToSearch:String):String {
+	private fun getExplanatoryRequestStr(wordToSearch: String): String {
 		return getRequestStr(wordToSearch, "beld")
 	}
 
-	private fun getRequestStr(wordToSearch:String, language:String):String {
+	private fun getRequestStr(wordToSearch: String, language: String): String {
 		val builder = Uri.Builder()
-		builder.scheme("http").authority(url).appendPath("search").appendQueryParameter("lang",
-				language).appendQueryParameter("term", wordToSearch)
+
+		builder.scheme("http")
+				.authority(url)
+				.appendPath("search")
+				.appendQueryParameter("lang", language)
+				.appendQueryParameter("term", wordToSearch)
 
 		return builder.build().toString()
 	}

@@ -3,8 +3,9 @@ package org.anibyl.slounik.network
 /**
  * Articles callback interface.
  *
- * Created by Usievaład Čorny on 29.4.15 17.47.
+ * @author Usievaład Kimajeŭ
+ * @created 29.04.2015
  */
 interface ArticlesCallback {
-	fun invoke(info:ArticlesInfo)
+	fun invoke(info: ArticlesInfo)
 }

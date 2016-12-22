@@ -31,28 +31,28 @@ import java.util.ArrayList
  * See the [design guidelines](https://developer.android.com/design/patterns/navigation-drawer.html#Interaction) for a
  * complete explanation of the behaviors implemented here.
  */
-class NavigationDrawerFragment:Fragment() {
+class NavigationDrawerFragment : Fragment() {
 	/**
 	 * A pointer to the current callbacks instance (the Activity).
 	 */
-	private var mCallbacks:NavigationDrawerCallbacks? = null
+	private var mCallbacks: NavigationDrawerCallbacks? = null
 
 	/**
 	 * Helper component that ties the action bar to the navigation drawer.
 	 */
-	private var mDrawerToggle:ActionBarDrawerToggle? = null
+	private var mDrawerToggle: ActionBarDrawerToggle? = null
 
-	private var mDrawerLayout:DrawerLayout? = null
-	private var mFragmentContainerView:View? = null
+	private var mDrawerLayout: DrawerLayout? = null
+	private var mFragmentContainerView: View? = null
 
 	private var mCurrentSelectedPosition = 0
-	private var mFromSavedInstanceState:Boolean = false
-	private var mUserLearnedDrawer:Boolean = false
-	private var searchItem:MenuItem? = null
-	private var checkBoxSlounikOrg:CheckBox? = null
-	private var checkBoxSkarnik:CheckBox? = null
+	private var mFromSavedInstanceState: Boolean = false
+	private var mUserLearnedDrawer: Boolean = false
+	private var searchItem: MenuItem? = null
+	private var checkBoxSlounikOrg: CheckBox? = null
+	private var checkBoxSkarnik: CheckBox? = null
 
-	override fun onCreate(savedInstanceState:Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		// Read in the flag indicating whether or not the user has demonstrated awareness of the
@@ -69,18 +69,21 @@ class NavigationDrawerFragment:Fragment() {
 		selectItem(mCurrentSelectedPosition)
 	}
 
-	override fun onActivityCreated(savedInstanceState:Bundle?) {
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
 		// Indicate that this fragment would like to influence the set of actions in the action bar.
 		setHasOptionsMenu(true)
 	}
 
-	override fun onCreateView(inflater:LayoutInflater?, container:ViewGroup?,
-			savedInstanceState:Bundle?):View? {
+	override fun onCreateView(
+			inflater: LayoutInflater?,
+			container: ViewGroup?,
+			savedInstanceState: Bundle?
+	): View? {
 		return inflater!!.inflate(R.layout.drawer, container, false)
 	}
 
-	val isDrawerOpen:Boolean
+	val isDrawerOpen: Boolean
 		get() = mDrawerLayout != null && mDrawerLayout!!.isDrawerOpen(mFragmentContainerView!!)
 
 	/**
@@ -90,7 +93,7 @@ class NavigationDrawerFragment:Fragment() {
 	 * *
 	 * @param drawerLayout The DrawerLayout containing this fragment's UI.
 	 */
-	fun setUp(fragmentId:Int, drawerLayout:DrawerLayout) {
+	fun setUp(fragmentId: Int, drawerLayout: DrawerLayout) {
 		mFragmentContainerView = activity.findViewById(fragmentId)
 		mDrawerLayout = drawerLayout
 
@@ -104,12 +107,12 @@ class NavigationDrawerFragment:Fragment() {
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
-		mDrawerToggle = object:ActionBarDrawerToggle(
+		mDrawerToggle = object : ActionBarDrawerToggle(
 				activity, /* host Activity */
 				mDrawerLayout, /* DrawerLayout object */
 				R.string.navigation_drawer_open, /* "open drawer" description for accessibility */
 				R.string.navigation_drawer_close  /* "close drawer" description for accessibility */) {
-			override fun onDrawerClosed(drawerView:View?) {
+			override fun onDrawerClosed(drawerView: View?) {
 				super.onDrawerClosed(drawerView)
 				if (!isAdded) {
 					return
@@ -118,7 +121,7 @@ class NavigationDrawerFragment:Fragment() {
 				activity.supportInvalidateOptionsMenu() // calls onPrepareOptionsMenu()
 			}
 
-			override fun onDrawerOpened(drawerView:View?) {
+			override fun onDrawerOpened(drawerView: View?) {
 				super.onDrawerOpened(drawerView)
 				if (!isAdded) {
 					return
@@ -176,24 +179,24 @@ class NavigationDrawerFragment:Fragment() {
 				android.R.layout.simple_spinner_dropdown_item, list)
 		languageSwitcher.adapter = adapter
 		languageSwitcher.setSelection(LanguageSwitcher.preferredNo)
-		languageSwitcher.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
-			override fun onItemSelected(parent:AdapterView<*>, view:View, position:Int, id:Long) {
+		languageSwitcher.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
 				LanguageSwitcher.set(activity, position)
 			}
 
-			override fun onNothingSelected(parent:AdapterView<*>) {
+			override fun onNothingSelected(parent: AdapterView<*>) {
 				Notifier.log("")
 			}
 		}
 	}
 
-	fun setSearchEnabled(enabled:Boolean) {
+	fun setSearchEnabled(enabled: Boolean) {
 		if (searchItem != null) {
 			searchItem!!.isEnabled = enabled
 		}
 	}
 
-	private fun selectItem(position:Int) {
+	private fun selectItem(position: Int) {
 		mCurrentSelectedPosition = position
 		if (mDrawerLayout != null) {
 			mDrawerLayout!!.closeDrawer(mFragmentContainerView)
@@ -203,12 +206,12 @@ class NavigationDrawerFragment:Fragment() {
 		}
 	}
 
-	override fun onAttach(context:Context?) {
+	override fun onAttach(context: Context?) {
 		super.onAttach(context)
 
 		try {
 			mCallbacks = context as NavigationDrawerCallbacks?
-		} catch (e:ClassCastException) {
+		} catch (e: ClassCastException) {
 			throw ClassCastException("Activity must implement NavigationDrawerCallbacks.")
 		}
 
@@ -219,18 +222,18 @@ class NavigationDrawerFragment:Fragment() {
 		mCallbacks = null
 	}
 
-	override fun onSaveInstanceState(outState:Bundle?) {
+	override fun onSaveInstanceState(outState: Bundle?) {
 		super.onSaveInstanceState(outState)
 		outState!!.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition)
 	}
 
-	override fun onConfigurationChanged(newConfig:Configuration?) {
+	override fun onConfigurationChanged(newConfig: Configuration?) {
 		super.onConfigurationChanged(newConfig)
 		// Forward the new configuration the drawer toggle component.
 		mDrawerToggle!!.onConfigurationChanged(newConfig)
 	}
 
-	override fun onCreateOptionsMenu(menu:Menu?, inflater:MenuInflater?) {
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
 		// If the drawer is open, show the global app actions in the action bar. See also
 		// showGlobalContextActionBar, which controls the top-left area of the action bar.
 		if (mDrawerLayout != null && isDrawerOpen) {
@@ -241,14 +244,14 @@ class NavigationDrawerFragment:Fragment() {
 		searchItem = menu!!.findItem(R.id.action_search)
 		val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
 		searchView.queryHint = getString(R.string.search_hint)
-		searchView.setOnQueryTextListener(object:SearchView.OnQueryTextListener {
-			override fun onQueryTextSubmit(s:String):Boolean {
+		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+			override fun onQueryTextSubmit(s: String): Boolean {
 				(activity as SlounikActivity).search(s)
 				MenuItemCompat.collapseActionView(searchItem)
 				return false
 			}
 
-			override fun onQueryTextChange(s:String):Boolean {
+			override fun onQueryTextChange(s: String): Boolean {
 				return false
 			}
 		})
@@ -256,7 +259,7 @@ class NavigationDrawerFragment:Fragment() {
 		super.onCreateOptionsMenu(menu, inflater)
 	}
 
-	override fun onOptionsItemSelected(item:MenuItem?):Boolean {
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 		if (mDrawerToggle!!.onOptionsItemSelected(item)) {
 			return true
 		}
@@ -278,7 +281,7 @@ class NavigationDrawerFragment:Fragment() {
 		actionBar.setTitle(R.string.app_name)
 	}
 
-	private val actionBar:ActionBar
+	private val actionBar: ActionBar
 		get() = (activity as AppCompatActivity).supportActionBar ?: StubActionBar()
 
 	/**
@@ -288,7 +291,7 @@ class NavigationDrawerFragment:Fragment() {
 		/**
 		 * Called when an item in the navigation drawer is selected.
 		 */
-		fun onNavigationDrawerItemSelected(position:Int)
+		fun onNavigationDrawerItemSelected(position: Int)
 	}
 
 	companion object {

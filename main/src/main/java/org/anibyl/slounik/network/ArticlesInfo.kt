@@ -7,7 +7,8 @@ import java.util.ArrayList
 
  * Contains articles and connected information.
 
- * Created by Usievaład Čorny on 29.4.15 16.08.
+ * @author Usievaład Kimajeŭ
+ * @created 29.04.2015
  */
 class ArticlesInfo {
 	enum class Status {
@@ -16,17 +17,17 @@ class ArticlesInfo {
 		FAILURE
 	}
 
-	var articles:ArrayList<Article>? = null
+	var articles: ArrayList<Article>? = null
 		private set
-	var status:Status? = null
+	var status: Status? = null
 		internal set
 
-	constructor(articles:ArrayList<Article>?, status:Status) {
+	constructor(articles: ArrayList<Article>?, status: Status) {
 		this.articles = articles
 		this.status = status
 	}
 
-	constructor(articles:ArrayList<Article>?) {
+	constructor(articles: ArrayList<Article>?) {
 		this.articles = articles
 
 		if (articles == null) {
@@ -36,7 +37,7 @@ class ArticlesInfo {
 		}
 	}
 
-	constructor(status:Status) {
+	constructor(status: Status) {
 		this.status = status
 	}
 }

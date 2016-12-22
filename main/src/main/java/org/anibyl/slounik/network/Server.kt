@@ -14,24 +14,25 @@ import org.json.JSONObject
 /**
  * Own server communication.
  *
- * Created by Usievaład Čorny on 05.04.2015 4:16.
+ * @author Usievaład Kimajeŭ
+ * @created 05.04.2015
  */
 object Server {
-	private var config:Config? = null
+	private var config: Config? = null
 
 	abstract class Callback {
 		abstract operator fun invoke()
 	}
 
-	@JvmOverloads fun loadConfig(context:Context, callback:Callback? = null) {
+	@JvmOverloads fun loadConfig(context: Context, callback: Callback? = null) {
 		val androidId = getAndroidId(context)
 
 		val requestStr = context.getString(R.string.server) + "config"
 		val queue = Volley.newRequestQueue(context)
 		val request = StringRequest(requestStr,
 				Response.Listener<kotlin.String> { response ->
-					object:AsyncTask<String, Void, Config>() {
-						override fun doInBackground(vararg params:String):Config {
+					object : AsyncTask<String, Void, Config>() {
+						override fun doInBackground(vararg params: String): Config {
 							val config = Config()
 							try {
 								val json = JSONObject(response)
@@ -43,21 +44,21 @@ object Server {
 								config.skarnikUrl = skarnikUrl
 
 								val array = json.getJSONArray("testDevices")
-								var device:JSONObject
+								var device: JSONObject
 								for (i in 0..array.length() - 1) {
 									device = array.getJSONObject(i)
 									if (androidId == device.optString("androidId")) {
 										config.isTestDevice = true
 									}
 								}
-							} catch (ignored:JSONException) {
+							} catch (ignored: JSONException) {
 								Notifier.log("Config can not be read.")
 							}
 
 							return config
 						}
 
-						override fun onPostExecute(config:Config) {
+						override fun onPostExecute(config: Config) {
 							Server.config = config
 							callback?.invoke()
 						}
@@ -70,7 +71,7 @@ object Server {
 		queue.add(request)
 	}
 
-	val mainUrl:String?
+	val mainUrl: String?
 		get() {
 			if (config != null) {
 				return config!!.mainUrl
@@ -79,7 +80,7 @@ object Server {
 			}
 		}
 
-	val skarnikUrl:String?
+	val skarnikUrl: String?
 		get() {
 			if (config != null) {
 				return config!!.skarnikUrl
@@ -88,12 +89,12 @@ object Server {
 			}
 		}
 
-	val isTestDevice:Boolean
+	val isTestDevice: Boolean
 		get() = config != null && config!!.isTestDevice
 
 	private class Config {
-		var isTestDevice:Boolean = false
-		var mainUrl:String? = null
-		var skarnikUrl:String? = null
+		var isTestDevice: Boolean = false
+		var mainUrl: String? = null
+		var skarnikUrl: String? = null
 	}
 }

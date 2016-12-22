@@ -7,17 +7,17 @@ import android.graphics.drawable.Drawable
 /**
  * Created by anibyl on 18.8.16.
  */
-class StubDrawable:Drawable() {
-	override fun draw(canvas:Canvas?) {
+class StubDrawable : Drawable() {
+	override fun draw(canvas: Canvas?) {
 	}
 
-	override fun setAlpha(alpha:Int) {
+	override fun setAlpha(alpha: Int) {
 	}
 
-	override fun getOpacity():Int {
-		return 0;
+	override fun getOpacity(): Int {
+		return 0
 	}
 
-	override fun setColorFilter(colorFilter:ColorFilter?) {
+	override fun setColorFilter(colorFilter: ColorFilter?) {
 	}
 }
