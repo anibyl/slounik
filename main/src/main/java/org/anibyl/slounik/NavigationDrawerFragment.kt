@@ -75,12 +75,8 @@ class NavigationDrawerFragment : Fragment() {
 		setHasOptionsMenu(true)
 	}
 
-	override fun onCreateView(
-			inflater: LayoutInflater?,
-			container: ViewGroup?,
-			savedInstanceState: Bundle?
-	): View? {
-		return inflater!!.inflate(R.layout.drawer, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		return inflater.inflate(R.layout.drawer, container, false)
 	}
 
 	val isDrawerOpen: Boolean
