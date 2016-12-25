@@ -56,9 +56,6 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 				skarnik?.url = Server.skarnikUrl
 			}
 		})
-		if (LanguageSwitcher.initialize(this)) {
-			return
-		}
 
 		setContentView(R.layout.main)
 

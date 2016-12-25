@@ -18,13 +18,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.CheckBox
-import android.widget.Spinner
 import org.anibyl.slounik.core.Preferences
 import org.anibyl.slounik.util.StubActionBar
-import java.util.ArrayList
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -163,25 +159,6 @@ class NavigationDrawerFragment : Fragment() {
 		checkBoxSearchInTitle.isChecked = Preferences.searchInTitles
 		checkBoxSearchInTitle.setOnCheckedChangeListener { buttonView, isChecked ->
 			Preferences.searchInTitles = isChecked
-		}
-
-		val languageSwitcher = activity.findViewById(R.id.language_switcher) as Spinner
-		val list = ArrayList<String>()
-		for (language in LanguageSwitcher.languages) {
-			list.add(language.name)
-		}
-		val adapter = ArrayAdapter(activity,
-				android.R.layout.simple_spinner_dropdown_item, list)
-		languageSwitcher.adapter = adapter
-		languageSwitcher.setSelection(LanguageSwitcher.preferredNo)
-		languageSwitcher.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-			override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-				LanguageSwitcher.set(activity, position)
-			}
-
-			override fun onNothingSelected(parent: AdapterView<*>) {
-				Notifier.log("")
-			}
 		}
 	}
 

@@ -13,7 +13,6 @@ import android.os.Build
  * @created 03.11.2015
  */
 object Preferences {
-	private val LANGUAGE = "language"
 	private val USE_SLOUNIK_ORG = "use_slounik_org"
 	private val USE_SKARNIK = "use_skarnik"
 	private val SEARCH_IN_TITLES = "search_in_titles"
@@ -23,12 +22,6 @@ object Preferences {
 	fun initialize(context: Context) {
 		manager = PreferencesManager(context.getSharedPreferences("org.anibyl.slounik", Context.MODE_PRIVATE))
 	}
-
-	var language: String?
-		get() = manager!!.getString(LANGUAGE)
-		set(language) {
-			manager!!.save(LANGUAGE, language)
-		}
 
 	var useSlounikOrg: Boolean
 		get() = manager!!.getBoolean(USE_SLOUNIK_ORG, true)
