@@ -2,9 +2,15 @@
 <resources>
     <string name="app_name">Slounik</string>
 
-    <string name="about_text">Slounik is the client application for belarusian dictionary websites.</string>
-    <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
+    <string name="about_dialog_text">Slounik is the client application for belarusian dictionary websites.</string>
+    <string name="about_dialog_author">Created by Usievaład Kimajeŭ.</string>
+    <string name="about_dialog_homepage_button">HOME PAGE</string>
+    <string name="about_dialog_close_button">CLOSE</string>
+
+    <string name="drawer_dictionaries_title">DICTIONARIES</string>
+    <string name="drawer_settings_title">SETTINGS</string>
     <string name="drawer_checkbox_search_in_title">Search only in title</string>
+    <string name="drawer_about_button">ABOUT</string>
 
     <string name="toast_text_copied">Text copied to clipboard.</string>
 

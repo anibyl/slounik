@@ -16,8 +16,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import org.anibyl.slounik.core.Preferences
+import org.anibyl.slounik.dialogs.AboutDialog
 import org.anibyl.slounik.util.StubActionBar
 
 /**
@@ -124,6 +126,11 @@ class NavigationDrawerFragment : Fragment() {
 		checkBoxSearchInTitle.isChecked = Preferences.searchInTitles
 		checkBoxSearchInTitle.setOnCheckedChangeListener { buttonView, isChecked ->
 			Preferences.searchInTitles = isChecked
+		}
+
+		val aboutButton = activity.findViewById(R.id.drawer_about_button) as Button
+		aboutButton.setOnClickListener {
+			AboutDialog().show(activity.supportFragmentManager, "about_dialog")
 		}
 	}
 

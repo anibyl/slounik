@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Слоўнік</string>
-    <string name="about_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
-    <string name="about_author">Аўтар: Усевалад Чорны (anibyl@riseup.net)</string>
+
+    <string name="about_dialog_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
+    <string name="about_dialog_author">Аўтар: Усевалад Кімаеў</string>
+    <string name="about_dialog_homepage_button">ХАТНЯЯ СТАРОНКА</string>
+    <string name="about_dialog_close_button">ЗАЧЫНІЦЬ</string>
+
+    <string name="drawer_dictionaries_title">СЛОЎНІКІ</string>
+    <string name="drawer_settings_title">НАЛАДЫ</string>
     <string name="drawer_checkbox_search_in_title">Шукаць толькі ў назвах</string>
+    <string name="drawer_about_button">ПРА ПРАГРАМУ</string>
+
     <string name="toast_text_copied">Тэкст скапіяваны ў кішэню.</string>
 
     <string name="article_button_load_full_article">УВЕСЬ АРТЫКУЛ</string>

@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Слоуник</string>
-    <string name="about_text">Слоуник — клиентское приложение для белорусских словарных сайтов.</string>
-    <string name="about_author">Автор: Всеволод Чёрный (anibyl@riseup.net)</string>
+
+    <string name="about_dialog_text">Слоуник — клиентское приложение для белорусских словарных сайтов.</string>
+    <string name="about_dialog_author">Автор: Всеволод Кимаев</string>
+    <string name="about_dialog_homepage_button">ДОМАШНЯЯ СТРАНИЦА</string>
+    <string name="about_dialog_close_button">ЗАКРЫТЬ</string>
+
+    <string name="drawer_dictionaries_title">СЛОВАРИ</string>
+    <string name="drawer_settings_title">НАСТРОЙКИ</string>
     <string name="drawer_checkbox_search_in_title">Искать только в названиях</string>
+    <string name="drawer_about_button">О ПРОГРАММЕ</string>
+
     <string name="toast_text_copied">Текст скопирован в буфер обмена.</string>
 
     <string name="article_button_load_full_article">ВСЯ СТАТЬЯ</string>
