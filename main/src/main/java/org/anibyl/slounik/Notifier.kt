@@ -18,7 +18,7 @@ object Notifier {
 
 	fun toast(
 			context: Context,
-			text: String,
+			text: CharSequence,
 			developerMode: Boolean = false,
 			length: Int = Toast.LENGTH_SHORT
 	) {
