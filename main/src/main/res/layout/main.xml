@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 app:spb_sections_count="4"
-                app:spb_color="#FF0000"
+                app:spb_color="@color/accent"
                 app:spb_speed="1.0"
                 app:spb_stroke_width="4dp"
                 app:spb_stroke_separator_length="4dp"
