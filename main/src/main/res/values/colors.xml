@@ -2,7 +2,7 @@
 <resources>
     <color name="primary_dark">#212121</color>
     <color name="text_primary">#FFF</color>
-    <color name="window_background">#333</color>
+    <color name="window_background">#303030</color>
     <color name="navigation_bar">#212121</color>
     <color name="accent">#FF9800</color>
 
