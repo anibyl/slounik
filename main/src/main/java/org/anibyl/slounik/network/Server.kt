@@ -2,10 +2,10 @@ package org.anibyl.slounik.network
 
 import android.content.Context
 import android.os.AsyncTask
+import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.getAndroidId
 import org.json.JSONException
@@ -17,84 +17,55 @@ import org.json.JSONObject
  * @author Usievaład Kimajeŭ
  * @created 05.04.2015
  */
-object Server {
-	private var config: Config? = null
-
-	abstract class Callback {
-		abstract operator fun invoke()
+class Server {
+	class Config {
+		var isTestDevice: Boolean = false
+		var slounikOrgUrl: String = "slounik.org"
+		var skarnikUrl: String = "skarnik.by"
 	}
 
-	@JvmOverloads fun loadConfig(context: Context, callback: Callback? = null) {
+	fun loadConfig(context: Context): Config {
+		val config = Config()
+
 		val androidId = getAndroidId(context)
 
 		val requestStr = context.getString(R.string.server) + "config"
 		val queue = Volley.newRequestQueue(context)
 		val request = StringRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
+				Response.Listener<String> { response ->
 					object : AsyncTask<String, Void, Config>() {
 						override fun doInBackground(vararg params: String): Config {
-							val config = Config()
 							try {
 								val json = JSONObject(response)
 
-								val mainUrl = json.getString("mainUrl")
-								config.mainUrl = mainUrl
+								config.slounikOrgUrl = json.getString("slounikOrgUrl")
 
-								val skarnikUrl = json.getString("skarnikUrl")
-								config.skarnikUrl = skarnikUrl
+								config.skarnikUrl = json.getString("skarnikUrl")
 
 								val array = json.getJSONArray("testDevices")
-								var device: JSONObject
+
 								for (i in 0..array.length() - 1) {
-									device = array.getJSONObject(i)
-									if (androidId == device.optString("androidId")) {
+									if (androidId == array.getJSONObject(i).optString("androidId")) {
 										config.isTestDevice = true
+										break
 									}
 								}
-							} catch (ignored: JSONException) {
-								Notifier.log("Config can not be read.")
+							} catch (e: JSONException) {
+								Log.e(TAG, "Config cannot be read.", e)
 							}
 
 							return config
 						}
-
-						override fun onPostExecute(config: Config) {
-							Server.config = config
-							callback?.invoke()
-						}
 					}.execute()
 				},
 				Response.ErrorListener {
-					callback?.invoke()
+					Log.e(TAG, "Config cannot be loaded.")
 				})
 
 		queue.add(request)
-	}
 
-	val mainUrl: String?
-		get() {
-			if (config != null) {
-				return config!!.mainUrl
-			} else {
-				return null
-			}
-		}
-
-	val skarnikUrl: String?
-		get() {
-			if (config != null) {
-				return config!!.skarnikUrl
-			} else {
-				return null
-			}
-		}
-
-	val isTestDevice: Boolean
-		get() = config != null && config!!.isTestDevice
-
-	private class Config {
-		var isTestDevice: Boolean = false
-		var mainUrl: String? = null
-		var skarnikUrl: String? = null
+		return config
 	}
 }
+
+private const val TAG: String = "Slounik server"

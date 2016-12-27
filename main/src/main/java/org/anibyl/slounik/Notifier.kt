@@ -3,7 +3,8 @@ package org.anibyl.slounik
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import org.anibyl.slounik.network.Server
+import org.anibyl.slounik.network.Server.Config
+import javax.inject.Inject
 
 /**
  * Application notifier.
@@ -11,24 +12,29 @@ import org.anibyl.slounik.network.Server
  * @author Usievaład Kimajeŭ
  * @created 05.04.2015
  */
-object Notifier {
-	fun toast(context: Context, id: Int) {
-		toast(context, context.resources.getString(id), false)
+class Notifier {
+	@Inject lateinit var context: Context
+	@Inject lateinit var config: Config
+
+	private val isTestDevice: Boolean
+		get() = config.isTestDevice
+
+	init {
+		SlounikApplication.graph.inject(this)
 	}
 
-	fun toast(
-			context: Context,
-			text: CharSequence,
-			developerMode: Boolean = false,
-			length: Int = Toast.LENGTH_SHORT
-	) {
-		if (!developerMode || Server.isTestDevice) {
+	fun toast(id: Int) {
+		toast(context.resources.getString(id), false)
+	}
+
+	fun toast(text: CharSequence, developerMode: Boolean = false, length: Int = Toast.LENGTH_SHORT) {
+		if (!developerMode || isTestDevice) {
 			Toast.makeText(context, text, length).show()
 		}
 	}
 
 	fun log(message: String) {
-		if (Server.isTestDevice) {
+		if (isTestDevice) {
 			Log.d("Slounik", message)
 		}
 	}

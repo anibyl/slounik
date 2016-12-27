@@ -10,11 +10,12 @@ import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
-import org.anibyl.slounik.core.Preferences
+import org.anibyl.slounik.SlounikApplication
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import java.util.*
+import java.util.ArrayList
+import javax.inject.Inject
 
 /**
  * slounik.org website communication.
@@ -23,8 +24,13 @@ import java.util.*
  * @created 08.04.2015
  */
 class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
+	@Inject lateinit var notifier: Notifier
+
+	override val url: String
+		get() = config.slounikOrgUrl
+
 	init {
-		url = "slounik.org"
+		SlounikApplication.graph.inject(this)
 	}
 
 	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
@@ -33,7 +39,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 		val builder = Uri.Builder()
 		builder.scheme("http").authority(url).appendPath("search").appendQueryParameter("search", wordToSearch)
 
-		if (Preferences.searchInTitles) {
+		if (preferences.searchInTitles) {
 			builder.appendQueryParameter("un", "1")
 		}
 
@@ -55,7 +61,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 	}
 
 	override fun enabled(): Boolean {
-		return Preferences.useSlounikOrg
+		return preferences.useSlounikOrg
 	}
 
 	private fun getLoadRequest(requestStr: String, context: Context, callback: ArticlesCallback): SlounikOrgRequest {
@@ -87,7 +93,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 											})
 
 									getQueue(context).add(eachDicRequest)
-									Notifier.log("Request added to queue: " + eachDicRequest)
+									notifier.log("Request added to queue: " + eachDicRequest)
 								}
 							}
 
@@ -96,7 +102,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 
 						override fun onPostExecute(ignored: Void?) {
 							if (dicsAmount == 0) {
-								Notifier.log("Callback invoked: no dictionaries.")
+								notifier.log("Callback invoked: no dictionaries.")
 								callback.invoke(ArticlesInfo(articles = null, status = ArticlesInfo.Status.SUCCESS))
 							}
 						}
@@ -106,14 +112,13 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 								ArticlesInfo.Status.SUCCESS
 							else
 								ArticlesInfo.Status.IN_PROCESS
-							Notifier.log("Callback invoked, " + (if (list != null) list.size else 0)
-									+ " articles added.")
+							notifier.log("Callback invoked, " + (list?.size ?: 0) + " articles added.")
 							callback.invoke(ArticlesInfo(list!!, status))
 						}
 					}.execute()
 				},
 				Response.ErrorListener {
-					Notifier.toast(context, "Error response.", true)
+					notifier.toast("Error response.", true)
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				})
 	}
@@ -171,7 +176,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 				Response.Listener<kotlin.String> { response ->
 					object : AsyncTask<Void, Void, ArrayList<Article>>() {
 						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							Notifier.log("Response received for $dicRequestStr.")
+							notifier.log("Response received for $dicRequestStr.")
 							val dicPage = Jsoup.parse(response)
 							val articleElements = dicPage.select("li#li_poszuk")
 
@@ -197,7 +202,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 					}.execute()
 				},
 				Response.ErrorListener { error ->
-					Notifier.log("Response error: " + error.message)
+					notifier.log("Response error: " + error.message)
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				})
 	}
@@ -211,7 +216,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 				Response.Listener<kotlin.String> { response ->
 					object : AsyncTask<Void, Void, ArrayList<Article>>() {
 						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							Notifier.log("Response received for $requestStr.")
+							notifier.log("Response received for $requestStr.")
 							val articlePage = Jsoup.parse(response)
 							val articleElement = articlePage.select("td.n12").first()
 
@@ -235,7 +240,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 					}.execute()
 				},
 				Response.ErrorListener { error ->
-					Notifier.log("Response error: " + error.message)
+					notifier.log("Response error: " + error.message)
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				})
 	}

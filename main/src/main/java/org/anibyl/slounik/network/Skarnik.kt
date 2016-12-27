@@ -8,10 +8,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
-import org.anibyl.slounik.core.Preferences
+import org.anibyl.slounik.SlounikApplication
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.ArrayList
+import javax.inject.Inject
 
 /**
  * skarnik.by website communication.
@@ -20,10 +21,15 @@ import java.util.ArrayList
  * @created 22.12.2015
  */
 class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
+	@Inject lateinit var notifier: Notifier
+
+	override val url: String
+		get() = config.skarnikUrl
+
 	private var requestCount: Int = 0
 
 	init {
-		url = "skarnik.by"
+		SlounikApplication.graph.inject(this)
 	}
 
 	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
@@ -69,7 +75,7 @@ class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
 	}
 
 	override fun enabled(): Boolean {
-		return Preferences.useSkarnik
+		return preferences.useSkarnik
 	}
 
 	override fun parseElement(element: Element?): Article {
@@ -126,7 +132,7 @@ class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
 					}.execute()
 				},
 				Response.ErrorListener {
-					Notifier.toast(context, "Error response.", true)
+					notifier.toast("Error response.", developerMode = true)
 					// TODO fix it.
 					val status = if (--requestCount == 0)
 						ArticlesInfo.Status.FAILURE

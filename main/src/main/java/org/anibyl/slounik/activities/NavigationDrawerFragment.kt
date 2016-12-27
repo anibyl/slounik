@@ -1,4 +1,4 @@
-package org.anibyl.slounik
+package org.anibyl.slounik.activities
 
 import android.content.Context
 import android.content.res.Configuration
@@ -18,9 +18,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import org.anibyl.slounik.R
+import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.core.Preferences
 import org.anibyl.slounik.dialogs.AboutDialog
 import org.anibyl.slounik.util.StubActionBar
+import javax.inject.Inject
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -28,7 +31,20 @@ import org.anibyl.slounik.util.StubActionBar
  * complete explanation of the behaviors implemented here.
  */
 class NavigationDrawerFragment : Fragment() {
-	val isDrawerOpen: Boolean
+	/**
+	 * Callbacks interface that all activities using this fragment must implement.
+	 */
+	interface NavigationDrawerCallbacks {
+		fun onSearchClicked(wordToSearch: String)
+
+		fun getLastSearchedWord(): String?
+
+		fun getSupportActionBar(): ActionBar?
+	}
+
+	@Inject lateinit var preferences: Preferences
+
+	internal val isDrawerOpen: Boolean
 		get() = drawerLayout != null && drawerLayout!!.isDrawerOpen(fragmentContainerView)
 
 	private val actionBar: ActionBar
@@ -61,15 +77,80 @@ class NavigationDrawerFragment : Fragment() {
 		return inflater.inflate(R.layout.drawer, container, false)
 	}
 
+	override fun onAttach(context: Context?) {
+		super.onAttach(context)
+
+		try {
+			callbacks = context as NavigationDrawerCallbacks?
+		} catch (e: ClassCastException) {
+			throw ClassCastException("Activity must implement NavigationDrawerCallbacks.")
+		}
+	}
+
+	override fun onDetach() {
+		super.onDetach()
+
+		callbacks = null
+	}
+
+	override fun onConfigurationChanged(newConfig: Configuration?) {
+		super.onConfigurationChanged(newConfig)
+		// Forward the new configuration the drawer toggle component.
+		drawerToggle!!.onConfigurationChanged(newConfig)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		// If the drawer is open, show the global app actions in the action bar. See also
+		// showGlobalContextActionBar, which controls the top-left area of the action bar.
+		if (drawerLayout != null && isDrawerOpen) {
+			inflater.inflate(R.menu.main, menu)
+			showGlobalContextActionBar()
+		}
+
+		searchItem = menu.findItem(R.id.action_search)
+		val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+		searchView.queryHint = getString(R.string.search_hint)
+		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+			override fun onQueryTextSubmit(s: String): Boolean {
+				callbacks?.onSearchClicked(s)
+				MenuItemCompat.collapseActionView(searchItem)
+				return false
+			}
+
+			override fun onQueryTextChange(s: String): Boolean {
+				return false
+			}
+		})
+		searchView.setOnSearchClickListener {
+			searchView.setQuery(callbacks?.getLastSearchedWord(), false)
+		}
+
+		super.onCreateOptionsMenu(menu, inflater)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		if (drawerToggle!!.onOptionsItemSelected(item)) {
+			return true
+		}
+
+		if (drawerLayout != null) {
+			drawerLayout!!.closeDrawer(fragmentContainerView)
+		}
+
+		return super.onOptionsItemSelected(item)
+	}
+
 	/**
 	 * Users of this fragment must call this method to set up the navigation drawer interactions.
 	 *
 	 * @param fragmentContainerView This fragment in its activity's layout.
 	 * @param drawerLayout          The DrawerLayout containing this fragment's UI.
 	 */
-	fun setUp(fragmentContainerView: View, drawerLayout: DrawerLayout) {
+	internal fun setup(fragmentContainerView: View, drawerLayout: DrawerLayout) {
 		this.fragmentContainerView = fragmentContainerView
 		this.drawerLayout = drawerLayout
+
+		SlounikApplication.graph.inject(this)
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
@@ -109,23 +190,23 @@ class NavigationDrawerFragment : Fragment() {
 		drawerLayout.addDrawerListener(drawerToggle!!)
 
 		checkBoxSlounikOrg = activity.findViewById(R.id.checkbox_slounik_org) as CheckBox
-		checkBoxSlounikOrg!!.isChecked = Preferences.useSlounikOrg
+		checkBoxSlounikOrg!!.isChecked = preferences.useSlounikOrg
 		checkBoxSlounikOrg!!.setOnCheckedChangeListener { buttonView, isChecked ->
-			Preferences.useSlounikOrg = isChecked
+			preferences.useSlounikOrg = isChecked
 			checkBoxSkarnik!!.isEnabled = isChecked
 		}
 
 		checkBoxSkarnik = activity.findViewById(R.id.checkbox_skarnik) as CheckBox
-		checkBoxSkarnik!!.isChecked = Preferences.useSkarnik
+		checkBoxSkarnik!!.isChecked = preferences.useSkarnik
 		checkBoxSkarnik!!.setOnCheckedChangeListener { buttonView, isChecked ->
-			Preferences.useSkarnik = isChecked
+			preferences.useSkarnik = isChecked
 			checkBoxSlounikOrg!!.isEnabled = isChecked
 		}
 
 		val checkBoxSearchInTitle = activity.findViewById(R.id.checkbox_search_in_title) as CheckBox
-		checkBoxSearchInTitle.isChecked = Preferences.searchInTitles
+		checkBoxSearchInTitle.isChecked = preferences.searchInTitles
 		checkBoxSearchInTitle.setOnCheckedChangeListener { buttonView, isChecked ->
-			Preferences.searchInTitles = isChecked
+			preferences.searchInTitles = isChecked
 		}
 
 		val aboutButton = activity.findViewById(R.id.drawer_about_button) as Button
@@ -134,73 +215,10 @@ class NavigationDrawerFragment : Fragment() {
 		}
 	}
 
-	fun setSearchEnabled(enabled: Boolean) {
+	internal fun setSearchEnabled(enabled: Boolean) {
 		if (searchItem != null) {
 			searchItem!!.isEnabled = enabled
 		}
-	}
-
-	override fun onAttach(context: Context?) {
-		super.onAttach(context)
-
-		try {
-			callbacks = context as NavigationDrawerCallbacks?
-		} catch (e: ClassCastException) {
-			throw ClassCastException("Activity must implement NavigationDrawerCallbacks.")
-		}
-
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-		callbacks = null
-	}
-
-	override fun onConfigurationChanged(newConfig: Configuration?) {
-		super.onConfigurationChanged(newConfig)
-		// Forward the new configuration the drawer toggle component.
-		drawerToggle!!.onConfigurationChanged(newConfig)
-	}
-
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		// If the drawer is open, show the global app actions in the action bar. See also
-		// showGlobalContextActionBar, which controls the top-left area of the action bar.
-		if (drawerLayout != null && isDrawerOpen) {
-			inflater.inflate(R.menu.main, menu)
-			showGlobalContextActionBar()
-		}
-
-		searchItem = menu.findItem(R.id.action_search)
-		val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
-		searchView.queryHint = getString(R.string.search_hint)
-		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-			override fun onQueryTextSubmit(s: String): Boolean {
-				(activity as SlounikActivity).search(s)
-				MenuItemCompat.collapseActionView(searchItem)
-				return false
-			}
-
-			override fun onQueryTextChange(s: String): Boolean {
-				return false
-			}
-		})
-		searchView.setOnSearchClickListener {
-			searchView.setQuery(callbacks?.getLastSearchedWord(), false)
-		}
-
-		super.onCreateOptionsMenu(menu, inflater)
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-		if (drawerToggle!!.onOptionsItemSelected(item)) {
-			return true
-		}
-
-		if (drawerLayout != null) {
-			drawerLayout!!.closeDrawer(fragmentContainerView)
-		}
-
-		return super.onOptionsItemSelected(item)
 	}
 
 	/**
@@ -211,16 +229,5 @@ class NavigationDrawerFragment : Fragment() {
 		val actionBar = actionBar
 		actionBar.setDisplayShowTitleEnabled(true)
 		actionBar.setTitle(R.string.app_name)
-	}
-
-	/**
-	 * Callbacks interface that all activities using this fragment must implement.
-	 */
-	interface NavigationDrawerCallbacks {
-		fun search(wordToSearch: String)
-
-		fun getLastSearchedWord(): String?
-
-		fun getSupportActionBar(): ActionBar?
 	}
 }

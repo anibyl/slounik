@@ -14,10 +14,12 @@ import android.widget.Button
 import android.widget.TextView
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
+import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.network.ArticlesCallback
 import org.anibyl.slounik.network.ArticlesInfo
 import org.anibyl.slounik.ui.ProgressBar
+import javax.inject.Inject
 
 /**
  * Dialog for the text of an article.
@@ -26,19 +28,23 @@ import org.anibyl.slounik.ui.ProgressBar
  * @created 01.03.2015
  */
 class ArticleDialog : DialogFragment() {
-	private var article: Article? = null
+	@Inject lateinit var notifier: Notifier
+
+	lateinit private var article: Article
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		SlounikApplication.graph.inject(this)
+
 		article = arguments.getSerializable("article") as Article?
-				?: savedInstanceState?.getSerializable("article") as Article?
+				?: savedInstanceState?.getSerializable("article") as Article
 	}
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		val view = inflater!!.inflate(R.layout.article, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		val view = inflater.inflate(R.layout.article, container, false)
 
-		val isLoadable = article!!.linkToFullDescription != null
+		val isLoadable = article.linkToFullDescription != null
 
 		val dictionary = view.findViewById(R.id.dictionary) as TextView
 		val description = view.findViewById(R.id.list_item_description) as TextView
@@ -46,22 +52,22 @@ class ArticleDialog : DialogFragment() {
 		val loadButton = view.findViewById(R.id.article_button_load) as Button
 		val progressBar = view.findViewById(R.id.article_progress) as ProgressBar
 
-		dictionary.text = article!!.dictionary
-		description.text = article!!.description
+		dictionary.text = article.dictionary
+		description.text = article.description
 
 		description.movementMethod = ScrollingMovementMethod()
 
 		description.setOnLongClickListener {
 			val text = description.text
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				val clipboard = context!!.getSystemService(Context.CLIPBOARD_SERVICE) as android.text.ClipboardManager
+				val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.text.ClipboardManager
 				clipboard.text = text
 			} else {
-				val clipboard = context!!.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-				val clip = ClipData.newPlainText(article!!.description, text)
+				val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+				val clip = ClipData.newPlainText(article.description, text)
 				clipboard.primaryClip = clip
 			}
-			Notifier.toast(context, R.string.toast_text_copied)
+			notifier.toast(R.string.toast_text_copied)
 			true
 		}
 
@@ -71,12 +77,12 @@ class ArticleDialog : DialogFragment() {
 			loadButton.setOnClickListener {
 				loadButton.isEnabled = false
 
-				if (article!!.fullDescription == null) {
+				if (article.fullDescription == null) {
 					progressBar.progressiveStart()
-					article!!.communicator.loadArticleDescription(article!!, context, object : ArticlesCallback {
+					article.communicator.loadArticleDescription(article, context, object : ArticlesCallback {
 						override fun invoke(info: ArticlesInfo) {
 							when (info.status) {
-								ArticlesInfo.Status.SUCCESS -> description.text = article!!.fullDescription
+								ArticlesInfo.Status.SUCCESS -> description.text = article.fullDescription
 
 								else -> loadButton.isEnabled = true
 							}
@@ -84,7 +90,7 @@ class ArticleDialog : DialogFragment() {
 						}
 					})
 				} else {
-					description.text = article!!.fullDescription
+					description.text = article.fullDescription
 				}
 			}
 		} else {

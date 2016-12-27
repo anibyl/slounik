@@ -5,7 +5,7 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SlounikActivity"
+        tools:context=".activities.SlounikActivity"
 >
     <RelativeLayout
             android:id="@+id/container"
@@ -49,7 +49,7 @@
             android:layout_width="@dimen/drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:name="org.anibyl.slounik.NavigationDrawerFragment"
+            android:name="org.anibyl.slounik.activities.NavigationDrawerFragment"
             tools:layout="@layout/drawer"
     />
 </android.support.v4.widget.DrawerLayout>
