@@ -5,6 +5,7 @@
         android:layout_height="match_parent"
         android:background="@color/transparent_black"
         android:padding="@dimen/big_padding"
+        android:clickable="true"
 >
     <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
