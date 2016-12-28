@@ -23,13 +23,13 @@ repositories {
 }
 
 android {
-	compileSdkVersion 24
-	buildToolsVersion "24"
+	compileSdkVersion 25
+	buildToolsVersion "25.0.2"
 
 	defaultConfig {
 		applicationId "org.anibyl.slounik"
-		minSdkVersion 8
-		targetSdkVersion 23
+		minSdkVersion 9
+		targetSdkVersion 25
 		versionCode 11
 		versionName "1.0.0"
 	}
@@ -37,6 +37,9 @@ android {
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_7
 		targetCompatibility JavaVersion.VERSION_1_7
+	}
+	sourceSets {
+		main.java.srcDirs += "src/main/kotlin"
 	}
 	buildTypes {
 		release {
@@ -47,9 +50,6 @@ android {
 			minifyEnabled false
 		}
 	}
-	sourceSets {
-		main.java.srcDirs += "src/main/kotlin"
-	}
 }
 
 kapt {
@@ -58,9 +58,9 @@ kapt {
 
 dependencies {
 	compile "com.android.volley:volley:1.0.0"
-	compile "com.android.support:support-v4:24.0.0"
-	compile "com.android.support:appcompat-v7:24.0.0"
-	compile "org.jsoup:jsoup:1.9.2"
+	compile "com.android.support:support-v4:25.1.0"
+	compile "com.android.support:appcompat-v7:25.1.0"
+	compile "org.jsoup:jsoup:1.10.1"
 	compile "com.github.castorflex.smoothprogressbar:library:1.1.0"
 	compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 	kapt "com.google.dagger:dagger-compiler:$dagger_version"
