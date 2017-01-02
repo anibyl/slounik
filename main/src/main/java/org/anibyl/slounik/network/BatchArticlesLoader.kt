@@ -9,9 +9,9 @@ import java.util.ArrayList
  * @author Usievaład Kimajeŭ
  * @created 23.12.2015
  */
-class BatchArticlesLoader(vararg communicators: DictionarySiteCommunicator<ArticlesCallback>)
+class BatchArticlesLoader(vararg communicators: DictionarySiteCommunicator)
 	: ArticlesLoader<BatchArticlesLoader.BatchArticlesCallback> {
-	private val communicators: Array<out DictionarySiteCommunicator<ArticlesCallback>>
+	private val communicators: Array<out DictionarySiteCommunicator>
 
 	init {
 		this.communicators = communicators

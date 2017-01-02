@@ -18,6 +18,7 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.network.ArticlesCallback
 import org.anibyl.slounik.network.ArticlesInfo
+import org.anibyl.slounik.network.loadArticleDescription
 import org.anibyl.slounik.ui.ProgressBar
 import javax.inject.Inject
 
@@ -79,16 +80,14 @@ class ArticleDialog : DialogFragment() {
 
 				if (article.fullDescription == null) {
 					progressBar.progressiveStart()
-					article.communicator.loadArticleDescription(article, context, object : ArticlesCallback {
-						override fun invoke(info: ArticlesInfo) {
-							when (info.status) {
-								ArticlesInfo.Status.SUCCESS -> description.text = article.fullDescription
+					article.loadArticleDescription { info: ArticlesInfo ->
+						when (info.status) {
+							ArticlesInfo.Status.SUCCESS -> description.text = article.fullDescription
 
-								else -> loadButton.isEnabled = true
-							}
-							progressBar.progressiveStop()
+							else -> loadButton.isEnabled = true
 						}
-					})
+						progressBar.progressiveStop()
+					}
 				} else {
 					description.text = article.fullDescription
 				}

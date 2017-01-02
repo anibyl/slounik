@@ -66,6 +66,7 @@ class NavigationDrawerFragment : Fragment() {
 	private var searchItem: MenuItem? = null
 	private var checkBoxSlounikOrg: CheckBox? = null
 	private var checkBoxSkarnik: CheckBox? = null
+	private var checkBoxRodnyjaVobrazy: CheckBox? = null
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
@@ -99,14 +100,7 @@ class NavigationDrawerFragment : Fragment() {
 		drawerToggle!!.onConfigurationChanged(newConfig)
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		// If the drawer is open, show the global app actions in the action bar. See also
-		// showGlobalContextActionBar, which controls the top-left area of the action bar.
-		if (drawerLayout != null && isDrawerOpen) {
-			inflater.inflate(R.menu.main, menu)
-			showGlobalContextActionBar()
-		}
-
+	override fun onPrepareOptionsMenu(menu: Menu) {
 		searchItem = menu.findItem(R.id.action_search)
 		val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
 		searchView.queryHint = getString(R.string.search_hint)
@@ -114,7 +108,7 @@ class NavigationDrawerFragment : Fragment() {
 			override fun onQueryTextSubmit(s: String): Boolean {
 				callbacks?.onSearchClicked(s)
 				MenuItemCompat.collapseActionView(searchItem)
-				return false
+				return true
 			}
 
 			override fun onQueryTextChange(s: String): Boolean {
@@ -123,6 +117,15 @@ class NavigationDrawerFragment : Fragment() {
 		})
 		searchView.setOnSearchClickListener {
 			searchView.setQuery(callbacks?.getLastSearchedWord(), false)
+		}
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		// If the drawer is open, show the global app actions in the action bar. See also
+		// showGlobalContextActionBar, which controls the top-left area of the action bar.
+		if (drawerLayout != null && isDrawerOpen) {
+			inflater.inflate(R.menu.main, menu)
+			showGlobalContextActionBar()
 		}
 
 		super.onCreateOptionsMenu(menu, inflater)
@@ -189,18 +192,23 @@ class NavigationDrawerFragment : Fragment() {
 
 		drawerLayout.addDrawerListener(drawerToggle!!)
 
+		// TODO Create list with disabling functionality.
 		checkBoxSlounikOrg = activity.findViewById(R.id.checkbox_slounik_org) as CheckBox
 		checkBoxSlounikOrg!!.isChecked = preferences.useSlounikOrg
 		checkBoxSlounikOrg!!.setOnCheckedChangeListener { buttonView, isChecked ->
 			preferences.useSlounikOrg = isChecked
-			checkBoxSkarnik!!.isEnabled = isChecked
 		}
 
 		checkBoxSkarnik = activity.findViewById(R.id.checkbox_skarnik) as CheckBox
 		checkBoxSkarnik!!.isChecked = preferences.useSkarnik
 		checkBoxSkarnik!!.setOnCheckedChangeListener { buttonView, isChecked ->
 			preferences.useSkarnik = isChecked
-			checkBoxSlounikOrg!!.isEnabled = isChecked
+		}
+
+		checkBoxRodnyjaVobrazy = activity.findViewById(R.id.checkbox_rodnyja_vobrazy) as CheckBox
+		checkBoxRodnyjaVobrazy!!.isChecked = preferences.useRodnyjaVobrazy
+		checkBoxRodnyjaVobrazy!!.setOnCheckedChangeListener { buttonView, isChecked ->
+			preferences.useRodnyjaVobrazy = isChecked
 		}
 
 		val checkBoxSearchInTitle = activity.findViewById(R.id.checkbox_search_in_title) as CheckBox

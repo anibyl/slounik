@@ -23,7 +23,7 @@ import javax.inject.Inject
  * @author Usievaład Kimajeŭ
  * @created 08.04.2015
  */
-class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
+class SlounikOrg : DictionarySiteCommunicator() {
 	@Inject lateinit var notifier: Notifier
 
 	override val url: String
@@ -47,17 +47,17 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 
 		val request = getLoadRequest(requestStr, context, callback)
 
-		getQueue(context).add(request)
+		queue.add(request)
 	}
 
-	override fun loadArticleDescription(article: Article, context: Context, callBack: ArticlesCallback) {
+	override fun loadArticleDescription(article: Article, callback: ArticlesCallback) {
 		val builder = Uri.Builder()
 		builder.scheme("http").authority(url).appendPath(article.linkToFullDescription!!.substring(1))
 		val requestStr = builder.build().toString()
 
-		val request = getArticleDescriptionLoadRequest(requestStr, article, callBack)
+		val request = getArticleDescriptionLoadRequest(requestStr, article, callback)
 
-		getQueue(context).add(request)
+		queue.add(request)
 	}
 
 	override fun enabled(): Boolean {
@@ -92,7 +92,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 												}
 											})
 
-									getQueue(context).add(eachDicRequest)
+									queue.add(eachDicRequest)
 									notifier.log("Request added to queue: " + eachDicRequest)
 								}
 							}
@@ -107,7 +107,7 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 							}
 						}
 
-						private fun setArticleList(list: ArrayList<Article>?) {
+						private fun setArticleList(list: List<Article>?) {
 							val status = if (--dicsAmount == 0)
 								ArticlesInfo.Status.SUCCESS
 							else
@@ -123,52 +123,46 @@ class SlounikOrg : DictionarySiteCommunicator<ArticlesCallback>() {
 				})
 	}
 
-	override fun parseElement(element: Element?): Article {
-		return object : Article(this) {
-			override fun fill(): Article {
-				if (element != null) {
-					var elements: Elements? = element.select("a.tsb")
+	override fun parseElement(element: Element, wordToSearch: String?): Article {
+		return Article(this).apply {
+			var elements: Elements? = element.select("a.tsb")
+			if (elements != null && elements.size != 0) {
+				val link = elements.first()
+				title = link.html()
+				linkToFullDescription = link.attr("href")
+
+				if (title != null) {
+					elements = element.select("a.ts")
 					if (elements != null && elements.size != 0) {
-						val link = elements.first()
-						title = link.html()
-						linkToFullDescription = link.attr("href")
-
-						if (title != null) {
-							elements = element.select("a.ts")
-							if (elements != null && elements.size != 0) {
-								description = Html.fromHtml(elements.first().html())
-							}
-						}
-					}
-
-					if (title == null) {
-						elements = element.select("b")
-						if (elements != null && elements.size != 0) {
-							title = elements.first().html()
-
-							if (title != null) {
-								description = Html.fromHtml(element.html())
-							}
-						}
-					}
-
-					if (title != null) {
-						title = title!!.replace("<u>".toRegex(), "")
-						title = title!!.replace("</u>".toRegex(), "́")
-
-						// Escape all other HTML tags, e.g. second <b>.
-						title = Jsoup.parse(title).text()
-					}
-
-					elements = element.select("a.la1")
-					if (elements != null && elements.size != 0) {
-						dictionary = elements.first().html()
+						description = Html.fromHtml(elements.first().html())
 					}
 				}
-
-				return this
 			}
-		}.fill()
+
+			if (title == null) {
+				elements = element.select("b")
+				if (elements != null && elements.size != 0) {
+					title = elements.first().html()
+
+					if (title != null) {
+						description = Html.fromHtml(element.html())
+					}
+				}
+			}
+
+			if (title != null) {
+				title = title!!.replace("<u>".toRegex(), "")
+				title = title!!.replace("</u>".toRegex(), "́")
+
+				// Escape all other HTML tags, e.g. second <b>.
+				title = Jsoup.parse(title).text()
+			}
+
+			elements = element.select("a.la1")
+			if (elements != null && elements.size != 0) {
+				dictionary = elements.first().html()
+			}
+		}
 	}
 
 	private fun getPerDicLoadingRequest(dicRequestStr: String, callback: ArticlesCallback): SlounikOrgRequest {

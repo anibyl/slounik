@@ -14,24 +14,26 @@ import javax.inject.Inject
  * @author Usievaład Kimajeŭ
  * @created 22.12.2015
  */
-abstract class DictionarySiteCommunicator<in T>() : ArticlesLoader<T> where T : ArticlesCallback {
+abstract class DictionarySiteCommunicator : ArticlesLoader<ArticlesCallback> {
 	@Inject lateinit var config: Config
 	@Inject lateinit var preferences: Preferences
+	@Inject lateinit var context: Context
+
+	protected val queue: RequestQueue
+		get() {
+			if (_queue == null) {
+				_queue = Volley.newRequestQueue(context)
+			}
+
+			return _queue!!
+		}
 
 	abstract protected val url: String
 
-	private var queue: RequestQueue? = null
+	private var _queue: RequestQueue? = null
 
-	abstract fun loadArticleDescription(article: Article, context: Context, callBack: T)
+	abstract fun loadArticleDescription(article: Article, callback: ArticlesCallback)
 	abstract fun enabled(): Boolean
 
-	protected abstract fun parseElement(element: Element?): Article
-
-	protected fun getQueue(context: Context): RequestQueue {
-		if (queue == null) {
-			queue = Volley.newRequestQueue(context)
-		}
-
-		return queue!!
-	}
+	protected abstract fun parseElement(element: Element, wordToSearch: String? = null): Article
 }

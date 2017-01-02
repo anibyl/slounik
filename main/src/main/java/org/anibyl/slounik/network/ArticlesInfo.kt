@@ -17,12 +17,12 @@ class ArticlesInfo {
 		FAILURE
 	}
 
-	var articles: ArrayList<Article>? = null
+	var articles: List<Article>? = null
 		private set
 	var status: Status? = null
 		internal set
 
-	constructor(articles: ArrayList<Article>?, status: Status) {
+	constructor(articles: List<Article>?, status: Status) {
 		this.articles = articles
 		this.status = status
 	}

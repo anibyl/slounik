@@ -10,7 +10,7 @@ import java.io.Serializable
  * @author Usievaład Kimajeŭ
  * @created 26.02.2015
  */
-abstract class Article(@Transient val communicator: DictionarySiteCommunicator<ArticlesCallback>) : Serializable {
+class Article(@Transient val communicator: DictionarySiteCommunicator) : Serializable {
 	var title: String? = null
 		internal set
 	var description: Spanned? = null
@@ -21,6 +21,10 @@ abstract class Article(@Transient val communicator: DictionarySiteCommunicator<A
 		internal set
 	var fullDescription: Spanned? = null
 		internal set
+}
 
-	internal abstract fun fill(): Article
+fun Article.loadArticleDescription(callback: (ArticlesInfo) -> Unit) {
+	this.communicator.loadArticleDescription(this, object : ArticlesCallback {
+		override fun invoke(info: ArticlesInfo) = callback(info)
+	})
 }

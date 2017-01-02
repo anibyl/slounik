@@ -7,6 +7,7 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.network.ArticlesInfo
 import org.anibyl.slounik.network.BatchArticlesLoader
+import org.anibyl.slounik.network.RodnyjaVobrazy
 import org.anibyl.slounik.network.Server
 import org.anibyl.slounik.network.Skarnik
 import org.anibyl.slounik.network.SlounikOrg
@@ -25,6 +26,7 @@ class SlounikActivityPresenter {
 	@Inject lateinit var notifier: Notifier
 	@Inject lateinit var slounikOrg: SlounikOrg
 	@Inject lateinit var skarnik: Skarnik
+	@Inject lateinit var rodnyjaVobrazy: RodnyjaVobrazy
 
 	internal val articles: ArrayList<Article> = arrayListOf()
 	internal val title: String
@@ -40,7 +42,7 @@ class SlounikActivityPresenter {
 	init {
 		SlounikApplication.graph.inject(this)
 
-		loader = BatchArticlesLoader(slounikOrg, skarnik)
+		loader = BatchArticlesLoader(slounikOrg, skarnik, rodnyjaVobrazy)
 	}
 
 	internal fun onActivityCreated(slounikActivity: SlounikActivity) {

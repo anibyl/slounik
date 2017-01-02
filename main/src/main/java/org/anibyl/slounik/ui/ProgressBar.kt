@@ -13,7 +13,9 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable
  * @created 21.12.2015
  */
 class ProgressBar : SmoothProgressBar {
-	private var invisible: Boolean = false
+	private var invisible: Boolean
+		get() { return visibility == View.INVISIBLE }
+		set(value) { visibility = if (value) View.INVISIBLE else View.VISIBLE }
 
 	constructor(context: Context) : super(context) {
 		init()

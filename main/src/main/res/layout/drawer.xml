@@ -37,6 +37,13 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
         />
+        <CheckBox
+                android:id="@+id/checkbox_rodnyja_vobrazy"
+                android:text="@string/drawer_checkbox_rodnyja_vobrazy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
         <TextView
                 android:id="@+id/drawer_settings"
                 android:text="@string/drawer_settings_title"

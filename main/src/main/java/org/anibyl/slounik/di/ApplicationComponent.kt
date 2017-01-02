@@ -7,6 +7,7 @@ import org.anibyl.slounik.activities.SlounikActivity
 import org.anibyl.slounik.activities.SlounikActivityPresenter
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.dialogs.ArticleDialog
+import org.anibyl.slounik.network.RodnyjaVobrazy
 import org.anibyl.slounik.network.Skarnik
 import org.anibyl.slounik.network.SlounikOrg
 import javax.inject.Singleton
@@ -26,4 +27,5 @@ interface ApplicationComponent {
 	fun inject(skarnik: Skarnik)
 	fun inject(notifier: Notifier)
 	fun inject(articleDialog: ArticleDialog)
+	fun inject(rodnyjaVobrazy: RodnyjaVobrazy)
 }

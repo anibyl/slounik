@@ -17,6 +17,7 @@ class Preferences(context: Context) {
 
 	private val USE_SLOUNIK_ORG = "use_slounik_org"
 	private val USE_SKARNIK = "use_skarnik"
+	private val USE_RODNYJA_VOBRAZY = "use_rodnyja_vobrazy"
 	private val SEARCH_IN_TITLES = "search_in_titles"
 
 	var useSlounikOrg: Boolean
@@ -29,6 +30,12 @@ class Preferences(context: Context) {
 		get() = manager.getBoolean(USE_SKARNIK, true)
 		set(useSkarnik) {
 			manager.save(USE_SKARNIK, useSkarnik)
+		}
+
+	var useRodnyjaVobrazy: Boolean
+		get() = manager.getBoolean(USE_RODNYJA_VOBRAZY, true)
+		set(useRodnyjaVobrazy) {
+			manager.save(USE_RODNYJA_VOBRAZY, useRodnyjaVobrazy)
 		}
 
 	var searchInTitles: Boolean

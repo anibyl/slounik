@@ -7,6 +7,7 @@ import dagger.Provides
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.activities.SlounikActivityPresenter
 import org.anibyl.slounik.core.Preferences
+import org.anibyl.slounik.network.RodnyjaVobrazy
 import org.anibyl.slounik.network.Server
 import org.anibyl.slounik.network.Skarnik
 import org.anibyl.slounik.network.SlounikOrg
@@ -46,6 +47,12 @@ class ApplicationModule(val application: Application) {
 	@Singleton
 	fun provideSkarnik(): Skarnik {
 		return Skarnik()
+	}
+
+	@Provides
+	@Singleton
+	fun provideRodnyjaVobrazy(): RodnyjaVobrazy {
+		return RodnyjaVobrazy()
 	}
 
 	@Provides

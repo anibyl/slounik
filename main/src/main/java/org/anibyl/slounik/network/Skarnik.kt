@@ -20,7 +20,7 @@ import javax.inject.Inject
  * @author Usievaład Kimajeŭ
  * @created 22.12.2015
  */
-class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
+class Skarnik : DictionarySiteCommunicator() {
 	@Inject lateinit var notifier: Notifier
 
 	override val url: String
@@ -33,31 +33,22 @@ class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
 	}
 
 	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
-		val requests = ArrayList<StringRequest>()
-
-		requests.add(
+		val requests: List<StringRequest> = arrayListOf(
 				getLoadRequest(
 						getRBRequestStr(wordToSearch),
 						wordToSearch,
-						context,
 						callback,
 						url + " " + context.resources.getString(R.string.skarnik_dictionary_rus_bel)
-				)
-		)
-		requests.add(
+				),
 				getLoadRequest(
 						getBRRequestStr(wordToSearch),
 						wordToSearch,
-						context,
 						callback,
 						url + " " + context.resources.getString(R.string.skarnik_dictionary_bel_rus)
-				)
-		)
-		requests.add(
+				),
 				getLoadRequest(
 						getExplanatoryRequestStr(wordToSearch),
 						wordToSearch,
-						context,
 						callback,
 						url + " " + context.resources.getString(R.string.skarnik_dictionary_explanatory)
 				)
@@ -66,11 +57,11 @@ class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
 		requestCount = requests.size
 
 		for (request in requests) {
-			getQueue(context).add(request)
+			queue.add(request)
 		}
 	}
 
-	override fun loadArticleDescription(article: Article, context: Context, callBack: ArticlesCallback) {
+	override fun loadArticleDescription(article: Article, callback: ArticlesCallback) {
 		// Skarnik has no loadable descriptions.
 	}
 
@@ -78,20 +69,15 @@ class Skarnik : DictionarySiteCommunicator<ArticlesCallback>() {
 		return preferences.useSkarnik
 	}
 
-	override fun parseElement(element: Element?): Article {
-		return object : Article(this) {
-			override fun fill(): Article {
-				description = Html.fromHtml(element?.html())
-
-				return this
-			}
-		}.fill()
+	override fun parseElement(element: Element, wordToSearch: String?): Article {
+		return Article(this).apply {
+			description = Html.fromHtml(element.html())
+		}
 	}
 
 	private fun getLoadRequest(
 			requestStr: String,
 			wordToSearch: String,
-			context: Context,
 			callback: ArticlesCallback,
 			dictionaryTitle: String
 	): StringRequest {

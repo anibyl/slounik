@@ -21,5 +21,10 @@
 
     <string name="skarnik_dictionary_rus_bel">Русско-белорусский словарь</string>
     <string name="skarnik_dictionary_bel_rus">Белорусско-русский словарь</string>
-    <string name="skarnik_dictionary_explanatory">Толковый словарь белорусского языка</string>
+    <string name="skarnik_dictionary_explanatory">Толковый словарь</string>
+
+    <string name="rodnyja_vobrazy_dictionary_explanatory">Толковый словарь</string>
+    <string name="rodnyja_vobrazy_dictionary_ethnography">Этнография</string>
+    <string name="rodnyja_vobrazy_dictionary_mythology">Мифология</string>
+    <string name="rodnyja_vobrazy_dictionary_red_list">Красная книга</string>
 </resources>
