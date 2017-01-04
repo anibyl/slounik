@@ -24,10 +24,15 @@ class AboutDialog : DialogFragment() {
 		val view: View = inflater.inflate(R.layout.about, container, false)
 
 		val homepageButton = view.findViewById(R.id.about_dialog_homepage_button) as Button
+		val betaParticipationButton = view.findViewById(R.id.about_dialog_beta_participation_button) as Button
 		val closeButton = view.findViewById(R.id.about_dialog_close_button) as Button
 
 		homepageButton.setOnClickListener {
 			startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.homepage))))
+		}
+
+		betaParticipationButton.setOnClickListener {
+			startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.beta_participation_page))))
 		}
 
 		closeButton.setOnClickListener {

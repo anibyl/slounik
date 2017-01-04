@@ -22,7 +22,7 @@
             android:drawableLeft="@mipmap/icon"
             android:drawablePadding="@dimen/padding"
 
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
     />
     <View
@@ -32,7 +32,7 @@
     <TextView
             android:id="@+id/about_dialog_text"
             android:text="@string/about_dialog_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
     />
     <View
@@ -42,7 +42,7 @@
     <TextView
             android:id="@+id/about_dialog_author"
             android:text="@string/about_dialog_author"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
     />
     <View
@@ -58,6 +58,13 @@
         <Button
                 android:id="@+id/about_dialog_homepage_button"
                 android:text="@string/about_dialog_homepage_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/SlounikButton"
+        />
+        <Button
+                android:id="@+id/about_dialog_beta_participation_button"
+                android:text="@string/about_dialog_beta_participation_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/SlounikButton"

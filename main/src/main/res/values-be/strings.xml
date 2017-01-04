@@ -5,6 +5,7 @@
     <string name="about_dialog_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
     <string name="about_dialog_author">Аўтар: Усевалад Кімаеў</string>
     <string name="about_dialog_homepage_button">ХАТНЯЯ СТАРОНКА</string>
+    <string name="about_dialog_beta_participation_button">УДЗЕЛ У БЭТА-ТЭСТАВАНЬНІ</string>
     <string name="about_dialog_close_button">ЗАЧЫНІЦЬ</string>
 
     <string name="drawer_dictionaries_title">СЛОЎНІКІ</string>
