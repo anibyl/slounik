@@ -9,5 +9,6 @@
 
     <style name="SlounikButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/button_text</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 </resources>
