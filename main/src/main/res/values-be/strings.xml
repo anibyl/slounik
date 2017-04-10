@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Слоўнік</string>
-    <string name="about_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
-    <string name="about_author">Аўтар: Усевалад Чорны (anibyl@riseup.net)</string>
+
+    <string name="about_dialog_text">Слоўнік — кліенцкая праграма для беларускіх слоўнікавых сайтаў.</string>
+    <string name="about_dialog_author">Аўтар: Усевалад Кімаеў</string>
+    <string name="about_dialog_homepage_button">ХАТНЯЯ СТАРОНКА</string>
+    <string name="about_dialog_beta_participation_button">УДЗЕЛ У БЭТА-ТЭСТАВАНЬНІ</string>
+    <string name="about_dialog_close_button">ЗАЧЫНІЦЬ</string>
+
+    <string name="drawer_dictionaries_title">СЛОЎНІКІ</string>
+    <string name="drawer_settings_title">НАЛАДЫ</string>
     <string name="drawer_checkbox_search_in_title">Шукаць толькі ў назвах</string>
+    <string name="drawer_about_button">ПРА ПРАГРАМУ</string>
+
     <string name="toast_text_copied">Тэкст скапіяваны ў кішэню.</string>
 
     <string name="article_button_load_full_article">УВЕСЬ АРТЫКУЛ</string>
@@ -14,4 +23,9 @@
     <string name="skarnik_dictionary_rus_bel">Расейска-беларускі слоўнік</string>
     <string name="skarnik_dictionary_bel_rus">Беларуска-расейскі слоўнік</string>
     <string name="skarnik_dictionary_explanatory">Тлумачальны слоўнік</string>
+
+    <string name="rodnyja_vobrazy_dictionary_explanatory">Тлумачальны слоўнік</string>
+    <string name="rodnyja_vobrazy_dictionary_ethnography">Этнаграфія</string>
+    <string name="rodnyja_vobrazy_dictionary_mythology">Міталёгія</string>
+    <string name="rodnyja_vobrazy_dictionary_red_list">Чырвоная кніга</string>
 </resources>

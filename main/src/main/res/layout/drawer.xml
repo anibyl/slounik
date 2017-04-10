@@ -1,103 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/transparent_black"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView
-            android:id="@+id/about_icon"
-            android:src="@mipmap/icon"
-            android:layout_width="wrap_content"
+        android:padding="@dimen/big_padding"
+        android:clickable="true"
+>
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignBottom="@+id/about_title"
-            android:padding="@dimen/padding"
-            android:contentDescription="@string/about_image_description"
-    />
-    <TextView
-            android:id="@+id/about_title"
-            android:text="@string/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/about_icon"
-            android:layout_toEndOf="@+id/about_icon"
-            android:textStyle="bold"
-            android:textSize="@dimen/font_large"
-    />
-    <TextView
-            android:id="@+id/about_description"
-            android:text="@string/about_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/about_icon"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:padding="@dimen/padding"
-    />
-    <TextView
-            android:id="@+id/about_contacts"
-            android:text="@string/about_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding"
-            android:layout_below="@+id/about_description"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:autoLink="email"
-    />
-    <CheckBox
-            android:id="@+id/checkbox_slounik_org"
-            android:text="@string/drawer_checkbox_slounik_org"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding"
-            android:layout_below="@+id/about_contacts"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-    />
-    <CheckBox
-            android:id="@+id/checkbox_skarnik"
-            android:text="@string/drawer_checkbox_skarnik"
-            android:layout_width="wrap_content"
+    >
+        <TextView
+                android:id="@+id/drawer_dictionaries_title"
+                android:text="@string/drawer_dictionaries_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+        />
+        <CheckBox
+                android:id="@+id/checkbox_slounik_org"
+                android:text="@string/drawer_checkbox_slounik_org"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
+        <CheckBox
+                android:id="@+id/checkbox_skarnik"
+                android:text="@string/drawer_checkbox_skarnik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
+        <CheckBox
+                android:id="@+id/checkbox_rodnyja_vobrazy"
+                android:text="@string/drawer_checkbox_rodnyja_vobrazy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
+        <TextView
+                android:id="@+id/drawer_settings"
+                android:text="@string/drawer_settings_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+        />
+        <CheckBox
+                android:id="@+id/checkbox_search_in_title"
+                android:text="@string/drawer_checkbox_search_in_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
+    </LinearLayout>
+    <Button
+            android:id="@+id/drawer_about_button"
+            android:text="@string/drawer_about_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding"
-            android:layout_below="@+id/checkbox_slounik_org"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-    />
-    <CheckBox
-            android:id="@+id/checkbox_search_in_title"
-            android:text="@string/drawer_checkbox_search_in_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/checkbox_skarnik"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:padding="@dimen/padding"
-    />
-    <ImageView
-            android:id="@+id/language_icon"
-            android:src="@drawable/ic_language_white_48dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/SlounikButton"
+
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/language_switcher"
-            android:contentDescription="@string/about_language_icon_description"
-    />
-    <Spinner
-            android:id="@+id/language_switcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding"
-            android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/language_icon"
-            android:layout_toRightOf="@+id/language_icon"
-            android:theme="@style/Animation.AppCompat.DropDownUp"
+            android:layout_alignParentLeft="true"
     />
 </RelativeLayout>

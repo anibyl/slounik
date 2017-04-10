@@ -5,7 +5,7 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SlounikActivity"
+        tools:context=".activities.SlounikActivity"
 >
     <RelativeLayout
             android:id="@+id/container"
@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 app:spb_sections_count="4"
-                app:spb_color="#FF0000"
+                app:spb_color="@color/accent"
                 app:spb_speed="1.0"
                 app:spb_stroke_width="4dp"
                 app:spb_stroke_separator_length="4dp"
@@ -46,10 +46,10 @@
     </RelativeLayout>
     <fragment
             android:id="@+id/navigation_drawer"
-            android:layout_width="@dimen/navigation_drawer_width"
+            android:layout_width="@dimen/drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:name="org.anibyl.slounik.NavigationDrawerFragment"
+            android:name="org.anibyl.slounik.activities.NavigationDrawerFragment"
             tools:layout="@layout/drawer"
     />
 </android.support.v4.widget.DrawerLayout>

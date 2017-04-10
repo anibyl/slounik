@@ -2,9 +2,16 @@
 <resources>
     <string name="app_name">Slounik</string>
 
-    <string name="about_text">Slounik is the client application for belarusian dictionary websites.</string>
-    <string name="about_author">Created by Usievaład Čorny (anibyl@riseup.net).</string>
+    <string name="about_dialog_text">Slounik is the client application for belarusian dictionary websites.</string>
+    <string name="about_dialog_author">Created by Usievaład Kimajeŭ.</string>
+    <string name="about_dialog_homepage_button">HOME PAGE</string>
+    <string name="about_dialog_beta_participation_button">BETA PARTICIPATION</string>
+    <string name="about_dialog_close_button">CLOSE</string>
+
+    <string name="drawer_dictionaries_title">DICTIONARIES</string>
+    <string name="drawer_settings_title">SETTINGS</string>
     <string name="drawer_checkbox_search_in_title">Search only in title</string>
+    <string name="drawer_about_button">ABOUT</string>
 
     <string name="toast_text_copied">Text copied to clipboard.</string>
 
@@ -15,19 +22,18 @@
 
     <string name="skarnik_dictionary_rus_bel">Russian-Belarusian Dictionary</string>
     <string name="skarnik_dictionary_bel_rus">Belarusian-Russian Dictionary</string>
-    <string name="skarnik_dictionary_explanatory">Belarusian Explanatory Dictionary</string>
+    <string name="skarnik_dictionary_explanatory">Explanatory Dictionary</string>
+
+    <string name="rodnyja_vobrazy_dictionary_explanatory">Explanatory Dictionary</string>
+    <string name="rodnyja_vobrazy_dictionary_ethnography">Ethnography</string>
+    <string name="rodnyja_vobrazy_dictionary_mythology">Mythology</string>
+    <string name="rodnyja_vobrazy_dictionary_red_list">Red List</string>
 
     <string name="drawer_checkbox_slounik_org" translatable="false">slounik.org</string>
     <string name="drawer_checkbox_skarnik" translatable="false">skarnik.by</string>
+    <string name="drawer_checkbox_rodnyja_vobrazy" translatable="false">rv-blr.com</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="about_image_description" translatable="false">Application icon.</string>
-    <string name="about_language_icon_description" translatable="false">Language switcher icon.</string>
-
-    <string-array name="languages" translatable="false">
-        <item>Беларуская</item>
-        <item>Русский</item>
-        <item>English</item>
-    </string-array>
 </resources>
