@@ -113,7 +113,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 							else
 								ArticlesInfo.Status.IN_PROCESS
 							notifier.log("Callback invoked, " + (list?.size ?: 0) + " articles added.")
-							callback.invoke(ArticlesInfo(list!!, status))
+							callback.invoke(ArticlesInfo(list, status))
 						}
 					}.execute()
 				},
