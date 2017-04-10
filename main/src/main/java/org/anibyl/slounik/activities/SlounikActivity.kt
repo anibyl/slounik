@@ -8,6 +8,7 @@ import android.view.Menu
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
+import butterknife.bindView
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.dialogs.newArticleDialog
@@ -27,9 +28,10 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 	private val articles: List<Article>
 		get() = presenter.articles
 
-	lateinit private var progress: ProgressBar
-	lateinit private var listView: ListView
-	lateinit private var articlesAmount: TextView
+	val progress: ProgressBar by bindView(R.id.progress)
+	val listView: ListView by bindView(R.id.listView)
+	val articlesAmount: TextView by bindView(R.id.articles_amount)
+
 	lateinit private var navigationDrawerFragment: NavigationDrawerFragment
 
 	lateinit private var adapter: SlounikAdapter
@@ -40,10 +42,6 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		setContentView(R.layout.main)
 
 		SlounikApplication.graph.inject(this)
-
-		progress = findViewById(R.id.progress) as ProgressBar
-		listView = findViewById(R.id.listView) as ListView
-		articlesAmount = findViewById(R.id.articles_amount) as TextView
 
 		navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer)
 				as NavigationDrawerFragment
@@ -77,8 +75,8 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		return presenter.lastSearchedWord
 	}
 
-	override fun getSupportActionBar(): ActionBar? {
-		return super.getSupportActionBar()
+	override fun getSupportActionBar(): ActionBar {
+		return super.getSupportActionBar()!!
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -18,11 +18,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import butterknife.bindView
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.core.Preferences
 import org.anibyl.slounik.dialogs.AboutDialog
-import org.anibyl.slounik.util.StubActionBar
 import javax.inject.Inject
 
 /**
@@ -39,7 +39,7 @@ class NavigationDrawerFragment : Fragment() {
 
 		fun getLastSearchedWord(): String?
 
-		fun getSupportActionBar(): ActionBar?
+		fun getSupportActionBar(): ActionBar
 	}
 
 	@Inject lateinit var preferences: Preferences
@@ -48,12 +48,12 @@ class NavigationDrawerFragment : Fragment() {
 		get() = drawerLayout != null && drawerLayout!!.isDrawerOpen(fragmentContainerView)
 
 	private val actionBar: ActionBar
-		get() = callbacks?.getSupportActionBar() ?: StubActionBar()
+		get() = callbacks.getSupportActionBar()
 
 	/**
 	 * A pointer to the current callbacks instance (the Activity).
 	 */
-	private var callbacks: NavigationDrawerCallbacks? = null
+	private lateinit var callbacks: NavigationDrawerCallbacks
 
 	/**
 	 * Helper component that ties the action bar to the navigation drawer.
@@ -64,9 +64,11 @@ class NavigationDrawerFragment : Fragment() {
 	private var fragmentContainerView: View? = null
 
 	private var searchItem: MenuItem? = null
-	private var checkBoxSlounikOrg: CheckBox? = null
-	private var checkBoxSkarnik: CheckBox? = null
-	private var checkBoxRodnyjaVobrazy: CheckBox? = null
+	private val checkBoxSlounikOrg: CheckBox by bindView(R.id.checkbox_slounik_org)
+	private val checkBoxSkarnik: CheckBox by bindView(R.id.checkbox_skarnik)
+	private val checkBoxRodnyjaVobrazy: CheckBox by bindView(R.id.checkbox_rodnyja_vobrazy)
+	private val checkBoxSearchInTitle: CheckBox by bindView(R.id.checkbox_search_in_title)
+	private val aboutButton: Button by bindView(R.id.drawer_about_button)
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
@@ -82,16 +84,10 @@ class NavigationDrawerFragment : Fragment() {
 		super.onAttach(context)
 
 		try {
-			callbacks = context as NavigationDrawerCallbacks?
+			callbacks = context as NavigationDrawerCallbacks
 		} catch (e: ClassCastException) {
 			throw ClassCastException("Activity must implement NavigationDrawerCallbacks.")
 		}
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-
-		callbacks = null
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -106,7 +102,7 @@ class NavigationDrawerFragment : Fragment() {
 		searchView.queryHint = getString(R.string.search_hint)
 		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextSubmit(s: String): Boolean {
-				callbacks?.onSearchClicked(s)
+				callbacks.onSearchClicked(s)
 				MenuItemCompat.collapseActionView(searchItem)
 				return true
 			}
@@ -116,7 +112,7 @@ class NavigationDrawerFragment : Fragment() {
 			}
 		})
 		searchView.setOnSearchClickListener {
-			searchView.setQuery(callbacks?.getLastSearchedWord(), false)
+			searchView.setQuery(callbacks.getLastSearchedWord(), false)
 		}
 	}
 
@@ -193,31 +189,26 @@ class NavigationDrawerFragment : Fragment() {
 		drawerLayout.addDrawerListener(drawerToggle!!)
 
 		// TODO Create list with disabling functionality.
-		checkBoxSlounikOrg = activity.findViewById(R.id.checkbox_slounik_org) as CheckBox
-		checkBoxSlounikOrg!!.isChecked = preferences.useSlounikOrg
-		checkBoxSlounikOrg!!.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxSlounikOrg.isChecked = preferences.useSlounikOrg
+		checkBoxSlounikOrg.setOnCheckedChangeListener { buttonView, isChecked ->
 			preferences.useSlounikOrg = isChecked
 		}
 
-		checkBoxSkarnik = activity.findViewById(R.id.checkbox_skarnik) as CheckBox
-		checkBoxSkarnik!!.isChecked = preferences.useSkarnik
-		checkBoxSkarnik!!.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxSkarnik.isChecked = preferences.useSkarnik
+		checkBoxSkarnik.setOnCheckedChangeListener { buttonView, isChecked ->
 			preferences.useSkarnik = isChecked
 		}
 
-		checkBoxRodnyjaVobrazy = activity.findViewById(R.id.checkbox_rodnyja_vobrazy) as CheckBox
-		checkBoxRodnyjaVobrazy!!.isChecked = preferences.useRodnyjaVobrazy
-		checkBoxRodnyjaVobrazy!!.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxRodnyjaVobrazy.isChecked = preferences.useRodnyjaVobrazy
+		checkBoxRodnyjaVobrazy.setOnCheckedChangeListener { buttonView, isChecked ->
 			preferences.useRodnyjaVobrazy = isChecked
 		}
 
-		val checkBoxSearchInTitle = activity.findViewById(R.id.checkbox_search_in_title) as CheckBox
 		checkBoxSearchInTitle.isChecked = preferences.searchInTitles
 		checkBoxSearchInTitle.setOnCheckedChangeListener { buttonView, isChecked ->
 			preferences.searchInTitles = isChecked
 		}
 
-		val aboutButton = activity.findViewById(R.id.drawer_about_button) as Button
 		aboutButton.setOnClickListener {
 			AboutDialog().show(activity.supportFragmentManager, "about_dialog")
 		}

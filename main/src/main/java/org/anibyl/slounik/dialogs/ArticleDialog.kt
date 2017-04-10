@@ -1,8 +1,6 @@
 package org.anibyl.slounik.dialogs
 
 import android.app.Dialog
-import android.content.ClipData
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.text.method.ScrollingMovementMethod
@@ -15,8 +13,8 @@ import android.widget.TextView
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
+import org.anibyl.slounik.core.copyToClipboard
 import org.anibyl.slounik.network.Article
-import org.anibyl.slounik.network.ArticlesCallback
 import org.anibyl.slounik.network.ArticlesInfo
 import org.anibyl.slounik.network.loadArticleDescription
 import org.anibyl.slounik.ui.ProgressBar
@@ -59,15 +57,8 @@ class ArticleDialog : DialogFragment() {
 		description.movementMethod = ScrollingMovementMethod()
 
 		description.setOnLongClickListener {
-			val text = description.text
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.text.ClipboardManager
-				clipboard.text = text
-			} else {
-				val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-				val clip = ClipData.newPlainText(article.description, text)
-				clipboard.primaryClip = clip
-			}
+			context.copyToClipboard(description.text)
+
 			notifier.toast(R.string.toast_text_copied)
 			true
 		}

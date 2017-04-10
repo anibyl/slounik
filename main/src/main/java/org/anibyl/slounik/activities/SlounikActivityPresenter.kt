@@ -7,10 +7,6 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.network.ArticlesInfo
 import org.anibyl.slounik.network.BatchArticlesLoader
-import org.anibyl.slounik.network.RodnyjaVobrazy
-import org.anibyl.slounik.network.Server
-import org.anibyl.slounik.network.Skarnik
-import org.anibyl.slounik.network.SlounikOrg
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -22,11 +18,8 @@ import javax.inject.Inject
  */
 class SlounikActivityPresenter {
 	@Inject lateinit var context: Context
-	@Inject lateinit var config: Server.Config
 	@Inject lateinit var notifier: Notifier
-	@Inject lateinit var slounikOrg: SlounikOrg
-	@Inject lateinit var skarnik: Skarnik
-	@Inject lateinit var rodnyjaVobrazy: RodnyjaVobrazy
+	@Inject lateinit var loader: BatchArticlesLoader
 
 	internal val articles: ArrayList<Article> = arrayListOf()
 	internal val title: String
@@ -35,14 +28,10 @@ class SlounikActivityPresenter {
 	internal var lastSearchedWord: String? = null
 	internal var searching = false
 
-	private val loader: BatchArticlesLoader
-
 	private var activity: SlounikActivity? = null
 
 	init {
 		SlounikApplication.graph.inject(this)
-
-		loader = BatchArticlesLoader(slounikOrg, skarnik, rodnyjaVobrazy)
 	}
 
 	internal fun onActivityCreated(slounikActivity: SlounikActivity) {

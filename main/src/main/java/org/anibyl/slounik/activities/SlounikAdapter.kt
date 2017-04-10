@@ -17,11 +17,7 @@ import org.anibyl.slounik.network.Article
  */
 class SlounikAdapter(context: Context, resource: Int, textViewResourceId: Int, private val list: List<Article>)
 	: ArrayAdapter<Article>(context, resource, textViewResourceId, list) {
-	private val inflater: LayoutInflater
-
-	init {
-		inflater = LayoutInflater.from(context)
-	}
+	private val inflater: LayoutInflater = LayoutInflater.from(context)
 
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 		val holder: ViewHolder
