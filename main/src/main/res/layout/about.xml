@@ -1,80 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TODO Merge it with article dialog. -->
-<LinearLayout
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
-
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:background="@color/transparent_black"
-
-        android:orientation="vertical"
-        android:padding="@dimen/big_padding"
+        android:layout_width="match_parent"
 >
-    <TextView
-            android:id="@+id/about_dialog_title"
-
-            android:text="@string/app_name"
-            android:textStyle="bold"
-            android:textSize="@dimen/font_large"
-
-            android:drawableStart="@mipmap/icon"
-            android:drawableLeft="@mipmap/icon"
-            android:drawablePadding="@dimen/padding"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/big_padding"
-    />
-    <TextView
-            android:id="@+id/about_dialog_text"
-            android:text="@string/about_dialog_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/big_padding"
-    />
-    <TextView
-            android:id="@+id/about_dialog_author"
-            android:text="@string/about_dialog_author"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/big_padding"
-    />
     <LinearLayout
+
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:background="@color/transparent_black"
+
             android:orientation="vertical"
-            android:gravity="end"
+            android:padding="@dimen/big_padding"
     >
-        <Button
-                android:id="@+id/about_dialog_homepage_button"
-                android:text="@string/about_dialog_homepage_button"
-                android:layout_width="wrap_content"
+        <TextView
+                android:id="@+id/about_dialog_title"
+
+                android:text="@string/app_name"
+                android:textStyle="bold"
+                android:textSize="@dimen/font_large"
+
+                android:drawableStart="@mipmap/icon"
+                android:drawableLeft="@mipmap/icon"
+                android:drawablePadding="@dimen/padding"
+
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/SlounikButton"
         />
-        <Button
-                android:id="@+id/about_dialog_beta_participation_button"
-                android:text="@string/about_dialog_beta_participation_button"
-                android:layout_width="wrap_content"
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/big_padding"
+        />
+        <TextView
+                android:id="@+id/about_dialog_text"
+                android:text="@string/about_dialog_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/SlounikButton"
         />
-        <Button
-                android:id="@+id/about_dialog_close_button"
-                android:text="@string/about_dialog_close_button"
-                android:layout_width="wrap_content"
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/big_padding"
+        />
+        <TextView
+                android:id="@+id/about_dialog_author"
+                android:text="@string/about_dialog_author"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/SlounikButton"
         />
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/big_padding"
+        />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end"
+        >
+            <Button
+                    android:id="@+id/about_dialog_homepage_button"
+                    android:text="@string/about_dialog_homepage_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/SlounikButton"
+            />
+            <Button
+                    android:id="@+id/about_dialog_beta_participation_button"
+                    android:text="@string/about_dialog_beta_participation_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/SlounikButton"
+            />
+            <Button
+                    android:id="@+id/about_dialog_close_button"
+                    android:text="@string/about_dialog_close_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/SlounikButton"
+            />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
