@@ -34,8 +34,8 @@ android {
 		applicationId "org.anibyl.slounik"
 		minSdkVersion 9
 		targetSdkVersion 25
-		versionCode 13
-		versionName "1.0.2"
+		versionCode 14
+		versionName "1.1.0"
 	}
 
 	compileOptions {
