@@ -3,8 +3,6 @@ package org.anibyl.slounik.network
 import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
-import android.text.Html
-import android.text.Spanned
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
@@ -134,7 +132,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 				if (title != null) {
 					elements = element.select("a.ts")
 					if (elements != null && elements.size != 0) {
-						description = Html.fromHtml(elements.first().html())
+						description = elements.first().html()
 					}
 				}
 			}
@@ -145,7 +143,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 					title = elements.first().html()
 
 					if (title != null) {
-						description = Html.fromHtml(element.html())
+						description = element.html()
 					}
 				}
 			}
@@ -214,13 +212,11 @@ class SlounikOrg : DictionarySiteCommunicator() {
 							val articlePage = Jsoup.parse(response)
 							val articleElement = articlePage.select("td.n12").first()
 
-							val htmlDescription = Html.fromHtml(articleElement.html())
-							val descriptionWithOutExtraSpace = htmlDescription.toString().trim { it <= ' ' }
+							val htmlDescription:String = articleElement.html()
+							val descriptionWithOutExtraSpace = htmlDescription.trim { it <= ' ' }
 
-							article.fullDescription = htmlDescription.subSequence(
-									0,
-									descriptionWithOutExtraSpace.length
-							) as Spanned
+							article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
+									as String
 
 							val list = ArrayList<Article>()
 							list.add(article)
