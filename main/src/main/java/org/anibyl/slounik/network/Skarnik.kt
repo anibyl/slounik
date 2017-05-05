@@ -71,7 +71,7 @@ class Skarnik : DictionarySiteCommunicator() {
 
 	override fun parseElement(element: Element, wordToSearch: String?): Article {
 		return Article(this).apply {
-			description = Html.fromHtml(element.html())
+			description = element.html()
 		}
 	}
 

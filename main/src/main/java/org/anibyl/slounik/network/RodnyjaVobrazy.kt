@@ -3,7 +3,6 @@ package org.anibyl.slounik.network
 import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
-import android.text.Html
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
@@ -98,7 +97,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 
 					checkTitle(title, wordToSearch)
 
-					description = Html.fromHtml(tds[1].html() + "<br>" + tds[2].html())
+					description = tds[1].html() + "<br>" + tds[2].html()
 				}
 				1, 2 -> {
 					// Other dictionaries.
@@ -108,7 +107,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 
 					checkTitle(title, wordToSearch)
 
-					description = Html.fromHtml(td.html())
+					description = td.html()
 					linkToFullDescription = td.select("a").attr("href")
 				}
 			}
@@ -236,7 +235,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 								} while (tr != null)
 							}
 
-							article.fullDescription = Html.fromHtml(fullArticleDescription)
+							article.fullDescription = fullArticleDescription
 
 							return arrayListOf(article)
 						}

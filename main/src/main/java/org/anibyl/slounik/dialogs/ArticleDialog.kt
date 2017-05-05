@@ -52,7 +52,7 @@ class ArticleDialog : DialogFragment() {
 		val progressBar = view.findViewById(R.id.article_progress) as ProgressBar
 
 		dictionary.text = article.dictionary
-		description.text = article.description
+		description.text = article.spannedDescription
 
 		description.movementMethod = ScrollingMovementMethod()
 
@@ -73,14 +73,14 @@ class ArticleDialog : DialogFragment() {
 					progressBar.progressiveStart()
 					article.loadArticleDescription { info: ArticlesInfo ->
 						when (info.status) {
-							ArticlesInfo.Status.SUCCESS -> description.text = article.fullDescription
+							ArticlesInfo.Status.SUCCESS -> description.text = article.spannedFullDescription
 
 							else -> loadButton.isEnabled = true
 						}
 						progressBar.progressiveStop()
 					}
 				} else {
-					description.text = article.fullDescription
+					description.text = article.spannedFullDescription
 				}
 			}
 		} else {
