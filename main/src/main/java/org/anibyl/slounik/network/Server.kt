@@ -30,7 +30,7 @@ class Server {
 
 		val androidId = getAndroidId(context)
 
-		val requestStr = context.getString(R.string.server) + "config"
+		val requestStr = context.getString(R.string.config)
 		val queue = Volley.newRequestQueue(context)
 		val request = StringRequest(requestStr,
 				Response.Listener<String> { response ->

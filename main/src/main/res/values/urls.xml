@@ -4,6 +4,7 @@
     <string name="beta_participation_page" translatable="false">
         https://play.google.com/apps/testing/org.anibyl.slounik
     </string>
-    <!-- TODO replace me. -->
-    <string name="server" translatable="false">https://dl.dropboxusercontent.com/u/23331377/server/slounik/</string>
+    <string name="config" translatable="false">
+        https://gist.githubusercontent.com/anibyl/b45b217c2d2c2d4096f130b39f34dc1a/raw/620ed11895ff9a82f4a8e4108f9bfd21167226af/slounik-config.json
+    </string>
 </resources>
