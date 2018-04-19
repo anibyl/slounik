@@ -9,13 +9,8 @@ import java.util.ArrayList
  * @author Usievaład Kimajeŭ
  * @created 23.12.2015
  */
-class BatchArticlesLoader(vararg communicators: DictionarySiteCommunicator)
+class BatchArticlesLoader(private vararg val communicators: DictionarySiteCommunicator)
 	: ArticlesLoader<BatchArticlesLoader.BatchArticlesCallback> {
-	private val communicators: Array<out DictionarySiteCommunicator>
-
-	init {
-		this.communicators = communicators
-	}
 
 	override fun loadArticles(wordToSearch: String, context: Context, callback: BatchArticlesCallback) {
 		var activeCommunicators = 0
@@ -39,7 +34,7 @@ class BatchArticlesLoader(vararg communicators: DictionarySiteCommunicator)
 	}
 
 	abstract class BatchArticlesCallback : ArticlesCallback {
-		internal var callbacks = ArrayList<ArticlesCallback>()
+		private var callbacks = ArrayList<ArticlesCallback>()
 
 		internal operator fun invoke(callback: ArticlesCallback, info: ArticlesInfo) {
 			if (!callbacks.contains(callback)) {

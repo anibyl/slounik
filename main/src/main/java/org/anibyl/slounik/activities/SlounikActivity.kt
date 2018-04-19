@@ -33,9 +33,9 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 	private val articles: List<Article>
 		get() = presenter.articles
 
-	lateinit private var navigationDrawerFragment: NavigationDrawerFragment
+	private lateinit var navigationDrawerFragment: NavigationDrawerFragment
 
-	lateinit private var adapter: SlounikAdapter
+	private lateinit var adapter: SlounikAdapter
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 
 		adapter = SlounikAdapter(this, R.layout.list_item, R.id.list_item_description, articles)
 		listView.adapter = adapter
-		listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+		listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 			newArticleDialog(articles[position]).show(supportFragmentManager, "article_dialog")
 		}
 
@@ -96,7 +96,7 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 
 	override fun setTitle(title: CharSequence?) {
 		super.setTitle(title)
-		supportActionBar?.title = title
+		supportActionBar.title = title
 	}
 
 	override fun onSearchClicked(wordToSearch: String) {

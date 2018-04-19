@@ -45,6 +45,12 @@ class NavigationDrawerFragment : Fragment() {
 
 	@Inject lateinit var preferences: Preferences
 
+	@BindView(R.id.checkbox_slounik_org) lateinit var checkBoxSlounikOrg: CheckBox
+	@BindView(R.id.checkbox_skarnik) lateinit var checkBoxSkarnik: CheckBox
+	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
+	@BindView(R.id.checkbox_search_in_title) lateinit var checkBoxSearchInTitle: CheckBox
+	@BindView(R.id.drawer_about_button) lateinit var aboutButton: Button
+
 	internal val isDrawerOpen: Boolean
 		get() = drawerLayout != null && drawerLayout!!.isDrawerOpen(fragmentContainerView)
 
@@ -65,11 +71,6 @@ class NavigationDrawerFragment : Fragment() {
 	private var fragmentContainerView: View? = null
 
 	private var searchItem: MenuItem? = null
-	@BindView(R.id.checkbox_slounik_org) lateinit var checkBoxSlounikOrg: CheckBox
-	@BindView(R.id.checkbox_skarnik) lateinit var checkBoxSkarnik: CheckBox
-	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
-	@BindView(R.id.checkbox_search_in_title) lateinit var checkBoxSearchInTitle: CheckBox
-	@BindView(R.id.drawer_about_button) lateinit var aboutButton: Button
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
@@ -193,22 +194,22 @@ class NavigationDrawerFragment : Fragment() {
 
 		// TODO Create list with disabling functionality.
 		checkBoxSlounikOrg.isChecked = preferences.useSlounikOrg
-		checkBoxSlounikOrg.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxSlounikOrg.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useSlounikOrg = isChecked
 		}
 
 		checkBoxSkarnik.isChecked = preferences.useSkarnik
-		checkBoxSkarnik.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxSkarnik.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useSkarnik = isChecked
 		}
 
 		checkBoxRodnyjaVobrazy.isChecked = preferences.useRodnyjaVobrazy
-		checkBoxRodnyjaVobrazy.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxRodnyjaVobrazy.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useRodnyjaVobrazy = isChecked
 		}
 
 		checkBoxSearchInTitle.isChecked = preferences.searchInTitles
-		checkBoxSearchInTitle.setOnCheckedChangeListener { buttonView, isChecked ->
+		checkBoxSearchInTitle.setOnCheckedChangeListener { _, isChecked ->
 			preferences.searchInTitles = isChecked
 		}
 

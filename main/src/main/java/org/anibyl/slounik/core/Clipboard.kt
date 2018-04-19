@@ -10,15 +10,7 @@ import android.os.Build.VERSION_CODES.HONEYCOMB
  */
 
 fun Context.copyToClipboard(text: CharSequence) {
-	version(HONEYCOMB,
-			{
-				val clipboard = this.getSystemService(Context.CLIPBOARD_SERVICE) as android.text.ClipboardManager
-				clipboard.text = text
-			},
-			{
-				val clipboard = this.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-				val clip = ClipData.newPlainText("Article description", text)
-				clipboard.primaryClip = clip
-			}
-	)
+	val clipboard = this.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+	val clip = ClipData.newPlainText("Article description", text)
+	clipboard.primaryClip = clip
 }

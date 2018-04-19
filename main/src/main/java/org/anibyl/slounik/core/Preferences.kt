@@ -70,11 +70,7 @@ class Preferences(context: Context) {
 		}
 
 		fun apply(editor: SharedPreferences.Editor) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-				editor.apply()
-			} else {
-				editor.commit()
-			}
+			editor.apply()
 		}
 	}
 }

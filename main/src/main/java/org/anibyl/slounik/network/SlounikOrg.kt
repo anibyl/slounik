@@ -64,7 +64,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 	private fun getLoadRequest(requestStr: String, context: Context, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
+				Response.Listener { response ->
 					object : AsyncTask<Void, Void, Void>() {
 						private var dicsAmount: Int = 0
 
@@ -241,7 +241,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 			errorListener: Response.ErrorListener
 	) : StringRequest(url, listener, errorListener) {
 		override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
-			val parsed: String = String(response.data, Charsets.UTF_8)
+			val parsed = String(response.data, Charsets.UTF_8)
 
 			return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response))
 		}

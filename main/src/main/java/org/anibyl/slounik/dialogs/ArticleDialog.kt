@@ -29,7 +29,7 @@ import javax.inject.Inject
 class ArticleDialog : DialogFragment() {
 	@Inject lateinit var notifier: Notifier
 
-	lateinit private var article: Article
+	private lateinit var article: Article
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
