@@ -66,10 +66,10 @@ dependencies {
 	compile "org.jsoup:jsoup:1.10.1"
 	compile "com.github.castorflex.smoothprogressbar:library:1.1.0"
 	compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 	kapt "com.google.dagger:dagger-compiler:$dagger_version"
 	compile "com.google.dagger:dagger:$dagger_version"
 	provided "javax.annotation:jsr250-api:1.0"
 	compile "com.jakewharton:butterknife:8.8.1"
 	kapt "com.jakewharton:butterknife-compiler:8.8.1"
-	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
