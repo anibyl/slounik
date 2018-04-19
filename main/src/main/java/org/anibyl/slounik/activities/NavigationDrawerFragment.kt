@@ -18,7 +18,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import butterknife.bindView
+import butterknife.BindView
+import butterknife.ButterKnife
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.core.Preferences
@@ -64,11 +65,11 @@ class NavigationDrawerFragment : Fragment() {
 	private var fragmentContainerView: View? = null
 
 	private var searchItem: MenuItem? = null
-	private val checkBoxSlounikOrg: CheckBox by bindView(R.id.checkbox_slounik_org)
-	private val checkBoxSkarnik: CheckBox by bindView(R.id.checkbox_skarnik)
-	private val checkBoxRodnyjaVobrazy: CheckBox by bindView(R.id.checkbox_rodnyja_vobrazy)
-	private val checkBoxSearchInTitle: CheckBox by bindView(R.id.checkbox_search_in_title)
-	private val aboutButton: Button by bindView(R.id.drawer_about_button)
+	@BindView(R.id.checkbox_slounik_org) lateinit var checkBoxSlounikOrg: CheckBox
+	@BindView(R.id.checkbox_skarnik) lateinit var checkBoxSkarnik: CheckBox
+	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
+	@BindView(R.id.checkbox_search_in_title) lateinit var checkBoxSearchInTitle: CheckBox
+	@BindView(R.id.drawer_about_button) lateinit var aboutButton: Button
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
@@ -77,7 +78,9 @@ class NavigationDrawerFragment : Fragment() {
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.drawer, container, false)
+		val view: View = inflater.inflate(R.layout.drawer, container, false)
+		ButterKnife.bind(this, view)
+		return view
 	}
 
 	override fun onAttach(context: Context?) {

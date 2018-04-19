@@ -8,7 +8,8 @@ import android.view.Menu
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
-import butterknife.bindView
+import butterknife.BindView
+import butterknife.ButterKnife
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.dialogs.newArticleDialog
@@ -25,12 +26,12 @@ import javax.inject.Inject
 class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.NavigationDrawerCallbacks {
 	@Inject lateinit var presenter: SlounikActivityPresenter
 
+	@BindView(R.id.progress) lateinit var progress: ProgressBar
+	@BindView(R.id.listView) lateinit var listView: ListView
+	@BindView(R.id.articles_amount) lateinit var articlesAmount: TextView
+
 	private val articles: List<Article>
 		get() = presenter.articles
-
-	val progress: ProgressBar by bindView(R.id.progress)
-	val listView: ListView by bindView(R.id.listView)
-	val articlesAmount: TextView by bindView(R.id.articles_amount)
 
 	lateinit private var navigationDrawerFragment: NavigationDrawerFragment
 
@@ -42,6 +43,8 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		setContentView(R.layout.main)
 
 		SlounikApplication.graph.inject(this)
+
+		ButterKnife.bind(this)
 
 		navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer)
 				as NavigationDrawerFragment
