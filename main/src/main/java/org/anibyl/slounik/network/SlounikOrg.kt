@@ -2,17 +2,18 @@ package org.anibyl.slounik.network
 
 import android.content.Context
 import android.net.Uri
-import android.os.AsyncTask
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.SlounikApplication
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import java.util.ArrayList
 import javax.inject.Inject
 
 /**
@@ -43,7 +44,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 		requestStr = builder.build().toString()
 
-		val request = getLoadRequest(requestStr, context, callback)
+		val request = getLoadRequest(requestStr, callback)
 
 		queue.add(request)
 	}
@@ -62,21 +63,15 @@ class SlounikOrg : DictionarySiteCommunicator() {
 		return preferences.useSlounikOrg
 	}
 
-	private fun getLoadRequest(requestStr: String, context: Context, callback: ArticlesCallback): SlounikOrgRequest {
+	private fun getLoadRequest(requestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
 				Response.Listener { response ->
-					object : AsyncTask<Void, Void, Void>() {
-						private var dicsAmount: Int = 0
+					doAsync {
+						val page = Jsoup.parse(response)
+						val dicsElements = page.select("a.treeSearchDict")
+						var dicsAmount: Int = dicsElements.size
 
-						override fun doInBackground(vararg params: Void): Void? {
-							val page = Jsoup.parse(response)
-							val dicsElements = page.select("a.treeSearchDict")
-							dicsAmount = dicsElements.size
-
-							if (dicsAmount == 0) {
-								return null
-							}
-
+						if (dicsAmount != 0) {
 							for (e in dicsElements) {
 								var dicRequestStr: String? = e.attr("href")
 								if (dicRequestStr != null) {
@@ -86,34 +81,29 @@ class SlounikOrg : DictionarySiteCommunicator() {
 									val eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
 											object : ArticlesCallback {
 												override operator fun invoke(info: ArticlesInfo) {
-													setArticleList(info.articles)
+													val status = if (--dicsAmount == 0)
+														ArticlesInfo.Status.SUCCESS
+													else
+														ArticlesInfo.Status.IN_PROCESS
+													notifier.log("Callback invoked, " + (info.articles?.size
+															?: 0) + " articles added.")
+													callback.invoke(ArticlesInfo(info.articles, status))
 												}
 											})
 
 									queue.add(eachDicRequest)
-									notifier.log("Request added to queue: " + eachDicRequest)
+									notifier.log("Request added to queue: $eachDicRequest")
 								}
 							}
-
-							return null
 						}
 
-						override fun onPostExecute(ignored: Void?) {
+						uiThread {
 							if (dicsAmount == 0) {
 								notifier.log("Callback invoked: no dictionaries.")
 								callback.invoke(ArticlesInfo(articles = null, status = ArticlesInfo.Status.SUCCESS))
 							}
 						}
-
-						private fun setArticleList(list: List<Article>?) {
-							val status = if (--dicsAmount == 0)
-								ArticlesInfo.Status.SUCCESS
-							else
-								ArticlesInfo.Status.IN_PROCESS
-							notifier.log("Callback invoked, " + (list?.size ?: 0) + " articles added.")
-							callback.invoke(ArticlesInfo(list, status))
-						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener {
 					notifier.toast("Error response.", true)
@@ -165,33 +155,26 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 	private fun getPerDicLoadingRequest(dicRequestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(dicRequestStr,
-				Response.Listener<kotlin.String> { response ->
-					object : AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							notifier.log("Response received for $dicRequestStr.")
-							val dicPage = Jsoup.parse(response)
-							val articleElements = dicPage.select("li#li_poszuk")
+				Response.Listener { response ->
+					doAsync {
+						notifier.log("Response received for $dicRequestStr.")
+						val dicPage = Jsoup.parse(response)
+						val articleElements = dicPage.select("li#li_poszuk")
 
-							var dictionaryTitle: String? = null
-							val dictionaryTitles = dicPage.select("a.t3")
-							if (dictionaryTitles != null && dictionaryTitles.size != 0) {
-								dictionaryTitle = dictionaryTitles.first().html()
-							}
-
-							val list = ArrayList<Article>()
-							for (e in articleElements) {
-								list.add(parseElement(e).apply {
-									dictionary = dictionaryTitle
-								})
-							}
-
-							return list
+						var dictionaryTitle: String? = null
+						val dictionaryTitles = dicPage.select("a.t3")
+						if (dictionaryTitles != null && dictionaryTitles.size != 0) {
+							dictionaryTitle = dictionaryTitles.first().html()
 						}
 
-						override fun onPostExecute(articles: ArrayList<Article>) {
-							callback.invoke(ArticlesInfo(articles))
+						val list: List<Article> = articleElements.map {
+							e -> parseElement(e).apply { dictionary = dictionaryTitle }
 						}
-					}.execute()
+
+						uiThread {
+							callback.invoke(ArticlesInfo(list))
+						}
+					}
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Response error: " + error.message)
@@ -205,29 +188,24 @@ class SlounikOrg : DictionarySiteCommunicator() {
 			callback: ArticlesCallback
 	): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
-					object : AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							notifier.log("Response received for $requestStr.")
-							val articlePage = Jsoup.parse(response)
-							val articleElement = articlePage.select("td.n12").first()
+				Response.Listener { response ->
+					doAsync {
+						notifier.log("Response received for $requestStr.")
+						val articlePage: Document = Jsoup.parse(response)
+						val articleElement: Element = articlePage.select("td.n12").first()
 
-							val htmlDescription:String = articleElement.html()
-							val descriptionWithOutExtraSpace = htmlDescription.trim { it <= ' ' }
+						val htmlDescription:String = articleElement.html()
+						val descriptionWithOutExtraSpace: String = htmlDescription.trim { it <= ' ' }
 
-							article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
-									as String
+						article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
+								as String
 
-							val list = ArrayList<Article>()
-							list.add(article)
+						val list = listOf(article)
 
-							return list
+						uiThread {
+							callback.invoke(ArticlesInfo(list))
 						}
-
-						override fun onPostExecute(articles: ArrayList<Article>) {
-							callback.invoke(ArticlesInfo(articles))
-						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Response error: " + error.message)

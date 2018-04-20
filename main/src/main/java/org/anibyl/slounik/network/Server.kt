@@ -1,13 +1,13 @@
 package org.anibyl.slounik.network
 
 import android.content.Context
-import android.os.AsyncTask
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.anibyl.slounik.R
 import org.anibyl.slounik.getAndroidId
+import org.jetbrains.anko.doAsync
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -34,32 +34,28 @@ class Server {
 		val queue = Volley.newRequestQueue(context)
 		val request = StringRequest(requestStr,
 				Response.Listener<String> { response ->
-					object : AsyncTask<String, Void, Config>() {
-						override fun doInBackground(vararg params: String): Config {
-							try {
-								val json = JSONObject(response)
+					doAsync {
+						try {
+							val json = JSONObject(response)
 
-								config.slounikOrgUrl = json.getString("slounikOrgUrl")
+							config.slounikOrgUrl = json.getString("slounikOrgUrl")
 
-								config.skarnikUrl = json.getString("skarnikUrl")
+							config.skarnikUrl = json.getString("skarnikUrl")
 
-								config.rodnyjaVobrazyUrl = json.getString("rodnyjaVobrazyUrl")
+							config.rodnyjaVobrazyUrl = json.getString("rodnyjaVobrazyUrl")
 
-								val array = json.getJSONArray("testDevices")
+							val array = json.getJSONArray("testDevices")
 
-								for (i in 0..array.length() - 1) {
-									if (androidId == array.getJSONObject(i).optString("androidId")) {
-										config.isTestDevice = true
-										break
-									}
+							for (i in 0 until array.length()) {
+								if (androidId == array.getJSONObject(i).optString("androidId")) {
+									config.isTestDevice = true
+									break
 								}
-							} catch (e: JSONException) {
-								Log.e(TAG, "Config cannot be read.", e)
 							}
-
-							return config
+						} catch (e: JSONException) {
+							Log.e(TAG, "Config cannot be read.", e)
 						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener {
 					Log.e(TAG, "Config cannot be loaded.")

@@ -67,6 +67,7 @@ dependencies {
 	compile "com.github.castorflex.smoothprogressbar:library:1.1.0"
 	compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	compile "org.jetbrains.anko:anko:0.10.4"
 	kapt "com.google.dagger:dagger-compiler:$dagger_version"
 	compile "com.google.dagger:dagger:$dagger_version"
 	provided "javax.annotation:jsr250-api:1.0"

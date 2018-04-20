@@ -2,16 +2,15 @@ package org.anibyl.slounik.network
 
 import android.content.Context
 import android.net.Uri
-import android.os.AsyncTask
-import android.text.Html
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import java.util.ArrayList
 import javax.inject.Inject
 
 /**
@@ -83,42 +82,35 @@ class Skarnik : DictionarySiteCommunicator() {
 	): StringRequest {
 		return StringRequest(requestStr,
 				Response.Listener<kotlin.String> { response ->
-					object : AsyncTask<Void, Void, Article>() {
-						override fun doInBackground(vararg params: Void): Article? {
-							val page = Jsoup.parse(response)
-							val articleElements = page.select("p#trn")
+					doAsync {
+						val page = Jsoup.parse(response)
+						val articleElements = page.select("p#trn")
 
-							if (articleElements.size == 0) {
-								return null
-							} else {
-								val article = parseElement(articleElements.first())
-								article.title = wordToSearch
-								article.dictionary = dictionaryTitle
-								return article
+						val article: Article? = if (articleElements.size == 0) {
+							null
+						} else {
+							parseElement(articleElements.first()).apply {
+								this.title = wordToSearch
+								this.dictionary = dictionaryTitle
 							}
 						}
 
-						override fun onPostExecute(article: Article?) {
+						uiThread {
 							val status = if (--requestCount == 0)
 								ArticlesInfo.Status.SUCCESS
 							else
 								ArticlesInfo.Status.IN_PROCESS
-							val info: ArticlesInfo
-							if (article != null) {
-								info = ArticlesInfo(object : ArrayList<Article>() {
-									init {
-										add(article)
-									}
-								}, status)
+							val info: ArticlesInfo = if (article != null) {
+								ArticlesInfo(listOf(article), status)
 							} else {
-								info = ArticlesInfo(status)
+								ArticlesInfo(status)
 							}
 							callback.invoke(info)
 						}
-					}.execute()
+					}
 				},
-				Response.ErrorListener {
-					notifier.toast("Error response.", developerMode = true)
+				Response.ErrorListener { error ->
+					notifier.log("Response error: " + error.message)
 					// TODO fix it.
 					val status = if (--requestCount == 0)
 						ArticlesInfo.Status.FAILURE
