@@ -3,6 +3,7 @@ package org.anibyl.slounik.network
 import android.content.Context
 import android.net.Uri
 import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
@@ -82,42 +83,79 @@ class Skarnik : DictionarySiteCommunicator() {
 	): StringRequest {
 		return StringRequest(requestStr,
 				Response.Listener<kotlin.String> { response ->
-					doAsync {
-						val page = Jsoup.parse(response)
-						val articleElements = page.select("p#trn")
-
-						val article: Article? = if (articleElements.size == 0) {
-							null
-						} else {
-							parseElement(articleElements.first()).apply {
-								this.title = wordToSearch
-								this.dictionary = dictionaryTitle
-							}
-						}
-
-						uiThread {
-							val status = if (--requestCount == 0)
-								ArticlesInfo.Status.SUCCESS
-							else
-								ArticlesInfo.Status.IN_PROCESS
-							val info: ArticlesInfo = if (article != null) {
-								ArticlesInfo(listOf(article), status)
-							} else {
-								ArticlesInfo(status)
-							}
-							callback.invoke(info)
-						}
-					}
+					// In the good old days I received correct page immediately but now it is empty page most likely.
+					processPage(response, wordToSearch, callback, dictionaryTitle)
 				},
 				Response.ErrorListener { error ->
-					notifier.log("Response error: " + error.message)
-					// TODO fix it.
-					val status = if (--requestCount == 0)
-						ArticlesInfo.Status.FAILURE
-					else
-						ArticlesInfo.Status.IN_PROCESS
-					callback.invoke(ArticlesInfo(status))
+					fun loadPage(url: String) {
+						queue.add(getPageRequest(url, wordToSearch, callback, dictionaryTitle))
+					}
+
+					if (error.networkResponse.statusCode == 302) {
+						/* Skarnik has strange redirection behaviour:
+						   http search → https search → http page → https page.
+						   I skip first and third parts to get
+						   https search → https page. */
+						val location: String? = error.networkResponse.headers["Location"]
+						if (location != null) {
+							if (location.startsWith("http:")) {
+								loadPage(location.replace("http:", "https:"))
+							} else {
+								// Should not happen.
+								loadPage(location)
+							}
+						} else {
+							// Should not happen.
+							fail(error, callback)
+						}
+					} else {
+						fail(error, callback)
+					}
 				})
+	}
+
+	private fun getPageRequest(
+			requestStr: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
+	): StringRequest {
+		return StringRequest(requestStr,
+				Response.Listener<kotlin.String> { response ->
+					processPage(response, wordToSearch, callback, dictionaryTitle)
+				},
+				Response.ErrorListener { error ->
+					fail(error, callback)
+				}
+		)
+	}
+
+	private fun processPage(
+			response: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
+	) {
+		doAsync {
+			val page = Jsoup.parse(response)
+			val articleElements = page.select("p#trn")
+
+			val article: Article? = if (articleElements.size == 0) {
+				null
+			} else {
+				parseElement(articleElements.first()).apply {
+					this.title = wordToSearch
+					this.dictionary = dictionaryTitle
+				}
+			}
+
+			uiThread {
+				val status = if (--requestCount == 0)
+					ArticlesInfo.Status.SUCCESS
+				else
+					ArticlesInfo.Status.IN_PROCESS
+				val info: ArticlesInfo = if (article != null) {
+					ArticlesInfo(listOf(article), status)
+				} else {
+					ArticlesInfo(status)
+				}
+				callback.invoke(info)
+			}
+		}
 	}
 
 	private fun getRBRequestStr(wordToSearch: String): String {
@@ -135,12 +173,21 @@ class Skarnik : DictionarySiteCommunicator() {
 	private fun getRequestStr(wordToSearch: String, language: String): String {
 		val builder = Uri.Builder()
 
-		builder.scheme("http")
+		builder.scheme("https")
 				.authority(url)
 				.appendPath("search")
 				.appendQueryParameter("lang", language)
 				.appendQueryParameter("term", wordToSearch)
 
 		return builder.build().toString()
+	}
+
+	private fun fail(error: VolleyError, callback: ArticlesCallback) {
+		notifier.log("Response error: " + error.message)
+		val status = if (--requestCount == 0)
+			ArticlesInfo.Status.FAILURE
+		else
+			ArticlesInfo.Status.IN_PROCESS
+		callback.invoke(ArticlesInfo(status))
 	}
 }
