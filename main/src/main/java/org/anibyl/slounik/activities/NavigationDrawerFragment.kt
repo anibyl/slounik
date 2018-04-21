@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
-import android.support.v4.view.MenuItemCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
@@ -102,12 +101,12 @@ class NavigationDrawerFragment : Fragment() {
 
 	override fun onPrepareOptionsMenu(menu: Menu) {
 		searchItem = menu.findItem(R.id.action_search)
-		val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+		val searchView: SearchView = searchItem?.actionView as SearchView
 		searchView.queryHint = getString(R.string.search_hint)
 		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextSubmit(s: String): Boolean {
 				callbacks.onSearchClicked(s)
-				MenuItemCompat.collapseActionView(searchItem)
+				searchItem?.collapseActionView()
 				return true
 			}
 
@@ -175,7 +174,7 @@ class NavigationDrawerFragment : Fragment() {
 				super.onDrawerClosed(drawerView)
 
 				if (isAdded) {
-					activity.supportInvalidateOptionsMenu()
+					activity.invalidateOptionsMenu()
 				}
 			}
 
@@ -183,7 +182,7 @@ class NavigationDrawerFragment : Fragment() {
 				super.onDrawerOpened(drawerView)
 
 				if (isAdded) {
-					activity.supportInvalidateOptionsMenu()
+					activity.invalidateOptionsMenu()
 				}
 			}
 		}
