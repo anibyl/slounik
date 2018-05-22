@@ -130,7 +130,7 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 	}
 
 	private fun updateArticlesAmount() {
-		articlesAmount.text = if (articles.isEmpty()) "" else articles.size.toString()
+		articlesAmount.text = if (articles.isEmpty()) "0" else articles.size.toString()
 	}
 
 	private fun updateProgress() {
