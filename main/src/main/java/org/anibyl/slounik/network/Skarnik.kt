@@ -2,6 +2,7 @@ package org.anibyl.slounik.network
 
 import android.content.Context
 import android.net.Uri
+import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
@@ -91,12 +92,14 @@ class Skarnik : DictionarySiteCommunicator() {
 						queue.add(getPageRequest(url, wordToSearch, callback, dictionaryTitle))
 					}
 
-					if (error.networkResponse.statusCode == 302) {
+					val networkResponse: NetworkResponse? = error.networkResponse
+
+					if (networkResponse != null && networkResponse.statusCode == 302) {
 						/* Skarnik has strange redirection behaviour:
 						   http search → https search → http page → https page.
 						   I skip first and third parts to get
 						   https search → https page. */
-						val location: String? = error.networkResponse.headers["Location"]
+						val location: String? = networkResponse.headers["Location"]
 						if (location != null) {
 							if (location.startsWith("http:")) {
 								loadPage(location.replace("http:", "https:"))
