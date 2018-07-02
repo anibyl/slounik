@@ -20,6 +20,7 @@ import org.json.JSONObject
 class Server {
 	class Config {
 		var isTestDevice: Boolean = false
+		var slounikServerUrl: String = "18.222.103.40:8080"
 		var slounikOrgUrl: String = "slounik.org"
 		var skarnikUrl: String = "skarnik.by"
 		var rodnyjaVobrazyUrl: String = "rv-blr.com"
@@ -37,6 +38,8 @@ class Server {
 					doAsync {
 						try {
 							val json = JSONObject(response)
+
+							config.slounikServerUrl= json.getString("slounikServerUrl")
 
 							config.slounikOrgUrl = json.getString("slounikOrgUrl")
 
