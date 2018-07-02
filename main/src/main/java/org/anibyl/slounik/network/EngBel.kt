@@ -80,6 +80,7 @@ class EngBel : DictionarySiteCommunicator() {
 				.encodedAuthority(url)
 				.appendPath("engbel")
 				.appendPath(wordToSearch)
+				.appendQueryParameter("d", (!preferences.searchInTitles).toString())
 
 		return builder.build().toString()
 	}
