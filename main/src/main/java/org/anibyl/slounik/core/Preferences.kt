@@ -22,7 +22,7 @@ class Preferences(context: Context) {
 
 	var useSlounikServer: Boolean
 		get() = manager.getBoolean(USE_SLOUNIK_SERVER, true)
-		set(value) = manager.save(USE_SLOUNIK_ORG, value)
+		set(value) = manager.save(USE_SLOUNIK_SERVER, value)
 
 	var useSlounikOrg: Boolean
 		get() = manager.getBoolean(USE_SLOUNIK_ORG, true)
