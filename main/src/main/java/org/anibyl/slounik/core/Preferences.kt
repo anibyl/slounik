@@ -2,7 +2,6 @@ package org.anibyl.slounik.core
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 
 /**
  * Shared preferences of the application.
@@ -15,10 +14,15 @@ class Preferences(context: Context) {
 			context.getSharedPreferences("org.anibyl.slounik", Context.MODE_PRIVATE)
 	)
 
+	private val USE_SLOUNIK_SERVER = "use_slounik_server"
 	private val USE_SLOUNIK_ORG = "use_slounik_org"
 	private val USE_SKARNIK = "use_skarnik"
 	private val USE_RODNYJA_VOBRAZY = "use_rodnyja_vobrazy"
 	private val SEARCH_IN_TITLES = "search_in_titles"
+
+	var useSlounikServer: Boolean
+		get() = manager.getBoolean(USE_SLOUNIK_SERVER, true)
+		set(value) = manager.save(USE_SLOUNIK_ORG, value)
 
 	var useSlounikOrg: Boolean
 		get() = manager.getBoolean(USE_SLOUNIK_ORG, true)

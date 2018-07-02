@@ -8,6 +8,7 @@ import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.activities.SlounikActivityPresenter
 import org.anibyl.slounik.core.Preferences
 import org.anibyl.slounik.network.BatchArticlesLoader
+import org.anibyl.slounik.network.EngBel
 import org.anibyl.slounik.network.RodnyjaVobrazy
 import org.anibyl.slounik.network.Server
 import org.anibyl.slounik.network.Skarnik
@@ -41,7 +42,7 @@ class ApplicationModule(val application: Application) {
 	@Provides
 	@Singleton
 	fun provideBatchArticlesLoader(): BatchArticlesLoader {
-		return BatchArticlesLoader(SlounikOrg(), Skarnik(), RodnyjaVobrazy())
+		return BatchArticlesLoader(EngBel(), SlounikOrg(), Skarnik(), RodnyjaVobrazy())
 	}
 
 	@Provides

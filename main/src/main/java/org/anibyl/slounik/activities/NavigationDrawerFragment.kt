@@ -44,6 +44,7 @@ class NavigationDrawerFragment : Fragment() {
 
 	@Inject lateinit var preferences: Preferences
 
+	@BindView(R.id.checkbox_slounik_server) lateinit var checkBoxSlounikServer: CheckBox
 	@BindView(R.id.checkbox_slounik_org) lateinit var checkBoxSlounikOrg: CheckBox
 	@BindView(R.id.checkbox_skarnik) lateinit var checkBoxSkarnik: CheckBox
 	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
@@ -192,6 +193,11 @@ class NavigationDrawerFragment : Fragment() {
 		drawerLayout.addDrawerListener(drawerToggle!!)
 
 		// TODO Create list with disabling functionality.
+		checkBoxSlounikServer.isChecked = preferences.useSlounikServer
+		checkBoxSlounikServer.setOnCheckedChangeListener { _, isChecked ->
+			preferences.useSlounikServer= isChecked
+		}
+
 		checkBoxSlounikOrg.isChecked = preferences.useSlounikOrg
 		checkBoxSlounikOrg.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useSlounikOrg = isChecked

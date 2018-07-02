@@ -24,6 +24,13 @@
                 android:layout_height="wrap_content"
         />
         <CheckBox
+                android:id="@+id/checkbox_slounik_server"
+                android:text="@string/drawer_checkbox_slounik_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
+        <CheckBox
                 android:id="@+id/checkbox_slounik_org"
                 android:text="@string/drawer_checkbox_slounik_org"
                 android:layout_width="match_parent"

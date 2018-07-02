@@ -148,7 +148,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 			elements = element.select("a.la1")
 			if (elements != null && elements.size != 0) {
-				dictionary = elements.first().html()
+				dictionary = "$elements.first().html() $url"
 			}
 		}
 	}
@@ -168,7 +168,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 						}
 
 						val list: List<Article> = articleElements.map {
-							e -> parseElement(e).apply { dictionary = dictionaryTitle }
+							e -> parseElement(e).apply { dictionary = "$dictionaryTitle $url" }
 						}
 
 						uiThread {
