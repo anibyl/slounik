@@ -14,7 +14,6 @@
             android:layout_height="wrap_content"
             android:layout_alignWithParentIfMissing="false"
             android:layout_alignParentTop="true"
-            android:typeface="serif"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
     />
@@ -23,7 +22,6 @@
             android:text="Long Dictionary Nameeeeee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:typeface="serif"
             android:singleLine="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
@@ -48,7 +46,6 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:typeface="serif"
             android:layout_below="@id/list_item_title"
             android:lines="2"
     />

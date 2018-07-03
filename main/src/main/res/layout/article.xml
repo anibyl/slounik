@@ -17,7 +17,6 @@
                 android:id="@+id/dictionary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:typeface="serif"
                 android:textSize="@dimen/font_title_16"
         />
         <View
@@ -28,7 +27,6 @@
                 android:id="@+id/list_item_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:typeface="serif"
                 android:textIsSelectable="true"
                 android:longClickable="true"
         />
