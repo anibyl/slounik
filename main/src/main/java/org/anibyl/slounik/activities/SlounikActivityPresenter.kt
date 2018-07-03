@@ -44,15 +44,14 @@ class SlounikActivityPresenter {
 
 	internal fun onSearchClicked(wordToSearch: String) {
 		articles.clear()
-		activity?.resetArticles()
+		activity?.articlesUpdated()
 
 		if (wordToSearch == "") {
-			// TODO Make it visible for everyone.
-			notifier.toast("Nothing to onSearchClicked.", true)
+			notifier.toast("Nothing to search.", false)
 		} else {
 			lastSearchedWord = wordToSearch
 			searching = true
-			activity?.onStartSearching(wordToSearch)
+			activity?.lockControls()
 
 			loader.loadArticles(wordToSearch, context, object : BatchArticlesLoader.BatchArticlesCallback() {
 				override fun invoke(info: ArticlesInfo) {
@@ -61,15 +60,14 @@ class SlounikActivityPresenter {
 						articles.addAll(loadedArticles)
 					}
 
-					// TODO Move down.
+					activity?.articlesUpdated()
+
 					when (info.status) {
 						ArticlesInfo.Status.SUCCESS, ArticlesInfo.Status.FAILURE -> {
 							searching = false
-							activity?.resetControls()
+							activity?.unlockControls()
 						}
 					}
-
-					activity?.articlesUpdated()
 				}
 			})
 		}

@@ -8,10 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -35,8 +32,6 @@ class NavigationDrawerFragment : Fragment() {
 	 * Callbacks interface that all activities using this fragment must implement.
 	 */
 	interface NavigationDrawerCallbacks {
-		fun onSearchClicked(wordToSearch: String)
-
 		fun getLastSearchedWord(): String?
 
 		fun getSupportActionBar(): ActionBar
@@ -50,9 +45,6 @@ class NavigationDrawerFragment : Fragment() {
 	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
 	@BindView(R.id.checkbox_search_in_title) lateinit var checkBoxSearchInTitle: CheckBox
 	@BindView(R.id.drawer_about_button) lateinit var aboutButton: Button
-
-	internal val isDrawerOpen: Boolean
-		get() = drawerLayout != null && drawerLayout!!.isDrawerOpen(fragmentContainerView)
 
 	private val actionBar: ActionBar
 		get() = callbacks.getSupportActionBar()
@@ -69,8 +61,6 @@ class NavigationDrawerFragment : Fragment() {
 
 	private var drawerLayout: DrawerLayout? = null
 	private var fragmentContainerView: View? = null
-
-	private var searchItem: MenuItem? = null
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
@@ -100,35 +90,10 @@ class NavigationDrawerFragment : Fragment() {
 		drawerToggle!!.onConfigurationChanged(newConfig)
 	}
 
-	override fun onPrepareOptionsMenu(menu: Menu) {
-		searchItem = menu.findItem(R.id.action_search)
-		val searchView: SearchView = searchItem?.actionView as SearchView
-		searchView.queryHint = getString(R.string.search_hint)
-		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-			override fun onQueryTextSubmit(s: String): Boolean {
-				callbacks.onSearchClicked(s)
-				searchItem?.collapseActionView()
-				return true
-			}
-
-			override fun onQueryTextChange(s: String): Boolean {
-				return false
-			}
-		})
-		searchView.setOnSearchClickListener {
-			searchView.setQuery(callbacks.getLastSearchedWord(), false)
+	fun close() {
+		if (drawerLayout != null) {
+			drawerLayout!!.closeDrawer(fragmentContainerView)
 		}
-	}
-
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		// If the drawer is open, show the global app actions in the action bar. See also
-		// showGlobalContextActionBar, which controls the top-left area of the action bar.
-		if (drawerLayout != null && isDrawerOpen) {
-			inflater.inflate(R.menu.main, menu)
-			showGlobalContextActionBar()
-		}
-
-		super.onCreateOptionsMenu(menu, inflater)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -136,9 +101,7 @@ class NavigationDrawerFragment : Fragment() {
 			return true
 		}
 
-		if (drawerLayout != null) {
-			drawerLayout!!.closeDrawer(fragmentContainerView)
-		}
+		close()
 
 		return super.onOptionsItemSelected(item)
 	}
@@ -221,21 +184,5 @@ class NavigationDrawerFragment : Fragment() {
 		aboutButton.setOnClickListener {
 			AboutDialog().show(activity.supportFragmentManager, "about_dialog")
 		}
-	}
-
-	internal fun setSearchEnabled(enabled: Boolean) {
-		if (searchItem != null) {
-			searchItem!!.isEnabled = enabled
-		}
-	}
-
-	/**
-	 * Per the navigation drawer design guidelines, updates the action bar to show the global app
-	 * 'context', rather than just what's in the current screen.
-	 */
-	private fun showGlobalContextActionBar() {
-		val actionBar = actionBar
-		actionBar.setDisplayShowTitleEnabled(true)
-		actionBar.setTitle(R.string.app_name)
 	}
 }
