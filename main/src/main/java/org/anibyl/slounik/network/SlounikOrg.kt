@@ -14,6 +14,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import java.net.URLEncoder
 import javax.inject.Inject
 
 /**
@@ -75,10 +76,26 @@ class SlounikOrg : DictionarySiteCommunicator() {
 							for (e in dicsElements) {
 								var dicRequestStr: String? = e.attr("href")
 								if (dicRequestStr != null) {
-									val builder = Uri.Builder()
-									builder.scheme("http").authority(url).appendEncodedPath(dicRequestStr.substring(1))
-									dicRequestStr = builder.build().toString()
-									val eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
+									// Encode cyrillic word.
+									val startIndex = dicRequestStr.indexOf("search=") + "search=".length
+									var endIndex = dicRequestStr.indexOf("&", startIndex)
+									if (endIndex == -1) {
+										endIndex = dicRequestStr.length - 1
+									}
+									dicRequestStr = dicRequestStr.substring(0 until startIndex) +
+											URLEncoder.encode(
+													dicRequestStr.substring(startIndex until endIndex),
+													Charsets.UTF_8.toString()
+											) +
+											dicRequestStr.substring(endIndex)
+
+									val uri = Uri.Builder()
+											.scheme("http")
+											.authority(url)
+											.appendEncodedPath(dicRequestStr.substring(1))
+											.build()
+
+									val eachDicRequest = getPerDicLoadingRequest(uri.toString(),
 											object : ArticlesCallback {
 												override operator fun invoke(info: ArticlesInfo) {
 													val status = if (--dicsAmount == 0)
