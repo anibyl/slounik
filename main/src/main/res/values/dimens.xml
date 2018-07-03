@@ -4,6 +4,7 @@
     <dimen name="big_padding">20dp</dimen>
     <dimen name="font_title_16">16sp</dimen>
     <dimen name="font_large">40sp</dimen>
+    <dimen name="font_large_150">150sp</dimen>
     <dimen name="font_large_200">200sp</dimen>
     <dimen name="drawer_width">240dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
@@ -45,6 +46,8 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 	private lateinit var navigationDrawerFragment: NavigationDrawerFragment
 
 	private lateinit var adapter: SlounikAdapter
+
+	private var largeArticlesAmountFont:Boolean = true
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -149,7 +152,18 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 	}
 
 	private fun updateArticlesAmount() {
-		articlesAmount.text = if (articles.isEmpty()) "0" else articles.size.toString()
+		articlesAmount.text = articles.size.toString()
+
+		when {
+			!largeArticlesAmountFont && articles.size in 0..999 -> {
+				articlesAmount.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_large_200))
+				largeArticlesAmountFont = true
+			}
+			largeArticlesAmountFont && articles.size > 999 -> {
+				articlesAmount.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_large_150))
+				largeArticlesAmountFont = false
+			}
+		}
 	}
 
 	private fun updateProgress() {
