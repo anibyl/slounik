@@ -45,12 +45,14 @@ class ArticleDialog : DialogFragment() {
 
 		val isLoadable = article.linkToFullDescription != null
 
-		val dictionary = view.findViewById(R.id.dictionary) as TextView
-		val description = view.findViewById(R.id.list_item_description) as TextView
+		val title = view.findViewById(R.id.article_title) as TextView
+		val dictionary = view.findViewById(R.id.article_dictionary) as TextView
+		val description = view.findViewById(R.id.article_description) as TextView
 		val closeButton = view.findViewById(R.id.article_button_close) as Button
 		val loadButton = view.findViewById(R.id.article_button_load) as Button
 		val progressBar = view.findViewById(R.id.article_progress) as ProgressBar
 
+		title.text = article.title
 		dictionary.text = article.dictionary
 		description.text = article.spannedDescription
 
