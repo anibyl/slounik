@@ -14,20 +14,32 @@
             android:orientation="vertical"
             android:padding="@dimen/big_padding"
     >
-        <TextView
-                android:id="@+id/about_dialog_title"
+        <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/about_dialog_title"
 
-                android:text="@string/app_name"
-                android:textStyle="bold"
-                android:textSize="@dimen/font_large"
+                    android:text="@string/app_name"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/font_large"
 
-                android:drawableStart="@mipmap/icon"
-                android:drawableLeft="@mipmap/icon"
-                android:drawablePadding="@dimen/padding"
+                    android:drawableStart="@mipmap/icon"
+                    android:drawableLeft="@mipmap/icon"
+                    android:drawablePadding="@dimen/padding"
 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+            />
+            <TextView
+                    android:id="@+id/about_dialog_version"
+
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+            />
+        </RelativeLayout>
         <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/big_padding"
