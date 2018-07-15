@@ -46,14 +46,16 @@ class SlounikActivityPresenter {
 		articles.clear()
 		activity?.articlesUpdated()
 
-		if (wordToSearch == "") {
+		val preparedWord: String = wordToSearch.trim()
+
+		if (preparedWord.isEmpty()) {
 			notifier.toast("Nothing to search.", false)
 		} else {
-			lastSearchedWord = wordToSearch
+			lastSearchedWord = preparedWord
 			searching = true
-			activity?.lockControls()
+			activity?.searchStarted(preparedWord)
 
-			loader.loadArticles(wordToSearch, context, object : BatchArticlesLoader.BatchArticlesCallback() {
+			loader.loadArticles(preparedWord, context, object : BatchArticlesLoader.BatchArticlesCallback() {
 				override fun invoke(info: ArticlesInfo) {
 					val loadedArticles = info.articles
 					if (loadedArticles != null) {
@@ -65,7 +67,7 @@ class SlounikActivityPresenter {
 					when (info.status) {
 						ArticlesInfo.Status.SUCCESS, ArticlesInfo.Status.FAILURE -> {
 							searching = false
-							activity?.unlockControls()
+							activity?.searchEnded()
 						}
 					}
 				}

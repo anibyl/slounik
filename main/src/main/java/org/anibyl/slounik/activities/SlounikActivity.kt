@@ -130,12 +130,13 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		return super.getSupportActionBar()!!
 	}
 
-	internal fun lockControls() {
+	internal fun searchStarted(word: String) {
+		searchEditText.setText(word)
 		progress.progressiveStart()
 		setSearchEnabled(false)
 	}
 
-	internal fun unlockControls() {
+	internal fun searchEnded() {
 		progress.progressiveStop()
 		setSearchEnabled(true)
 	}
