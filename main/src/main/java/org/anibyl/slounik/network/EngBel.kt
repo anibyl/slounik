@@ -31,7 +31,6 @@ class EngBel : DictionarySiteCommunicator() {
 		queue.add(
 				getLoadRequest(
 						getRequestUrl(wordToSearch),
-						wordToSearch,
 						callback,
 						context.resources.getString(R.string.slounik_server_eng_bel)
 				)
@@ -53,7 +52,7 @@ class EngBel : DictionarySiteCommunicator() {
 	}
 
 	private fun getLoadRequest(
-			requestString: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
+			requestString: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
 		return StringRequest(requestString,
 				Response.Listener<String> { response ->
