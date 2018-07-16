@@ -122,10 +122,6 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		super.onDestroy()
 	}
 
-	override fun getLastSearchedWord(): String? {
-		return presenter.lastSearchedWord
-	}
-
 	override fun getSupportActionBar(): ActionBar {
 		return super.getSupportActionBar()!!
 	}

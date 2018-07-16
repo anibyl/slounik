@@ -2,7 +2,6 @@ package org.anibyl.slounik.activities
 
 import android.content.Context
 import org.anibyl.slounik.Notifier
-import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.network.ArticlesInfo
@@ -22,10 +21,7 @@ class SlounikActivityPresenter {
 	@Inject lateinit var loader: BatchArticlesLoader
 
 	internal val articles: ArrayList<Article> = arrayListOf()
-	internal val title: String
-		get() = lastSearchedWord ?: context.getString(R.string.app_name)
 
-	internal var lastSearchedWord: String? = null
 	internal var searching = false
 
 	private var activity: SlounikActivity? = null
@@ -51,7 +47,6 @@ class SlounikActivityPresenter {
 		if (preparedWord.isEmpty()) {
 			notifier.toast("Nothing to search.", false)
 		} else {
-			lastSearchedWord = preparedWord
 			searching = true
 			activity?.searchStarted(preparedWord)
 

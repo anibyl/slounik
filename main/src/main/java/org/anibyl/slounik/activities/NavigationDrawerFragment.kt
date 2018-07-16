@@ -32,8 +32,6 @@ class NavigationDrawerFragment : Fragment() {
 	 * Callbacks interface that all activities using this fragment must implement.
 	 */
 	interface NavigationDrawerCallbacks {
-		fun getLastSearchedWord(): String?
-
 		fun getSupportActionBar(): ActionBar
 	}
 
