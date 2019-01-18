@@ -102,7 +102,11 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		adapter = SlounikAdapter(this, R.layout.list_item, R.id.list_item_description, articles)
 		listView.adapter = adapter
 		listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-			newArticleDialog(articles[position]).show(supportFragmentManager, "article_dialog")
+			try {
+				newArticleDialog(articles[position]).show(supportFragmentManager, "article_dialog")
+			} catch (t: Throwable) {
+				// who cares?
+			}
 		}
 
 		updateArticlesAmount()
