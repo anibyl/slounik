@@ -36,7 +36,7 @@ class ArticleDialog : DialogFragment() {
 
 		SlounikApplication.graph.inject(this)
 
-		article = arguments.getSerializable("article") as Article?
+		article = arguments?.getSerializable("article") as Article?
 				?: savedInstanceState?.getSerializable("article") as Article
 	}
 
@@ -59,7 +59,7 @@ class ArticleDialog : DialogFragment() {
 		description.movementMethod = ScrollingMovementMethod()
 
 		description.setOnLongClickListener {
-			context.copyToClipboard(description.text)
+			context?.copyToClipboard(description.text)
 
 			notifier.toast(R.string.toast_text_copied)
 			true

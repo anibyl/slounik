@@ -89,8 +89,8 @@ class NavigationDrawerFragment : Fragment() {
 	}
 
 	fun close() {
-		if (drawerLayout != null) {
-			drawerLayout!!.closeDrawer(fragmentContainerView)
+		if (drawerLayout != null && fragmentContainerView != null) {
+			drawerLayout!!.closeDrawer(fragmentContainerView!!)
 		}
 	}
 
@@ -132,19 +132,19 @@ class NavigationDrawerFragment : Fragment() {
 				R.string.navigation_drawer_open,
 				R.string.navigation_drawer_close
 		) {
-			override fun onDrawerClosed(drawerView: View?) {
+			override fun onDrawerClosed(drawerView: View) {
 				super.onDrawerClosed(drawerView)
 
 				if (isAdded) {
-					activity.invalidateOptionsMenu()
+					activity?.invalidateOptionsMenu()
 				}
 			}
 
-			override fun onDrawerOpened(drawerView: View?) {
+			override fun onDrawerOpened(drawerView: View) {
 				super.onDrawerOpened(drawerView)
 
 				if (isAdded) {
-					activity.invalidateOptionsMenu()
+					activity?.invalidateOptionsMenu()
 				}
 			}
 		}
@@ -180,7 +180,7 @@ class NavigationDrawerFragment : Fragment() {
 		}
 
 		aboutButton.setOnClickListener {
-			AboutDialog().show(activity.supportFragmentManager, "about_dialog")
+			AboutDialog().show(activity?.supportFragmentManager, "about_dialog")
 		}
 	}
 }
