@@ -38,7 +38,8 @@ class BatchArticlesLoader(private vararg val communicators: DictionarySiteCommun
 
 		internal operator fun invoke(callback: ArticlesCallback, info: ArticlesInfo) {
 			if (!callbacks.contains(callback)) {
-				throw RuntimeException("No such callback in batch callback.")
+				// Should not happen, however, I had couple occurrences in production.
+				return
 			}
 
 			when (info.status) {
