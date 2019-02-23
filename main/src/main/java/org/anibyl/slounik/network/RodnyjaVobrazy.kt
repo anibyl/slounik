@@ -118,7 +118,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 			requestString: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
 		return StringRequest(requestString,
-				Response.Listener<String> { response ->
+				Response.Listener { response ->
 					doAsync {
 						val page = Jsoup.parse(response)
 						val articleElements = page.select("table")
@@ -150,8 +150,8 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 						}
 					}
 				},
-				Response.ErrorListener {
-					notifier.toast("Error response.", developerMode = true)
+				Response.ErrorListener { error ->
+					notifier.log("Error response for $requestString: ${error.message}")
 					// TODO fix it.
 					val status = if (--requestCount == 0)
 						ArticlesInfo.Status.FAILURE
@@ -203,7 +203,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 			requestString: String, article: Article, callback: ArticlesCallback
 	): StringRequest {
 		return StringRequest(requestString,
-				Response.Listener<String> { response ->
+				Response.Listener { response ->
 					doAsync {
 						notifier.log("Response received for $requestString.")
 						val articlePage = Jsoup.parse(response)
@@ -230,7 +230,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 					}
 				},
 				Response.ErrorListener { error ->
-					notifier.log("Response error: " + error.message)
+					notifier.log("Error response for $requestString: ${error.message}")
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				}
 		)

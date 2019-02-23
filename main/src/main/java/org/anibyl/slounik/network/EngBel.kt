@@ -55,7 +55,7 @@ class EngBel : DictionarySiteCommunicator() {
 			requestString: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
 		return StringRequest(requestString,
-				Response.Listener<String> { response ->
+				Response.Listener { response ->
 					doAsync {
 						val articles: List<Article> = Gson().fromJson(response, EngBelResponse::class.java)
 						articles.forEach { article: Article -> article.dictionary = dictionaryTitle }
@@ -65,8 +65,8 @@ class EngBel : DictionarySiteCommunicator() {
 						}
 					}
 				},
-				Response.ErrorListener {
-					notifier.toast("Error response.", developerMode = true)
+				Response.ErrorListener { error ->
+					notifier.log("Error response for $requestString: ${error.message}")
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				}
 		)

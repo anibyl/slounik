@@ -34,7 +34,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 	}
 
 	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
-		val requestStr: String
+		val requestString: String
 
 		val builder = Uri.Builder()
 		builder.scheme("http").authority(url).appendPath("search").appendQueryParameter("search", wordToSearch)
@@ -43,9 +43,9 @@ class SlounikOrg : DictionarySiteCommunicator() {
 			builder.appendQueryParameter("un", "1")
 		}
 
-		requestStr = builder.build().toString()
+		requestString = builder.build().toString()
 
-		val request = getLoadRequest(requestStr, callback)
+		val request = getLoadRequest(requestString, callback)
 
 		queue.add(request)
 	}
@@ -53,9 +53,9 @@ class SlounikOrg : DictionarySiteCommunicator() {
 	override fun loadArticleDescription(article: Article, callback: ArticlesCallback) {
 		val builder = Uri.Builder()
 		builder.scheme("http").authority(url).appendPath(article.linkToFullDescription!!.substring(1))
-		val requestStr = builder.build().toString()
+		val requestString = builder.build().toString()
 
-		val request = getArticleDescriptionLoadRequest(requestStr, article, callback)
+		val request = getArticleDescriptionLoadRequest(requestString, article, callback)
 
 		queue.add(request)
 	}
@@ -64,8 +64,8 @@ class SlounikOrg : DictionarySiteCommunicator() {
 		return preferences.useSlounikOrg
 	}
 
-	private fun getLoadRequest(requestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
-		return SlounikOrgRequest(requestStr,
+	private fun getLoadRequest(requestString: String, callback: ArticlesCallback): SlounikOrgRequest {
+		return SlounikOrgRequest(requestString,
 				Response.Listener { response ->
 					doAsync {
 						val page = Jsoup.parse(response)
@@ -122,8 +122,8 @@ class SlounikOrg : DictionarySiteCommunicator() {
 						}
 					}
 				},
-				Response.ErrorListener {
-					notifier.toast("Error response.", true)
+				Response.ErrorListener { error ->
+					notifier.log("Error response for $requestString: ${error.message}")
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				})
 	}
@@ -170,11 +170,11 @@ class SlounikOrg : DictionarySiteCommunicator() {
 		}
 	}
 
-	private fun getPerDicLoadingRequest(dicRequestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
-		return SlounikOrgRequest(dicRequestStr,
+	private fun getPerDicLoadingRequest(requestString: String, callback: ArticlesCallback): SlounikOrgRequest {
+		return SlounikOrgRequest(requestString,
 				Response.Listener { response ->
 					doAsync {
-						notifier.log("Response received for $dicRequestStr.")
+						notifier.log("Response received for $requestString.")
 						val dicPage = Jsoup.parse(response)
 						val articleElements = dicPage.select("li#li_poszuk")
 
@@ -194,20 +194,20 @@ class SlounikOrg : DictionarySiteCommunicator() {
 					}
 				},
 				Response.ErrorListener { error ->
-					notifier.log("Response error: " + error.message)
+					notifier.log("Error response for $requestString: ${error.message}")
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				})
 	}
 
 	private fun getArticleDescriptionLoadRequest(
-			requestStr: String,
+			requestString: String,
 			article: Article,
 			callback: ArticlesCallback
 	): SlounikOrgRequest {
-		return SlounikOrgRequest(requestStr,
+		return SlounikOrgRequest(requestString,
 				Response.Listener { response ->
 					doAsync {
-						notifier.log("Response received for $requestStr.")
+						notifier.log("Response received for $requestString.")
 						val articlePage: Document = Jsoup.parse(response)
 						val articleElement: Element = articlePage.select("td.n12").first()
 
@@ -225,7 +225,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 					}
 				},
 				Response.ErrorListener { error ->
-					notifier.log("Response error: " + error.message)
+					notifier.log("Error response for $requestString: ${error.message}")
 					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
 				})
 	}

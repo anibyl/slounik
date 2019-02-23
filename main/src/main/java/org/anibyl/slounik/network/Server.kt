@@ -31,10 +31,10 @@ class Server {
 
 		val androidId = getAndroidId(context)
 
-		val requestStr = context.getString(R.string.config)
+		val requestString = context.getString(R.string.config)
 		val queue = Volley.newRequestQueue(context)
-		val request = StringRequest(requestStr,
-				Response.Listener<String> { response ->
+		val request = StringRequest(requestString,
+				Response.Listener { response ->
 					doAsync {
 						try {
 							val json = JSONObject(response)
@@ -60,8 +60,8 @@ class Server {
 						}
 					}
 				},
-				Response.ErrorListener {
-					Log.e(TAG, "Config cannot be loaded.")
+				Response.ErrorListener { error ->
+					Log.e(TAG, "Error response for $requestString: ${error.message}")
 				})
 
 		queue.add(request)

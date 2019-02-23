@@ -77,17 +77,19 @@ class Skarnik : DictionarySiteCommunicator() {
 	}
 
 	private fun getLoadRequest(
-			requestStr: String,
+			requestString: String,
 			wordToSearch: String,
 			callback: ArticlesCallback,
 			dictionaryTitle: String
 	): StringRequest {
-		return StringRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
+		return StringRequest(requestString,
+				Response.Listener { response ->
 					// In the good old days I received correct page immediately but now it is empty page most likely.
 					processPage(response, wordToSearch, callback, dictionaryTitle)
 				},
 				Response.ErrorListener { error ->
+					notifier.log("Error response for $requestString: ${error.message}")
+
 					fun loadPage(url: String) {
 						queue.add(getPageRequest(url, wordToSearch, callback, dictionaryTitle))
 					}
@@ -109,23 +111,23 @@ class Skarnik : DictionarySiteCommunicator() {
 							}
 						} else {
 							// Should not happen.
-							fail(error, callback)
+							fail(requestString, error, callback)
 						}
 					} else {
-						fail(error, callback)
+						fail(requestString, error, callback)
 					}
 				})
 	}
 
 	private fun getPageRequest(
-			requestStr: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
+			requestString: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
-		return StringRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
+		return StringRequest(requestString,
+				Response.Listener { response ->
 					processPage(response, wordToSearch, callback, dictionaryTitle)
 				},
 				Response.ErrorListener { error ->
-					fail(error, callback)
+					fail(requestString, error, callback)
 				}
 		)
 	}
@@ -185,12 +187,14 @@ class Skarnik : DictionarySiteCommunicator() {
 		return builder.build().toString()
 	}
 
-	private fun fail(error: VolleyError, callback: ArticlesCallback) {
-		notifier.log("Response error: " + error.message)
+	private fun fail(requestString: String, error: VolleyError, callback: ArticlesCallback) {
+		notifier.log("Error response for $requestString: ${error.message}")
+
 		val status = if (--requestCount == 0)
 			ArticlesInfo.Status.FAILURE
 		else
 			ArticlesInfo.Status.IN_PROCESS
+
 		callback.invoke(ArticlesInfo(status))
 	}
 }
