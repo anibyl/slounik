@@ -29,14 +29,14 @@ import javax.inject.Inject
 class ArticleDialog : DialogFragment() {
 	@Inject lateinit var notifier: Notifier
 
-	lateinit private var article: Article
+	private lateinit var article: Article
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		SlounikApplication.graph.inject(this)
 
-		article = arguments.getSerializable("article") as Article?
+		article = arguments?.getSerializable("article") as Article?
 				?: savedInstanceState?.getSerializable("article") as Article
 	}
 
@@ -45,19 +45,21 @@ class ArticleDialog : DialogFragment() {
 
 		val isLoadable = article.linkToFullDescription != null
 
-		val dictionary = view.findViewById(R.id.dictionary) as TextView
-		val description = view.findViewById(R.id.list_item_description) as TextView
+		val title = view.findViewById(R.id.article_title) as TextView
+		val dictionary = view.findViewById(R.id.article_dictionary) as TextView
+		val description = view.findViewById(R.id.article_description) as TextView
 		val closeButton = view.findViewById(R.id.article_button_close) as Button
 		val loadButton = view.findViewById(R.id.article_button_load) as Button
 		val progressBar = view.findViewById(R.id.article_progress) as ProgressBar
 
+		title.text = article.title
 		dictionary.text = article.dictionary
 		description.text = article.spannedDescription
 
 		description.movementMethod = ScrollingMovementMethod()
 
 		description.setOnLongClickListener {
-			context.copyToClipboard(description.text)
+			context?.copyToClipboard(description.text)
 
 			notifier.toast(R.string.toast_text_copied)
 			true

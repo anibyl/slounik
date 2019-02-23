@@ -2,16 +2,16 @@ package org.anibyl.slounik.network
 
 import android.content.Context
 import android.net.Uri
-import android.os.AsyncTask
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import java.util.ArrayList
 import javax.inject.Inject
 
 /**
@@ -115,52 +115,40 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 	}
 
 	private fun getLoadRequest(
-			requestString: String,
-			wordToSearch: String,
-			callback: ArticlesCallback,
-			dictionaryTitle: String
+			requestString: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
 		return StringRequest(requestString,
 				Response.Listener<String> { response ->
-					object : AsyncTask<Void, Void, Article>() {
-						override fun doInBackground(vararg params: Void): Article? {
-							val page = Jsoup.parse(response)
-							val articleElements = page.select("table")
+					doAsync {
+						val page = Jsoup.parse(response)
+						val articleElements = page.select("table")
 
-							if (articleElements.size < 1) {
-								return null
-							} else {
-								val article: Article
-								try {
-									// TODO Add other.
-									article = parseElement(articleElements.first(), wordToSearch)
-								} catch (e: IncorrectTitleException) {
-									return null
-								}
-
-								article.dictionary = dictionaryTitle
-								return article
+						val article: Article?
+						if (articleElements.size < 1) {
+							article = null
+						} else {
+							article = try {
+								parseElement(articleElements.first(), wordToSearch)
+							} catch (e: IncorrectTitleException) {
+								null
 							}
+
+							article?.dictionary = dictionaryTitle
 						}
 
-						override fun onPostExecute(article: Article?) {
+						uiThread {
 							val status = if (--requestCount == 0)
 								ArticlesInfo.Status.SUCCESS
 							else
 								ArticlesInfo.Status.IN_PROCESS
-							val info: ArticlesInfo
-							if (article != null) {
-								info = ArticlesInfo(object : ArrayList<Article>() {
-									init {
-										add(article)
-									}
-								}, status)
+							val info: ArticlesInfo = if (article != null) {
+								ArticlesInfo(listOf(article), status)
 							} else {
-								info = ArticlesInfo(status)
+								ArticlesInfo(status)
 							}
 							callback.invoke(info)
 						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener {
 					notifier.toast("Error response.", developerMode = true)
@@ -212,38 +200,34 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 	}
 
 	private fun getArticleDescriptionLoadRequest(
-			requestString: String,
-			article: Article,
-			callback: ArticlesCallback
+			requestString: String, article: Article, callback: ArticlesCallback
 	): StringRequest {
 		return StringRequest(requestString,
 				Response.Listener<String> { response ->
-					object : AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							notifier.log("Response received for $requestString.")
-							val articlePage = Jsoup.parse(response)
+					doAsync {
+						notifier.log("Response received for $requestString.")
+						val articlePage = Jsoup.parse(response)
 
-							var fullArticleDescription: String = ""
+						var fullArticleDescription = ""
 
-							val titleTd: Element? = articlePage.select("td[class$=text_title]")?.first()
+						val titleTd: Element? = articlePage.select("td[class$=text_title]")?.first()
 
-							if (titleTd != null) {
-								var tr: Element? = titleTd.parent()
-								do {
-									fullArticleDescription += tr!!.html() + "<br>"
-									tr = tr.nextElementSibling()
-								} while (tr != null)
-							}
-
-							article.fullDescription = fullArticleDescription
-
-							return arrayListOf(article)
+						if (titleTd != null) {
+							var tr: Element? = titleTd.parent()
+							do {
+								fullArticleDescription += tr!!.html() + "<br>"
+								tr = tr.nextElementSibling()
+							} while (tr != null)
 						}
 
-						override fun onPostExecute(articles: ArrayList<Article>) {
+						article.fullDescription = fullArticleDescription
+
+						val articles = arrayListOf(article)
+
+						uiThread {
 							callback.invoke(ArticlesInfo(articles))
 						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Response error: " + error.message)

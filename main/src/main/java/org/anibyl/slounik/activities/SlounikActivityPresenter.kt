@@ -2,7 +2,6 @@ package org.anibyl.slounik.activities
 
 import android.content.Context
 import org.anibyl.slounik.Notifier
-import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.network.ArticlesInfo
@@ -22,10 +21,7 @@ class SlounikActivityPresenter {
 	@Inject lateinit var loader: BatchArticlesLoader
 
 	internal val articles: ArrayList<Article> = arrayListOf()
-	internal val title: String
-		get() = lastSearchedWord ?: context.getString(R.string.app_name)
 
-	internal var lastSearchedWord: String? = null
 	internal var searching = false
 
 	private var activity: SlounikActivity? = null
@@ -44,32 +40,31 @@ class SlounikActivityPresenter {
 
 	internal fun onSearchClicked(wordToSearch: String) {
 		articles.clear()
-		activity?.resetArticles()
+		activity?.articlesUpdated()
 
-		if (wordToSearch == "") {
-			// TODO Make it visible for everyone.
-			notifier.toast("Nothing to onSearchClicked.", true)
+		val preparedWord: String = wordToSearch.trim()
+
+		if (preparedWord.isEmpty()) {
+			notifier.toast("Nothing to search.", false)
 		} else {
-			lastSearchedWord = wordToSearch
 			searching = true
-			activity?.onStartSearching(wordToSearch)
+			activity?.searchStarted(preparedWord)
 
-			loader.loadArticles(wordToSearch, context, object : BatchArticlesLoader.BatchArticlesCallback() {
+			loader.loadArticles(preparedWord, context, object : BatchArticlesLoader.BatchArticlesCallback() {
 				override fun invoke(info: ArticlesInfo) {
 					val loadedArticles = info.articles
 					if (loadedArticles != null) {
 						articles.addAll(loadedArticles)
 					}
 
-					// TODO Move down.
+					activity?.articlesUpdated()
+
 					when (info.status) {
 						ArticlesInfo.Status.SUCCESS, ArticlesInfo.Status.FAILURE -> {
 							searching = false
-							activity?.resetControls()
+							activity?.searchEnded()
 						}
 					}
-
-					activity?.articlesUpdated()
 				}
 			})
 		}

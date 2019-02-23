@@ -20,6 +20,8 @@
 
     <string name="search_hint">Пошук…</string>
 
+    <string name="slounik_server_eng_bel">Ангельска-беларускі слоўнік</string>
+
     <string name="skarnik_dictionary_rus_bel">Расейска-беларускі слоўнік</string>
     <string name="skarnik_dictionary_bel_rus">Беларуска-расейскі слоўнік</string>
     <string name="skarnik_dictionary_explanatory">Тлумачальны слоўнік</string>
@@ -28,4 +30,6 @@
     <string name="rodnyja_vobrazy_dictionary_ethnography">Этнаграфія</string>
     <string name="rodnyja_vobrazy_dictionary_mythology">Міталёгія</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Чырвоная кніга</string>
+
+    <string name="drawer_checkbox_slounik_server">Свой сэрвэр</string>
 </resources>

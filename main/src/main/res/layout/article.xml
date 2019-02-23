@@ -14,10 +14,20 @@
             android:padding="@dimen/padding"
     >
         <TextView
-                android:id="@+id/dictionary"
+                android:id="@+id/article_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:typeface="serif"
+                android:textSize="@dimen/font_title_16"
+                android:textStyle="bold"
+        />
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding"
+        />
+        <TextView
+                android:id="@+id/article_dictionary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textSize="@dimen/font_title_16"
         />
         <View
@@ -25,10 +35,9 @@
                 android:layout_height="@dimen/padding"
         />
         <TextView
-                android:id="@+id/list_item_description"
+                android:id="@+id/article_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:typeface="serif"
                 android:textIsSelectable="true"
                 android:longClickable="true"
         />

@@ -1,14 +1,16 @@
 <resources>
-    <style name="SlounikTheme" parent="Theme.AppCompat">
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+    <style name="SlounikTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:windowBackground">@color/window_background</item>
-        <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="SlounikButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/button_text</item>
         <item name="android:minWidth">0dp</item>
+    </style>
+
+    <style name="SlounikEditText" parent="SlounikButton">
+        <item name="android:gravity">left|center_vertical</item>
     </style>
 </resources>

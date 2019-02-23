@@ -2,17 +2,19 @@ package org.anibyl.slounik.network
 
 import android.content.Context
 import android.net.Uri
-import android.os.AsyncTask
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.SlounikApplication
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import java.util.ArrayList
+import java.net.URLEncoder
 import javax.inject.Inject
 
 /**
@@ -43,7 +45,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 		requestStr = builder.build().toString()
 
-		val request = getLoadRequest(requestStr, context, callback)
+		val request = getLoadRequest(requestStr, callback)
 
 		queue.add(request)
 	}
@@ -62,58 +64,63 @@ class SlounikOrg : DictionarySiteCommunicator() {
 		return preferences.useSlounikOrg
 	}
 
-	private fun getLoadRequest(requestStr: String, context: Context, callback: ArticlesCallback): SlounikOrgRequest {
+	private fun getLoadRequest(requestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
-					object : AsyncTask<Void, Void, Void>() {
-						private var dicsAmount: Int = 0
+				Response.Listener { response ->
+					doAsync {
+						val page = Jsoup.parse(response)
+						val dicsElements = page.select("a.treeSearchDict")
+						var dicsAmount: Int = dicsElements.size
 
-						override fun doInBackground(vararg params: Void): Void? {
-							val page = Jsoup.parse(response)
-							val dicsElements = page.select("a.treeSearchDict")
-							dicsAmount = dicsElements.size
-
-							if (dicsAmount == 0) {
-								return null
-							}
-
+						if (dicsAmount != 0) {
 							for (e in dicsElements) {
 								var dicRequestStr: String? = e.attr("href")
 								if (dicRequestStr != null) {
-									val builder = Uri.Builder()
-									builder.scheme("http").authority(url).appendEncodedPath(dicRequestStr.substring(1))
-									dicRequestStr = builder.build().toString()
-									val eachDicRequest = getPerDicLoadingRequest(dicRequestStr,
+									// Encode cyrillic word.
+									val startIndex = dicRequestStr.indexOf("search=") + "search=".length
+									var endIndex = dicRequestStr.indexOf("&", startIndex)
+									if (endIndex == -1) {
+										endIndex = dicRequestStr.length - 1
+									}
+									dicRequestStr = dicRequestStr.substring(0 until startIndex) +
+											URLEncoder.encode(
+													dicRequestStr.substring(startIndex until endIndex),
+													Charsets.UTF_8.toString()
+											) +
+											dicRequestStr.substring(endIndex)
+
+									val uri = Uri.Builder()
+											.scheme("http")
+											.authority(url)
+											.appendEncodedPath(dicRequestStr.substring(1))
+											.build()
+
+									val eachDicRequest = getPerDicLoadingRequest(uri.toString(),
 											object : ArticlesCallback {
 												override operator fun invoke(info: ArticlesInfo) {
-													setArticleList(info.articles)
+													val status = if (--dicsAmount == 0)
+														ArticlesInfo.Status.SUCCESS
+													else
+														ArticlesInfo.Status.IN_PROCESS
+													notifier.log("Callback invoked, " + (info.articles?.size
+															?: 0) + " articles added.")
+													callback.invoke(ArticlesInfo(info.articles, status))
 												}
 											})
 
 									queue.add(eachDicRequest)
-									notifier.log("Request added to queue: " + eachDicRequest)
+									notifier.log("Request added to queue: $eachDicRequest")
 								}
 							}
-
-							return null
 						}
 
-						override fun onPostExecute(ignored: Void?) {
+						uiThread {
 							if (dicsAmount == 0) {
 								notifier.log("Callback invoked: no dictionaries.")
 								callback.invoke(ArticlesInfo(articles = null, status = ArticlesInfo.Status.SUCCESS))
 							}
 						}
-
-						private fun setArticleList(list: List<Article>?) {
-							val status = if (--dicsAmount == 0)
-								ArticlesInfo.Status.SUCCESS
-							else
-								ArticlesInfo.Status.IN_PROCESS
-							notifier.log("Callback invoked, " + (list?.size ?: 0) + " articles added.")
-							callback.invoke(ArticlesInfo(list, status))
-						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener {
 					notifier.toast("Error response.", true)
@@ -158,40 +165,33 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 			elements = element.select("a.la1")
 			if (elements != null && elements.size != 0) {
-				dictionary = elements.first().html()
+				dictionary = "$elements.first().html() $url"
 			}
 		}
 	}
 
 	private fun getPerDicLoadingRequest(dicRequestStr: String, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(dicRequestStr,
-				Response.Listener<kotlin.String> { response ->
-					object : AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							notifier.log("Response received for $dicRequestStr.")
-							val dicPage = Jsoup.parse(response)
-							val articleElements = dicPage.select("li#li_poszuk")
+				Response.Listener { response ->
+					doAsync {
+						notifier.log("Response received for $dicRequestStr.")
+						val dicPage = Jsoup.parse(response)
+						val articleElements = dicPage.select("li#li_poszuk")
 
-							var dictionaryTitle: String? = null
-							val dictionaryTitles = dicPage.select("a.t3")
-							if (dictionaryTitles != null && dictionaryTitles.size != 0) {
-								dictionaryTitle = dictionaryTitles.first().html()
-							}
-
-							val list = ArrayList<Article>()
-							for (e in articleElements) {
-								list.add(parseElement(e).apply {
-									dictionary = dictionaryTitle
-								})
-							}
-
-							return list
+						var dictionaryTitle: String? = null
+						val dictionaryTitles = dicPage.select("a.t3")
+						if (dictionaryTitles != null && dictionaryTitles.size != 0) {
+							dictionaryTitle = dictionaryTitles.first().html()
 						}
 
-						override fun onPostExecute(articles: ArrayList<Article>) {
-							callback.invoke(ArticlesInfo(articles))
+						val list: List<Article> = articleElements.map {
+							e -> parseElement(e).apply { dictionary = "$dictionaryTitle $url" }
 						}
-					}.execute()
+
+						uiThread {
+							callback.invoke(ArticlesInfo(list))
+						}
+					}
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Response error: " + error.message)
@@ -205,29 +205,24 @@ class SlounikOrg : DictionarySiteCommunicator() {
 			callback: ArticlesCallback
 	): SlounikOrgRequest {
 		return SlounikOrgRequest(requestStr,
-				Response.Listener<kotlin.String> { response ->
-					object : AsyncTask<Void, Void, ArrayList<Article>>() {
-						override fun doInBackground(vararg params: Void): ArrayList<Article> {
-							notifier.log("Response received for $requestStr.")
-							val articlePage = Jsoup.parse(response)
-							val articleElement = articlePage.select("td.n12").first()
+				Response.Listener { response ->
+					doAsync {
+						notifier.log("Response received for $requestStr.")
+						val articlePage: Document = Jsoup.parse(response)
+						val articleElement: Element = articlePage.select("td.n12").first()
 
-							val htmlDescription:String = articleElement.html()
-							val descriptionWithOutExtraSpace = htmlDescription.trim { it <= ' ' }
+						val htmlDescription:String = articleElement.html()
+						val descriptionWithOutExtraSpace: String = htmlDescription.trim { it <= ' ' }
 
-							article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
-									as String
+						article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
+								as String
 
-							val list = ArrayList<Article>()
-							list.add(article)
+						val list = listOf(article)
 
-							return list
+						uiThread {
+							callback.invoke(ArticlesInfo(list))
 						}
-
-						override fun onPostExecute(articles: ArrayList<Article>) {
-							callback.invoke(ArticlesInfo(articles))
-						}
-					}.execute()
+					}
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Response error: " + error.message)
@@ -241,7 +236,7 @@ class SlounikOrg : DictionarySiteCommunicator() {
 			errorListener: Response.ErrorListener
 	) : StringRequest(url, listener, errorListener) {
 		override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
-			val parsed: String = String(response.data, Charsets.UTF_8)
+			val parsed = String(response.data, Charsets.UTF_8)
 
 			return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response))
 		}

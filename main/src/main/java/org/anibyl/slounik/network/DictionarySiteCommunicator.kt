@@ -28,7 +28,7 @@ abstract class DictionarySiteCommunicator : ArticlesLoader<ArticlesCallback> {
 			return _queue!!
 		}
 
-	abstract protected val url: String
+	protected abstract val url: String
 
 	private var _queue: RequestQueue? = null
 

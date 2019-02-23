@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.TextView
+import org.anibyl.slounik.BuildConfig
 import org.anibyl.slounik.R
 
 
@@ -23,9 +25,12 @@ class AboutDialog : DialogFragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view: View = inflater.inflate(R.layout.about, container, false)
 
+		val version: TextView = view.findViewById(R.id.about_dialog_version)
 		val homepageButton = view.findViewById(R.id.about_dialog_homepage_button) as Button
 		val betaParticipationButton = view.findViewById(R.id.about_dialog_beta_participation_button) as Button
 		val closeButton = view.findViewById(R.id.about_dialog_close_button) as Button
+
+		version.text = BuildConfig.VERSION_NAME
 
 		homepageButton.setOnClickListener {
 			startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.homepage))))

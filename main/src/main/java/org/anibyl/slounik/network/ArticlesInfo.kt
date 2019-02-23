@@ -1,7 +1,5 @@
 package org.anibyl.slounik.network
 
-import java.util.ArrayList
-
 /**
  * Represents article information.
 
@@ -27,7 +25,7 @@ class ArticlesInfo {
 		this.status = status
 	}
 
-	constructor(articles: ArrayList<Article>?) {
+	constructor(articles: List<Article>?) {
 		this.articles = articles
 
 		if (articles == null) {
