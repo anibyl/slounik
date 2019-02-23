@@ -39,19 +39,19 @@ class Skarnik : DictionarySiteCommunicator() {
 						getRBRequestStr(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.skarnik_dictionary_rus_bel)
+						context.resources.getString(R.string.skarnik_dictionary_rus_bel)
 				),
 				getLoadRequest(
 						getBRRequestStr(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.skarnik_dictionary_bel_rus)
+						context.resources.getString(R.string.skarnik_dictionary_bel_rus)
 				),
 				getLoadRequest(
 						getExplanatoryRequestStr(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.skarnik_dictionary_explanatory)
+						context.resources.getString(R.string.skarnik_dictionary_explanatory)
 				)
 		)
 
@@ -82,16 +82,18 @@ class Skarnik : DictionarySiteCommunicator() {
 			callback: ArticlesCallback,
 			dictionaryTitle: String
 	): StringRequest {
+		val completeDictionaryTitle = "$dictionaryTitle $url"
+
 		return StringRequest(requestString,
 				Response.Listener { response ->
 					// In the good old days I received correct page immediately but now it is empty page most likely.
-					processPage(response, wordToSearch, callback, dictionaryTitle)
+					processPage(response, wordToSearch, callback, completeDictionaryTitle)
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Error response for $requestString: ${error.message}")
 
 					fun loadPage(url: String) {
-						queue.add(getPageRequest(url, wordToSearch, callback, dictionaryTitle))
+						queue.add(getPageRequest(url, wordToSearch, callback, completeDictionaryTitle))
 					}
 
 					val networkResponse: NetworkResponse? = error.networkResponse

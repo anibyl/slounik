@@ -36,25 +36,25 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 						getExplanatoryRequestString(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.rodnyja_vobrazy_dictionary_explanatory)
+						context.resources.getString(R.string.rodnyja_vobrazy_dictionary_explanatory)
 				),
 				getLoadRequest(
 						getEthnographyRequestString(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.rodnyja_vobrazy_dictionary_ethnography)
+						context.resources.getString(R.string.rodnyja_vobrazy_dictionary_ethnography)
 				),
 				getLoadRequest(
 						getMythologyRequestString(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.rodnyja_vobrazy_dictionary_mythology)
+						context.resources.getString(R.string.rodnyja_vobrazy_dictionary_mythology)
 				),
 				getLoadRequest(
 						getRedListRequestString(wordToSearch),
 						wordToSearch,
 						callback,
-						url + " " + context.resources.getString(R.string.rodnyja_vobrazy_dictionary_red_list)
+						context.resources.getString(R.string.rodnyja_vobrazy_dictionary_red_list)
 				)
 		)
 
@@ -133,7 +133,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 								null
 							}
 
-							article?.dictionary = dictionaryTitle
+							article?.dictionary = "$dictionaryTitle $url"
 						}
 
 						uiThread {
