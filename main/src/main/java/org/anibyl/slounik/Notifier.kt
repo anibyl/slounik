@@ -3,7 +3,7 @@ package org.anibyl.slounik
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import org.anibyl.slounik.network.Server.Config
+import org.anibyl.slounik.data.network.Server.Config
 import javax.inject.Inject
 
 /**

@@ -37,10 +37,10 @@ class NavigationDrawerFragment : Fragment() {
 
 	@Inject lateinit var preferences: Preferences
 
-	@BindView(R.id.checkbox_slounik_server) lateinit var checkBoxSlounikServer: CheckBox
 	@BindView(R.id.checkbox_slounik_org) lateinit var checkBoxSlounikOrg: CheckBox
 	@BindView(R.id.checkbox_skarnik) lateinit var checkBoxSkarnik: CheckBox
 	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
+	@BindView(R.id.checkbox_engbel) lateinit var checkBoxEngBel: CheckBox
 	@BindView(R.id.checkbox_search_in_title) lateinit var checkBoxSearchInTitle: CheckBox
 	@BindView(R.id.drawer_about_button) lateinit var aboutButton: Button
 
@@ -154,11 +154,6 @@ class NavigationDrawerFragment : Fragment() {
 		drawerLayout.addDrawerListener(drawerToggle!!)
 
 		// TODO Create list with disabling functionality.
-		checkBoxSlounikServer.isChecked = preferences.useSlounikServer
-		checkBoxSlounikServer.setOnCheckedChangeListener { _, isChecked ->
-			preferences.useSlounikServer= isChecked
-		}
-
 		checkBoxSlounikOrg.isChecked = preferences.useSlounikOrg
 		checkBoxSlounikOrg.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useSlounikOrg = isChecked
@@ -172,6 +167,11 @@ class NavigationDrawerFragment : Fragment() {
 		checkBoxRodnyjaVobrazy.isChecked = preferences.useRodnyjaVobrazy
 		checkBoxRodnyjaVobrazy.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useRodnyjaVobrazy = isChecked
+		}
+
+		checkBoxEngBel.isChecked = preferences.useEngBel
+		checkBoxEngBel.setOnCheckedChangeListener { _, isChecked ->
+			preferences.useEngBel= isChecked
 		}
 
 		checkBoxSearchInTitle.isChecked = preferences.searchInTitles

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import org.anibyl.slounik.R
-import org.anibyl.slounik.network.Article
+import org.anibyl.slounik.data.Article
 
 /**
  * Adapter used to fill the list.

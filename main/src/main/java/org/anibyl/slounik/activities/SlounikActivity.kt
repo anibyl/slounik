@@ -18,8 +18,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
+import org.anibyl.slounik.data.Article
 import org.anibyl.slounik.dialogs.newArticleDialog
-import org.anibyl.slounik.network.Article
 import org.anibyl.slounik.ui.ProgressBar
 import javax.inject.Inject
 

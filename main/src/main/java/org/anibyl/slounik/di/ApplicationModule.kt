@@ -1,18 +1,21 @@
 package org.anibyl.slounik.di
 
 import android.app.Application
+import android.arch.persistence.room.Room
 import android.content.Context
+import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.activities.SlounikActivityPresenter
 import org.anibyl.slounik.core.Preferences
-import org.anibyl.slounik.network.BatchArticlesLoader
-import org.anibyl.slounik.network.EngBel
-import org.anibyl.slounik.network.RodnyjaVobrazy
-import org.anibyl.slounik.network.Server
-import org.anibyl.slounik.network.Skarnik
-import org.anibyl.slounik.network.SlounikOrg
+import org.anibyl.slounik.data.BatchArticlesLoader
+import org.anibyl.slounik.data.db.SlounikDb
+import org.anibyl.slounik.data.db.engbel.EngBel
+import org.anibyl.slounik.data.network.RodnyjaVobrazy
+import org.anibyl.slounik.data.network.Server
+import org.anibyl.slounik.data.network.Skarnik
+import org.anibyl.slounik.data.network.SlounikOrg
 import javax.inject.Singleton
 
 /**
@@ -25,6 +28,12 @@ class ApplicationModule(val application: Application) {
 	@Singleton
 	fun provideApplicationContext(): Context {
 		return application.applicationContext
+	}
+
+	@Provides
+	@Singleton
+	fun provideResources(): Resources {
+		return application.resources
 	}
 
 	@Provides
@@ -55,5 +64,11 @@ class ApplicationModule(val application: Application) {
 	@Singleton
 	fun provideSlounikActivityPresenter(): SlounikActivityPresenter {
 		return SlounikActivityPresenter()
+	}
+
+	@Provides
+	@Singleton
+	fun provideDb(): SlounikDb {
+		return Room.databaseBuilder(application.applicationContext, SlounikDb::class.java, "slounik_db").build()
 	}
 }

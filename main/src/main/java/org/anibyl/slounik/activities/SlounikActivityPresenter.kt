@@ -3,9 +3,9 @@ package org.anibyl.slounik.activities
 import android.content.Context
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.SlounikApplication
-import org.anibyl.slounik.network.Article
-import org.anibyl.slounik.network.ArticlesInfo
-import org.anibyl.slounik.network.BatchArticlesLoader
+import org.anibyl.slounik.data.Article
+import org.anibyl.slounik.data.ArticlesInfo
+import org.anibyl.slounik.data.BatchArticlesLoader
 import java.util.ArrayList
 import javax.inject.Inject
 
