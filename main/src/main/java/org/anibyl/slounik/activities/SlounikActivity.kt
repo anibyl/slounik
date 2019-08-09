@@ -72,11 +72,13 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 
 		searchEditText.setOnFocusChangeListener { _, hasFocus ->
 			searchClearButton.visibility = if (hasFocus && searchEditText.text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+			navigationDrawerFragment.close()
 		}
 
 		searchEditText.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {
 				searchClearButton.visibility = if (searchEditText.text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+				navigationDrawerFragment.close()
 			}
 
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
