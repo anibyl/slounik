@@ -14,12 +14,16 @@ class Preferences(context: Context) {
 			context.getSharedPreferences("org.anibyl.slounik", Context.MODE_PRIVATE)
 	)
 
+	@Deprecated("Slounik server is deprecated.")
 	private val USE_SLOUNIK_SERVER = "use_slounik_server"
 	private val USE_SLOUNIK_ORG = "use_slounik_org"
 	private val USE_SKARNIK = "use_skarnik"
 	private val USE_RODNYJA_VOBRAZY = "use_rodnyja_vobrazy"
+	private val USE_ENGBEL = "use_engbel"
 	private val SEARCH_IN_TITLES = "search_in_titles"
+	private val ENGBEL_INITIALIZED = "engbel_initialized"
 
+	@Deprecated("Slounik server is deprecated.")
 	var useSlounikServer: Boolean
 		get() = manager.getBoolean(USE_SLOUNIK_SERVER, true)
 		set(value) = manager.save(USE_SLOUNIK_SERVER, value)
@@ -42,10 +46,20 @@ class Preferences(context: Context) {
 			manager.save(USE_RODNYJA_VOBRAZY, useRodnyjaVobrazy)
 		}
 
+	var useEngBel: Boolean
+		get() = manager.getBoolean(USE_ENGBEL, useSlounikServer)
+		set(value) = manager.save(USE_ENGBEL, value)
+
 	var searchInTitles: Boolean
 		get() = manager.getBoolean(SEARCH_IN_TITLES)
 		set(searchInTitles) {
 			manager.save(SEARCH_IN_TITLES, searchInTitles)
+		}
+
+	var engBelInitialized: Boolean
+		get() = manager.getBoolean(ENGBEL_INITIALIZED)
+		set(value) {
+			manager.save(ENGBEL_INITIALIZED, value)
 		}
 
 	private class PreferencesManager(private val sharedPreferences: SharedPreferences) {

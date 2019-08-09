@@ -14,9 +14,8 @@ import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.core.copyToClipboard
-import org.anibyl.slounik.network.Article
-import org.anibyl.slounik.network.ArticlesInfo
-import org.anibyl.slounik.network.loadArticleDescription
+import org.anibyl.slounik.data.Article
+import org.anibyl.slounik.data.ArticlesInfo
 import org.anibyl.slounik.ui.ProgressBar
 import javax.inject.Inject
 

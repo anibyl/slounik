@@ -18,7 +18,7 @@
     <string name="article_button_load_full_article">ВСЯ СТАТЬЯ</string>
     <string name="article_button_close">ЗАКРЫТЬ</string>
 
-    <string name="slounik_server_eng_bel">Англо-белорусский словарь</string>
+    <string name="db_engbel">Англо-белорусский словарь</string>
 
     <string name="search_hint">Поиск…</string>
 
@@ -31,5 +31,5 @@
     <string name="rodnyja_vobrazy_dictionary_mythology">Мифология</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Красная книга</string>
 
-    <string name="drawer_checkbox_slounik_server">Свой сервер</string>
+    <string name="drawer_checkbox_engbel">Англо-белорусский</string>
 </resources>
