@@ -159,11 +159,15 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 
 		when {
 			!largeArticlesAmountFont && articles.size in 0..999 -> {
-				articlesAmount.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_large_200))
+				articlesAmount.setTextSize(
+						TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.background_counter_bigger_font_size)
+				)
 				largeArticlesAmountFont = true
 			}
 			largeArticlesAmountFont && articles.size > 999 -> {
-				articlesAmount.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_large_150))
+				articlesAmount.setTextSize(
+						TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.background_counter_font_size)
+				)
 				largeArticlesAmountFont = false
 			}
 		}

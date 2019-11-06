@@ -118,7 +118,7 @@
                     android:id="@+id/articles_amount"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:textSize="@dimen/font_large_200"
+                    android:textSize="@dimen/background_counter_bigger_font_size"
                     android:gravity="center"
                     android:textColor="@color/transparent_white"
             />

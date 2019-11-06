@@ -17,7 +17,7 @@
                 android:id="@+id/article_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_title_16"
+                android:textSize="@dimen/article_title_font_size"
                 android:textStyle="bold"
         />
         <View
@@ -28,7 +28,7 @@
                 android:id="@+id/article_dictionary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_title_16"
+                android:textSize="@dimen/article_title_font_size"
         />
         <View
                 android:layout_width="match_parent"

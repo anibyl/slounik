@@ -20,12 +20,14 @@
         <TextView
                 android:id="@+id/drawer_dictionaries_title"
                 android:text="@string/drawer_dictionaries_title"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
         />
         <CheckBox
                 android:id="@+id/checkbox_slounik_org"
                 android:text="@string/drawer_checkbox_slounik_org"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
@@ -33,6 +35,7 @@
         <CheckBox
                 android:id="@+id/checkbox_skarnik"
                 android:text="@string/drawer_checkbox_skarnik"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
@@ -40,6 +43,7 @@
         <CheckBox
                 android:id="@+id/checkbox_rodnyja_vobrazy"
                 android:text="@string/drawer_checkbox_rodnyja_vobrazy"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
@@ -47,6 +51,7 @@
         <CheckBox
                 android:id="@+id/checkbox_engbel"
                 android:text="@string/drawer_checkbox_engbel"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
@@ -54,12 +59,14 @@
         <TextView
                 android:id="@+id/drawer_settings"
                 android:text="@string/drawer_settings_title"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
         />
         <CheckBox
                 android:id="@+id/checkbox_search_in_title"
                 android:text="@string/drawer_checkbox_search_in_title"
+                android:textSize="@dimen/font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"

@@ -2,10 +2,12 @@
 <resources>
     <dimen name="padding">10dp</dimen>
     <dimen name="big_padding">20dp</dimen>
-    <dimen name="font_title_16">16sp</dimen>
-    <dimen name="font_large">40sp</dimen>
-    <dimen name="font_large_150">150sp</dimen>
-    <dimen name="font_large_200">200sp</dimen>
+    <dimen name="font_size">14sp</dimen>
+    <dimen name="small_font_size">10sp</dimen>
+    <dimen name="article_title_font_size">16sp</dimen>
+    <dimen name="about_title_font_size">40sp</dimen>
+    <dimen name="background_counter_font_size">150sp</dimen>
+    <dimen name="background_counter_bigger_font_size">200sp</dimen>
     <dimen name="drawer_width">240dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
