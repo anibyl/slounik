@@ -37,9 +37,9 @@ class SlounikAdapter(context: Context, resource: Int, textViewResourceId: Int, p
 		}
 
 		val article = list[position]
-		holder.title.text = article.title
-		holder.description.text = article.spannedDescription
-		holder.dicName.text = article.dictionary
+		holder.title.text = article.title?.trim()
+		holder.description.text = article.spannedDescription?.replace(Regex("\n"), " ")?.trim()
+		holder.dicName.text = article.dictionary?.trim()
 
 		return view
 	}
