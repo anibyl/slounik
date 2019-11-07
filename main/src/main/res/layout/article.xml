@@ -22,7 +22,7 @@
         />
         <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/padding"
+                android:layout_height="@dimen/spacing"
         />
         <TextView
                 android:id="@+id/article_dictionary"
@@ -32,7 +32,7 @@
         />
         <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/padding"
+                android:layout_height="@dimen/spacing"
         />
         <TextView
                 android:id="@+id/article_description"

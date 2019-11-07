@@ -12,5 +12,6 @@
 
     <style name="SlounikEditText" parent="SlounikButton">
         <item name="android:gravity">left|center_vertical</item>
+        <item name="android:background">@null</item>
     </style>
 </resources>

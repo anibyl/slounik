@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding">10dp</dimen>
+    <dimen name="spacing">6dp</dimen>
     <dimen name="big_padding">20dp</dimen>
     <dimen name="font_size">14sp</dimen>
-    <dimen name="title_font_size">16sp</dimen>
+    <dimen name="list_item_title_font_size">16sp</dimen>
+    <dimen name="title_font_size">18sp</dimen>
+    <dimen name="page_title_font_size">20sp</dimen>
     <dimen name="about_title_font_size">40sp</dimen>
     <dimen name="background_counter_font_size">150sp</dimen>
     <dimen name="background_counter_bigger_font_size">200sp</dimen>

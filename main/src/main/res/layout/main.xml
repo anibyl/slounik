@@ -45,6 +45,7 @@
                         android:inputType="text"
                         android:imeOptions="actionSearch"
                         android:hint="@string/search_hint"
+                        android:textSize="@dimen/page_title_font_size"
                         style="@style/SlounikEditText"
                 />
                 <ImageButton
@@ -71,7 +72,7 @@
                     android:layout_width="?android:attr/actionBarSize"
                     android:layout_height="?android:attr/actionBarSize"
                     android:src="@drawable/ic_action_search"
-                    android:padding="10dp"
+                    android:padding="@dimen/padding"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     style="@style/SlounikButton"
