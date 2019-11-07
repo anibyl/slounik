@@ -36,10 +36,17 @@ class SlounikAdapter(context: Context, resource: Int, textViewResourceId: Int, p
 			holder = convertView.tag as ViewHolder
 		}
 
-		val article = list[position]
-		holder.title.text = article.title?.trim()
-		holder.description.text = article.spannedDescription?.replace(Regex("\n"), " ")?.trim()
-		holder.dicName.text = article.dictionary?.trim()
+		if (position <= list.size - 1) {
+			val article = list[position]
+			holder.title.text = article.title?.trim()
+			holder.description.text = article.spannedDescription?.replace(Regex("\n"), " ")?.trim()
+			holder.dicName.text = article.dictionary?.trim()
+		} else {
+			// There was an IndexOutOfBoundsException in production on 2019-09-22.
+			holder.title.text = "";
+			holder.description.text = "";
+			holder.dicName.text = "";
+		}
 
 		return view
 	}
