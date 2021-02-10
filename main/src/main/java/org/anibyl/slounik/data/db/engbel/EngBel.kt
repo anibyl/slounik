@@ -1,8 +1,8 @@
 package org.anibyl.slounik.data.db.engbel
 
-import android.arch.persistence.db.SimpleSQLiteQuery
 import android.content.Context
 import android.content.res.Resources
+import androidx.sqlite.db.SimpleSQLiteQuery
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
@@ -35,9 +35,9 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 		doAsync {
 			val engBelEntities: List<EngBelEntity> = try {
 				if (preferences.searchInTitles) {
-					db.engBelDao().findInTitle(wordToSearch);
+					db.engBelDao().findInTitle(wordToSearch)
 				} else {
-					db.engBelDao().findInTitleOrDescription(wordToSearch);
+					db.engBelDao().findInTitleOrDescription(wordToSearch)
 				}
 			} catch (t: Throwable) {
 				notifier.log("Unable to load eng-bel articles. " + t.message)

@@ -1,7 +1,7 @@
-package org.anibyl.slounik.data.db;
+package org.anibyl.slounik.data.db
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import org.anibyl.slounik.data.db.engbel.EngBelDao
 import org.anibyl.slounik.data.db.engbel.EngBelEntity
 

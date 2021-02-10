@@ -3,17 +3,17 @@ package org.anibyl.slounik.activities
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBar
-import android.support.v7.app.ActionBarDrawerToggle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import butterknife.BindView
 import butterknife.ButterKnife
 import org.anibyl.slounik.R
@@ -66,13 +66,13 @@ class NavigationDrawerFragment : Fragment() {
 		setHasOptionsMenu(true)
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		val view: View = inflater.inflate(R.layout.drawer, container, false)
 		ButterKnife.bind(this, view)
 		return view
 	}
 
-	override fun onAttach(context: Context?) {
+	override fun onAttach(context: Context) {
 		super.onAttach(context)
 
 		try {
@@ -82,7 +82,7 @@ class NavigationDrawerFragment : Fragment() {
 		}
 	}
 
-	override fun onConfigurationChanged(newConfig: Configuration?) {
+	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		// Forward the new configuration the drawer toggle component.
 		drawerToggle!!.onConfigurationChanged(newConfig)
@@ -94,7 +94,7 @@ class NavigationDrawerFragment : Fragment() {
 		}
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		if (drawerToggle!!.onOptionsItemSelected(item)) {
 			return true
 		}
@@ -180,7 +180,9 @@ class NavigationDrawerFragment : Fragment() {
 		}
 
 		aboutButton.setOnClickListener {
-			AboutDialog().show(activity?.supportFragmentManager, "about_dialog")
+			if (activity != null) {
+				AboutDialog().show(activity!!.supportFragmentManager, "about_dialog")
+			}
 		}
 	}
 }

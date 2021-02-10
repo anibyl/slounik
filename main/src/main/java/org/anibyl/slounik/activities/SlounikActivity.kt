@@ -1,9 +1,6 @@
 package org.anibyl.slounik.activities
 
 import android.os.Bundle
-import android.support.v7.app.ActionBar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -14,6 +11,9 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.TextView
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import butterknife.BindView
 import butterknife.ButterKnife
 import org.anibyl.slounik.R

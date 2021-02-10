@@ -2,7 +2,6 @@ package org.anibyl.slounik.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
 import org.anibyl.slounik.SlounikApplication
