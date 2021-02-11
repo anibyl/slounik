@@ -24,6 +24,7 @@ class Server {
 		var slounikOrgUrl: String = "slounik.org"
 		var skarnikUrl: String = "skarnik.by"
 		var rodnyjaVobrazyUrl: String = "rv-blr.com"
+		var verbumUrl: String = "verbum.by"
 	}
 
 	fun loadConfig(context: Context): Config {
@@ -46,6 +47,8 @@ class Server {
 							config.skarnikUrl = json.getString("skarnikUrl")
 
 							config.rodnyjaVobrazyUrl = json.getString("rodnyjaVobrazyUrl")
+
+							config.verbumUrl = json.getString("verbumUrl")
 
 							val array = json.getJSONArray("testDevices")
 

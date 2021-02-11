@@ -56,6 +56,14 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
         />
+        <CheckBox
+                android:id="@+id/checkbox_verbum"
+                android:text="@string/drawer_checkbox_verbum"
+                android:textSize="@dimen/font_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding"
+        />
         <TextView
                 android:id="@+id/drawer_settings"
                 android:text="@string/drawer_settings_title"

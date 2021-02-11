@@ -31,5 +31,11 @@
     <string name="rodnyja_vobrazy_dictionary_mythology">Міталёгія</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Чырвоная кніга</string>
 
+    <string name="verbum_explanatory_rvblr">Тлумачальны (РВ)</string>
+    <string name="verbum_explanatory_krapiva">Тлумачальны (Крапіва)</string>
+    <string name="verbum_bel_rus">Беларуска-расейскі</string>
+    <string name="verbum_rus_bel">Расейска-беларускі</string>
+    <string name="verbum_eng_bel">Ангельска-беларускі</string>
+
     <string name="drawer_checkbox_engbel">Ангельска-беларускі</string>
 </resources>

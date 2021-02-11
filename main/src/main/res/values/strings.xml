@@ -31,9 +31,16 @@
     <string name="rodnyja_vobrazy_dictionary_mythology">Mythology</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Red List</string>
 
-    <string name="drawer_checkbox_slounik_org" translatable="false">slounik.org</string>
-    <string name="drawer_checkbox_skarnik" translatable="false">skarnik.by</string>
+    <string name="verbum_explanatory_rvblr">Explanatory (RV)</string>
+    <string name="verbum_explanatory_krapiva">Explanatory (Krapiva)</string>
+    <string name="verbum_bel_rus">Belarusian-Russian</string>
+    <string name="verbum_rus_bel">Russian-Belarusian</string>
+    <string name="verbum_eng_bel">English-Belarusian</string>
+
     <string name="drawer_checkbox_rodnyja_vobrazy" translatable="false">rv-blr.com</string>
+    <string name="drawer_checkbox_skarnik" translatable="false">skarnik.by</string>
+    <string name="drawer_checkbox_slounik_org" translatable="false">slounik.org</string>
+    <string name="drawer_checkbox_verbum" translatable="false">verbum.by</string>
     <string name="drawer_checkbox_engbel">English-Belarusian</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>

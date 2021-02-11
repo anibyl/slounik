@@ -16,6 +16,7 @@ import org.anibyl.slounik.data.network.RodnyjaVobrazy
 import org.anibyl.slounik.data.network.Server
 import org.anibyl.slounik.data.network.Skarnik
 import org.anibyl.slounik.data.network.SlounikOrg
+import org.anibyl.slounik.data.network.Verbum
 import javax.inject.Singleton
 
 /**
@@ -51,7 +52,7 @@ class ApplicationModule(val application: Application) {
 	@Provides
 	@Singleton
 	fun provideBatchArticlesLoader(): BatchArticlesLoader {
-		return BatchArticlesLoader(EngBel(), SlounikOrg(), Skarnik(), RodnyjaVobrazy())
+		return BatchArticlesLoader(EngBel(), RodnyjaVobrazy(), Skarnik(), SlounikOrg(), Verbum())
 	}
 
 	@Provides

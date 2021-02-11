@@ -19,6 +19,7 @@ class Preferences(context: Context) {
 	private val USE_SLOUNIK_ORG = "use_slounik_org"
 	private val USE_SKARNIK = "use_skarnik"
 	private val USE_RODNYJA_VOBRAZY = "use_rodnyja_vobrazy"
+	private val USE_VERBUM = "use_verbum"
 	private val USE_ENGBEL = "use_engbel"
 	private val SEARCH_IN_TITLES = "search_in_titles"
 	private val ENGBEL_INITIALIZED = "engbel_initialized"
@@ -49,6 +50,10 @@ class Preferences(context: Context) {
 	var useEngBel: Boolean
 		get() = manager.getBoolean(USE_ENGBEL, useSlounikServer)
 		set(value) = manager.save(USE_ENGBEL, value)
+
+	var useVerbum: Boolean
+		get() = manager.getBoolean(USE_VERBUM, true)
+		set(useRodnyjaVobrazy) = manager.save(USE_VERBUM, useRodnyjaVobrazy)
 
 	var searchInTitles: Boolean
 		get() = manager.getBoolean(SEARCH_IN_TITLES)

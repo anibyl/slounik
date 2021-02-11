@@ -6,9 +6,10 @@
 Currently it supports dictionaries from following websites:
 * slounik.org (Электронная энцыкляпэдыя),
 * skarnik.by (Скарнік),
-* rv-blr.com (Родныя вобразы).
+* rv-blr.com (Родныя вобразы),
+* verbum.by (Verbum).
 
-Also it has a built-in English-Belarusian dictionary.
+Also, it has a built-in English-Belarusian dictionary.
 
 ## Issues
 

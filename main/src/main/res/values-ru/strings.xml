@@ -31,5 +31,11 @@
     <string name="rodnyja_vobrazy_dictionary_mythology">Мифология</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Красная книга</string>
 
+    <string name="verbum_explanatory_rvblr">Толковый (Родныя Вобразы)</string>
+    <string name="verbum_explanatory_krapiva">Толковый (Крапива)</string>
+    <string name="verbum_bel_rus">Белорусско-русский</string>
+    <string name="verbum_rus_bel">Русско-белорусский</string>
+    <string name="verbum_eng_bel">Англо-белорусский</string>
+
     <string name="drawer_checkbox_engbel">Англо-белорусский</string>
 </resources>
