@@ -19,15 +19,15 @@
     <string name="article_button_close">ЗАКРЫТЬ</string>
 
     <!-- Deprecated -->
-    <string name="db_engbel">Англо-белорусский словарь</string>
+    <string name="db_engbel">Англо-белорусский</string>
 
     <string name="search_hint">Поиск…</string>
 
-    <string name="skarnik_dictionary_rus_bel">Русско-белорусский словарь</string>
-    <string name="skarnik_dictionary_bel_rus">Белорусско-русский словарь</string>
-    <string name="skarnik_dictionary_explanatory">Толковый словарь</string>
+    <string name="skarnik_dictionary_rus_bel">Русско-белорусский</string>
+    <string name="skarnik_dictionary_bel_rus">Белорусско-русский</string>
+    <string name="skarnik_dictionary_explanatory">Толковый</string>
 
-    <string name="rodnyja_vobrazy_dictionary_explanatory">Толковый словарь</string>
+    <string name="rodnyja_vobrazy_dictionary_explanatory">Толковый</string>
     <string name="rodnyja_vobrazy_dictionary_ethnography">Этнография</string>
     <string name="rodnyja_vobrazy_dictionary_mythology">Мифология</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Красная книга</string>

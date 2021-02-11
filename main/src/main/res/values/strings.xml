@@ -21,13 +21,13 @@
     <string name="search_hint">Search…</string>
 
     <!-- Deprecated -->
-    <string name="db_engbel">English-Belarusian Dictionary</string>
+    <string name="db_engbel">English-Belarusian</string>
 
-    <string name="skarnik_dictionary_rus_bel">Russian-Belarusian Dictionary</string>
-    <string name="skarnik_dictionary_bel_rus">Belarusian-Russian Dictionary</string>
-    <string name="skarnik_dictionary_explanatory">Explanatory Dictionary</string>
+    <string name="skarnik_dictionary_rus_bel">Russian-Belarusian</string>
+    <string name="skarnik_dictionary_bel_rus">Belarusian-Russian</string>
+    <string name="skarnik_dictionary_explanatory">Explanatory</string>
 
-    <string name="rodnyja_vobrazy_dictionary_explanatory">Explanatory Dictionary</string>
+    <string name="rodnyja_vobrazy_dictionary_explanatory">Explanatory</string>
     <string name="rodnyja_vobrazy_dictionary_ethnography">Ethnography</string>
     <string name="rodnyja_vobrazy_dictionary_mythology">Mythology</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Red List</string>
@@ -48,5 +48,5 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="about_image_description" translatable="false">Application icon.</string>
+    <string name="about_image_description" translatable="false">Application icon</string>
 </resources>

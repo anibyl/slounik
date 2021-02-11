@@ -21,13 +21,13 @@
     <string name="search_hint">Пошук…</string>
 
     <!-- Deprecated -->
-    <string name="db_engbel">Ангельска-беларускі слоўнік</string>
+    <string name="db_engbel">Ангельска-беларускі</string>
 
-    <string name="skarnik_dictionary_rus_bel">Расейска-беларускі слоўнік</string>
-    <string name="skarnik_dictionary_bel_rus">Беларуска-расейскі слоўнік</string>
-    <string name="skarnik_dictionary_explanatory">Тлумачальны слоўнік</string>
+    <string name="skarnik_dictionary_rus_bel">Расейска-беларускі</string>
+    <string name="skarnik_dictionary_bel_rus">Беларуска-расейскі</string>
+    <string name="skarnik_dictionary_explanatory">Тлумачальны</string>
 
-    <string name="rodnyja_vobrazy_dictionary_explanatory">Тлумачальны слоўнік</string>
+    <string name="rodnyja_vobrazy_dictionary_explanatory">Тлумачальны</string>
     <string name="rodnyja_vobrazy_dictionary_ethnography">Этнаграфія</string>
     <string name="rodnyja_vobrazy_dictionary_mythology">Міталёгія</string>
     <string name="rodnyja_vobrazy_dictionary_red_list">Чырвоная кніга</string>
