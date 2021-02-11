@@ -17,7 +17,7 @@ import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 08.08.2019
  */
 @Deprecated("Replaced by Verbum")

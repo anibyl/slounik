@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * Application notifier.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 05.04.2015
  */
 class Notifier {

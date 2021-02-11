@@ -5,7 +5,7 @@ package org.anibyl.slounik.data
 
  * Contains articles and connected information.
 
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 29.04.2015
  */
 class ArticlesInfo {

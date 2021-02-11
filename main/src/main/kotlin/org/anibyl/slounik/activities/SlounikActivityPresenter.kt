@@ -12,7 +12,7 @@ import javax.inject.Inject
 /**
  * Presenter for [SlounikActivity].
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 26.12.2016
  */
 class SlounikActivityPresenter {

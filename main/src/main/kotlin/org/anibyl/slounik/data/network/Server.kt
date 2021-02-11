@@ -14,7 +14,7 @@ import org.json.JSONObject
 /**
  * Own server communication.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 05.04.2015
  */
 class Server {

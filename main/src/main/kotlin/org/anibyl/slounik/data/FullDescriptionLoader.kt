@@ -1,7 +1,7 @@
 package org.anibyl.slounik.data
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 08.08.2019
  */
 interface FullDescriptionLoader {

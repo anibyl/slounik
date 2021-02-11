@@ -7,7 +7,7 @@ import java.io.Serializable
 /**
  * Article.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 26.02.2015
  */
 class Article(@Transient val fullDescriptionLoader: FullDescriptionLoader? = null) : Serializable {

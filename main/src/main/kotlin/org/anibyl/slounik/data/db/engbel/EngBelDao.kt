@@ -6,7 +6,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 08.08.2019
  */
 @Deprecated("Replaced by Verbum")

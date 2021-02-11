@@ -21,7 +21,7 @@ import javax.inject.Inject
 /**
  * skarnik.by website communication.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 22.12.2015
  */
 class Skarnik : DictionarySiteCommunicator() {

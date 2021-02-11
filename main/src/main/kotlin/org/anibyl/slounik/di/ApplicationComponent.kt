@@ -15,7 +15,7 @@ import org.anibyl.slounik.dialogs.ArticleDialog
 import javax.inject.Singleton
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 26.12.2016
  */
 @Singleton

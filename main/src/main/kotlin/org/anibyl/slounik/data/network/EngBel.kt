@@ -16,7 +16,7 @@ import org.jsoup.nodes.Element
 import javax.inject.Inject
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 02.07.2018
  */
 @Deprecated("Slounik server is deprecated.")

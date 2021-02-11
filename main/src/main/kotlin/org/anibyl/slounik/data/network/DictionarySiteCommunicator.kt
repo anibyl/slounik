@@ -15,7 +15,7 @@ import javax.inject.Inject
 /**
  * Dictionary site communicator.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 22.12.2015
  */
 abstract class DictionarySiteCommunicator : ArticlesLoader<ArticlesCallback>, FullDescriptionLoader {

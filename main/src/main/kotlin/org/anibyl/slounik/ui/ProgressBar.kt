@@ -9,7 +9,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable
 /**
  * Slounik's progress bar.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 21.12.2015
  */
 class ProgressBar : SmoothProgressBar {

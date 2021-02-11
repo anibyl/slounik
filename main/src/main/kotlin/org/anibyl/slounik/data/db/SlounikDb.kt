@@ -6,7 +6,7 @@ import org.anibyl.slounik.data.db.engbel.EngBelDao
 import org.anibyl.slounik.data.db.engbel.EngBelEntity
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 08.08.2019
  */
 @Deprecated("Replaced by Verbum")

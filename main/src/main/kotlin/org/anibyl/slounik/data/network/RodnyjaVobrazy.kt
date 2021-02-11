@@ -18,7 +18,7 @@ import org.jsoup.select.Elements
 import javax.inject.Inject
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 01.01.2017
  */
 class RodnyjaVobrazy : DictionarySiteCommunicator() {

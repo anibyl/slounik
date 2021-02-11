@@ -18,7 +18,7 @@ import org.anibyl.slounik.R
 /**
  * About information dialog.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 26.12.2016
  */
 class AboutDialog : DialogFragment() {

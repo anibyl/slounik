@@ -22,7 +22,7 @@ import javax.inject.Inject
 /**
  * Dialog for the text of an article.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 01.03.2015
  */
 class ArticleDialog : DialogFragment() {

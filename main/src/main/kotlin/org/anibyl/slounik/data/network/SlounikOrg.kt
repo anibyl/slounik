@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * slounik.org website communication.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 08.04.2015
  */
 class SlounikOrg : DictionarySiteCommunicator() {

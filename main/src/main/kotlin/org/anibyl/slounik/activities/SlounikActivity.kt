@@ -26,7 +26,7 @@ import javax.inject.Inject
 /**
  * The main activity.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 21.02.2015
  */
 class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.NavigationDrawerCallbacks {

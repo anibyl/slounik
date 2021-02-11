@@ -4,7 +4,7 @@ import android.content.ClipData
 import android.content.Context
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 05.01.2017
  */
 

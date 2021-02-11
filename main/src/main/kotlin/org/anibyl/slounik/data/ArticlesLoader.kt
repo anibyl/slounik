@@ -5,7 +5,7 @@ import android.content.Context
 /**
  * Articles loader interface.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 23.12.2015
  */
 interface ArticlesLoader<in T> where T : ArticlesCallback {

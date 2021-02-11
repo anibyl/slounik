@@ -7,7 +7,7 @@ import android.text.Spanned
 import android.text.SpannedString
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 05.05.2017
  */
 

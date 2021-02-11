@@ -6,7 +6,7 @@ import org.anibyl.slounik.di.ApplicationModule
 import org.anibyl.slounik.di.DaggerApplicationComponent
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 26.12.2016
  */
 class SlounikApplication : Application() {

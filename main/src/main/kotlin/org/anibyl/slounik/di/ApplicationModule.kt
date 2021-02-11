@@ -20,7 +20,7 @@ import org.anibyl.slounik.data.network.Verbum
 import javax.inject.Singleton
 
 /**
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 26.12.2016
  */
 @Module

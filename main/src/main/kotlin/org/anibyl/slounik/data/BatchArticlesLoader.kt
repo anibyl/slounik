@@ -6,7 +6,7 @@ import java.util.ArrayList
 /**
  * Batch loader for article loaders.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 23.12.2015
  */
 class BatchArticlesLoader(private vararg val loaders: ArticlesLoader<ArticlesCallback>) {

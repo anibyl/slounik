@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 /**
  * Shared preferences of the application.
  *
- * @author Usievaład Kimajeŭ
+ * @author Sieva Kimajeŭ
  * @created 03.11.2015
  */
 class Preferences(context: Context) {
