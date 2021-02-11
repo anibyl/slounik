@@ -24,7 +24,7 @@ import javax.inject.Inject
  * slounik.org website communication.
  *
  * @author Sieva Kimajeŭ
- * @created 08.04.2015
+ * @created 2015-04-08
  */
 class SlounikOrg : DictionarySiteCommunicator() {
 	@Inject lateinit var notifier: Notifier

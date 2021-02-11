@@ -6,7 +6,7 @@ package org.anibyl.slounik.data
  * Contains articles and connected information.
 
  * @author Sieva Kimajeŭ
- * @created 29.04.2015
+ * @created 2015-04-29
  */
 class ArticlesInfo {
 	enum class Status {

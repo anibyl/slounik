@@ -27,7 +27,7 @@ import javax.inject.Inject
  * The main activity.
  *
  * @author Sieva Kimajeŭ
- * @created 21.02.2015
+ * @created 2015-02-21
  */
 class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.NavigationDrawerCallbacks {
 	@Inject lateinit var presenter: SlounikActivityPresenter

@@ -10,7 +10,7 @@ import javax.inject.Inject
  * Application notifier.
  *
  * @author Sieva Kimajeŭ
- * @created 05.04.2015
+ * @created 2015-04-05
  */
 class Notifier {
 	@Inject lateinit var context: Context

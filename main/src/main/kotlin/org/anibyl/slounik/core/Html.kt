@@ -8,7 +8,7 @@ import android.text.SpannedString
 
 /**
  * @author Sieva Kimajeŭ
- * @created 05.05.2017
+ * @created 2017-05-05
  */
 
 private val htmlLinkRegex = "</?a[^>]*>".toRegex()

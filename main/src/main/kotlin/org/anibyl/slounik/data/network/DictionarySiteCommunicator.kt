@@ -16,7 +16,7 @@ import javax.inject.Inject
  * Dictionary site communicator.
  *
  * @author Sieva Kimajeŭ
- * @created 22.12.2015
+ * @created 2015-12-22
  */
 abstract class DictionarySiteCommunicator : ArticlesLoader<ArticlesCallback>, FullDescriptionLoader {
 	@Inject lateinit var config: Config

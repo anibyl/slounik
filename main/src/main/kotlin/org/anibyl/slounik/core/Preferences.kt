@@ -7,7 +7,7 @@ import android.content.SharedPreferences
  * Shared preferences of the application.
  *
  * @author Sieva Kimajeŭ
- * @created 03.11.2015
+ * @created 2015-11-03
  */
 class Preferences(context: Context) {
 	private val manager: PreferencesManager = PreferencesManager(

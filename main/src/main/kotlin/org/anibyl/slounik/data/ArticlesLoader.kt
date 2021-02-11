@@ -6,7 +6,7 @@ import android.content.Context
  * Articles loader interface.
  *
  * @author Sieva Kimajeŭ
- * @created 23.12.2015
+ * @created 2015-12-23
  */
 interface ArticlesLoader<in T> where T : ArticlesCallback {
 	fun loadArticles(wordToSearch: String, context: Context, callback: T)

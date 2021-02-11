@@ -15,7 +15,7 @@ import org.json.JSONObject
  * Own server communication.
  *
  * @author Sieva Kimajeŭ
- * @created 05.04.2015
+ * @created 2015-04-05
  */
 class Server {
 	class Config {

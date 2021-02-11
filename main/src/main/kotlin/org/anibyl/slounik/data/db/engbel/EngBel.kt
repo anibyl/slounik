@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 /**
  * @author Sieva Kimajeŭ
- * @created 08.08.2019
+ * @created 2019-08-08
  */
 @Deprecated("Replaced by Verbum")
 class EngBel : ArticlesLoader<ArticlesCallback> {

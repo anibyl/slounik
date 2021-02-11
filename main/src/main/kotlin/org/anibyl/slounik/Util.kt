@@ -7,7 +7,7 @@ import android.provider.Settings.Secure
  * General application utility.
  *
  * @author Sieva Kimajeŭ
- * @created 05.04.2015
+ * @created 2015-04-05
  */
 
 /**

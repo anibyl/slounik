@@ -7,7 +7,7 @@ import java.util.ArrayList
  * Batch loader for article loaders.
  *
  * @author Sieva Kimajeŭ
- * @created 23.12.2015
+ * @created 2015-12-23
  */
 class BatchArticlesLoader(private vararg val loaders: ArticlesLoader<ArticlesCallback>) {
 	fun loadArticles(wordToSearch: String, context: Context, callback: BatchArticlesCallback) {

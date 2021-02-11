@@ -7,7 +7,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 
 /**
  * @author Sieva Kimajeŭ
- * @created 08.08.2019
+ * @created 2019-08-08
  */
 @Deprecated("Replaced by Verbum")
 @Dao

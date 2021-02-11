@@ -4,7 +4,7 @@ package org.anibyl.slounik.data
  * Articles callback interface.
  *
  * @author Sieva Kimajeŭ
- * @created 29.04.2015
+ * @created 2015-04-29
  */
 interface ArticlesCallback {
 	fun invoke(info: ArticlesInfo)

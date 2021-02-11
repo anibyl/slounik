@@ -8,7 +8,7 @@ import java.io.Serializable
  * Article.
  *
  * @author Sieva Kimajeŭ
- * @created 26.02.2015
+ * @created 2015-02-26
  */
 class Article(@Transient val fullDescriptionLoader: FullDescriptionLoader? = null) : Serializable {
 	var title: String? = null

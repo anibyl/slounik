@@ -22,7 +22,7 @@ import javax.inject.Inject
  * skarnik.by website communication.
  *
  * @author Sieva Kimajeŭ
- * @created 22.12.2015
+ * @created 2015-12-22
  */
 class Skarnik : DictionarySiteCommunicator() {
 	@Inject lateinit var notifier: Notifier

@@ -19,7 +19,7 @@ import org.anibyl.slounik.R
  * About information dialog.
  *
  * @author Sieva Kimajeŭ
- * @created 26.12.2016
+ * @created 2016-12-26
  */
 class AboutDialog : DialogFragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

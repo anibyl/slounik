@@ -7,7 +7,7 @@ import org.anibyl.slounik.di.DaggerApplicationComponent
 
 /**
  * @author Sieva Kimajeŭ
- * @created 26.12.2016
+ * @created 2016-12-26
  */
 class SlounikApplication : Application() {
 	companion object {

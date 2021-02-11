@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 /**
  * @author Sieva Kimajeŭ
- * @created 01.01.2017
+ * @created 2017-01-01
  */
 class RodnyjaVobrazy : DictionarySiteCommunicator() {
 	@Inject lateinit var notifier: Notifier

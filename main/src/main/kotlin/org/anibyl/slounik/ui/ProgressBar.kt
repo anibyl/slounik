@@ -10,7 +10,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable
  * Slounik's progress bar.
  *
  * @author Sieva Kimajeŭ
- * @created 21.12.2015
+ * @created 2015-12-21
  */
 class ProgressBar : SmoothProgressBar {
 	private var invisible: Boolean

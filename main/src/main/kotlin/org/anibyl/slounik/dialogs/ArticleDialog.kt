@@ -23,7 +23,7 @@ import javax.inject.Inject
  * Dialog for the text of an article.
  *
  * @author Sieva Kimajeŭ
- * @created 01.03.2015
+ * @created 2015-03-01
  */
 class ArticleDialog : DialogFragment() {
 	@Inject lateinit var notifier: Notifier

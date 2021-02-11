@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 /**
  * @author Sieva Kimajeŭ
- * @created 02.07.2018
+ * @created 2018-07-02
  */
 @Deprecated("Slounik server is deprecated.")
 class EngBel : DictionarySiteCommunicator() {

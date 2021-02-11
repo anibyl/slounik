@@ -13,7 +13,7 @@ import org.anibyl.slounik.data.Article
  * Adapter used to fill the list.
  *
  * @author Sieva Kimajeŭ
- * @created 26.02.2015
+ * @created 2015-02-26
  */
 class SlounikAdapter(context: Context, resource: Int, textViewResourceId: Int, private val list: List<Article>)
 	: ArrayAdapter<Article>(context, resource, textViewResourceId, list) {

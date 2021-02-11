@@ -2,7 +2,7 @@ package org.anibyl.slounik.data
 
 /**
  * @author Sieva Kimajeŭ
- * @created 08.08.2019
+ * @created 2019-08-08
  */
 interface FullDescriptionLoader {
 	fun loadArticleDescription(article: Article, callback: ArticlesCallback)

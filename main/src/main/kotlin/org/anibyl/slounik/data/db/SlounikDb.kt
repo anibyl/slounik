@@ -7,7 +7,7 @@ import org.anibyl.slounik.data.db.engbel.EngBelEntity
 
 /**
  * @author Sieva Kimajeŭ
- * @created 08.08.2019
+ * @created 2019-08-08
  */
 @Deprecated("Replaced by Verbum")
 @Database(entities = [EngBelEntity::class], version = 1)

@@ -2,6 +2,6 @@ package org.anibyl.slounik.data.network
 
 /**
  * @author Sieva Kimajeŭ
- * @created 02.01.2017
+ * @created 2017-01-02
  */
 class IncorrectTitleException(s: String) : RuntimeException(s)

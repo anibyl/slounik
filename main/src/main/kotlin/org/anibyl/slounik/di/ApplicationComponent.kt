@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 /**
  * @author Sieva Kimajeŭ
- * @created 26.12.2016
+ * @created 2016-12-26
  */
 @Singleton
 @Component(modules = [ApplicationModule::class])

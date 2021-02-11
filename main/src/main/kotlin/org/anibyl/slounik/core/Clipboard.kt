@@ -5,7 +5,7 @@ import android.content.Context
 
 /**
  * @author Sieva Kimajeŭ
- * @created 05.01.2017
+ * @created 2017-01-05
  */
 
 fun Context.copyToClipboard(text: CharSequence) {
