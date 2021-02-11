@@ -18,6 +18,7 @@
     <string name="article_button_load_full_article">ВСЯ СТАТЬЯ</string>
     <string name="article_button_close">ЗАКРЫТЬ</string>
 
+    <!-- Deprecated -->
     <string name="db_engbel">Англо-белорусский словарь</string>
 
     <string name="search_hint">Поиск…</string>
@@ -37,5 +38,7 @@
     <string name="verbum_rus_bel">Русско-белорусский</string>
     <string name="verbum_eng_bel">Англо-белорусский</string>
 
+    <!-- Deprecated
     <string name="drawer_checkbox_engbel">Англо-белорусский</string>
+    -->
 </resources>

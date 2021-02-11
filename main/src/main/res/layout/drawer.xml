@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
         />
+        <!-- Deprecated
         <CheckBox
                 android:id="@+id/checkbox_engbel"
                 android:text="@string/drawer_checkbox_engbel"
@@ -56,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding"
         />
+        -->
         <CheckBox
                 android:id="@+id/checkbox_verbum"
                 android:text="@string/drawer_checkbox_verbum"

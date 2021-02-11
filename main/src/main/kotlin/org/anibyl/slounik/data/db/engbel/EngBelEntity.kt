@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
  * @author Usievaład Kimajeŭ
  * @created 08.08.2019
  */
+@Deprecated("Replaced by Verbum")
 @Entity(tableName = "engbel")
 data class EngBelEntity(
 		@ColumnInfo(name = "title") val title: String, @ColumnInfo(name = "description") val description: String

@@ -40,7 +40,9 @@ class NavigationDrawerFragment : Fragment() {
 	@BindView(R.id.checkbox_slounik_org) lateinit var checkBoxSlounikOrg: CheckBox
 	@BindView(R.id.checkbox_skarnik) lateinit var checkBoxSkarnik: CheckBox
 	@BindView(R.id.checkbox_rodnyja_vobrazy) lateinit var checkBoxRodnyjaVobrazy: CheckBox
+	/* Deprecated
 	@BindView(R.id.checkbox_engbel) lateinit var checkBoxEngBel: CheckBox
+	 */
 	@BindView(R.id.checkbox_verbum) lateinit var checkBoxVerbum: CheckBox
 	@BindView(R.id.checkbox_search_in_title) lateinit var checkBoxSearchInTitle: CheckBox
 	@BindView(R.id.drawer_about_button) lateinit var aboutButton: Button
@@ -170,10 +172,12 @@ class NavigationDrawerFragment : Fragment() {
 			preferences.useRodnyjaVobrazy = isChecked
 		}
 
+		/* Deprecated
 		checkBoxEngBel.isChecked = preferences.useEngBel
 		checkBoxEngBel.setOnCheckedChangeListener { _, isChecked ->
 			preferences.useEngBel= isChecked
 		}
+		 */
 
 		checkBoxVerbum.isChecked = preferences.useVerbum
 		checkBoxVerbum.setOnCheckedChangeListener { _, isChecked ->

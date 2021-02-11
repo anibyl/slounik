@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
  * @author Usievaład Kimajeŭ
  * @created 08.08.2019
  */
+@Deprecated("Replaced by Verbum")
 @Dao
 interface EngBelDao {
 	@Query("SELECT * FROM engbel WHERE title LIKE '% ' || :word || ' %' OR title LIKE :word || ' %' OR title LIKE '% ' || :word OR title LIKE :word")

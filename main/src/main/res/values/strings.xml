@@ -20,6 +20,7 @@
 
     <string name="search_hint">Search…</string>
 
+    <!-- Deprecated -->
     <string name="db_engbel">English-Belarusian Dictionary</string>
 
     <string name="skarnik_dictionary_rus_bel">Russian-Belarusian Dictionary</string>
@@ -41,7 +42,9 @@
     <string name="drawer_checkbox_skarnik" translatable="false">skarnik.by</string>
     <string name="drawer_checkbox_slounik_org" translatable="false">slounik.org</string>
     <string name="drawer_checkbox_verbum" translatable="false">verbum.by</string>
+    <!-- Deprecated
     <string name="drawer_checkbox_engbel">English-Belarusian</string>
+    -->
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

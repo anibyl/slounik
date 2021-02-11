@@ -20,6 +20,7 @@ import javax.inject.Inject
  * @author Usievaład Kimajeŭ
  * @created 08.08.2019
  */
+@Deprecated("Replaced by Verbum")
 class EngBel : ArticlesLoader<ArticlesCallback> {
 	@Inject lateinit var preferences: Preferences
 	@Inject lateinit var db: SlounikDb
@@ -28,7 +29,10 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 
 	init {
 		SlounikApplication.graph.inject(this)
+		/*
 		initialize()
+		 */
+		deactivate()
 	}
 
 	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
@@ -61,7 +65,7 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 	}
 
 	override fun enabled(): Boolean {
-		return preferences.useEngBel
+		return false
 	}
 
 	private fun initialize() {
@@ -73,6 +77,18 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 
 				uiThread {
 					preferences.engBelInitialized = true
+				}
+			}
+		}
+	}
+
+	private fun deactivate() {
+		if (!preferences.engBelDeactivated) {
+			doAsync {
+				db.engBelDao().query(SimpleSQLiteQuery("DELETE FROM engbel;", null))
+
+				uiThread {
+					preferences.engBelDeactivated = true
 				}
 			}
 		}

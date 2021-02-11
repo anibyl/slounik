@@ -22,7 +22,9 @@ class Preferences(context: Context) {
 	private val USE_VERBUM = "use_verbum"
 	private val USE_ENGBEL = "use_engbel"
 	private val SEARCH_IN_TITLES = "search_in_titles"
+	@Deprecated("Replaced with Verbum")
 	private val ENGBEL_INITIALIZED = "engbel_initialized"
+	private val ENGBEL_DEACTIVATED = "engbel_deactivated"
 
 	@Deprecated("Slounik server is deprecated.")
 	var useSlounikServer: Boolean
@@ -47,6 +49,7 @@ class Preferences(context: Context) {
 			manager.save(USE_RODNYJA_VOBRAZY, useRodnyjaVobrazy)
 		}
 
+	@Deprecated("Replaced with Verbum")
 	var useEngBel: Boolean
 		get() = manager.getBoolean(USE_ENGBEL, useSlounikServer)
 		set(value) = manager.save(USE_ENGBEL, value)
@@ -61,10 +64,17 @@ class Preferences(context: Context) {
 			manager.save(SEARCH_IN_TITLES, searchInTitles)
 		}
 
+	@Deprecated("Replaced with Verbum")
 	var engBelInitialized: Boolean
 		get() = manager.getBoolean(ENGBEL_INITIALIZED)
 		set(value) {
 			manager.save(ENGBEL_INITIALIZED, value)
+		}
+
+	var engBelDeactivated: Boolean
+		get() = manager.getBoolean(ENGBEL_DEACTIVATED)
+		set(value) {
+			manager.save(ENGBEL_DEACTIVATED, value)
 		}
 
 	private class PreferencesManager(private val sharedPreferences: SharedPreferences) {
