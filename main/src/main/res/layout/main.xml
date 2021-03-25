@@ -57,7 +57,7 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/baseline_cancel_24"
+                        android:src="@drawable/round_backspace_24"
                         android:adjustViewBounds="true"
                         android:scaleType="fitCenter"
                         android:visibility="invisible"
@@ -71,7 +71,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_width="?android:attr/actionBarSize"
                     android:layout_height="?android:attr/actionBarSize"
-                    android:src="@drawable/ic_action_search"
+                    android:src="@drawable/round_search_24"
                     android:padding="@dimen/padding"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"

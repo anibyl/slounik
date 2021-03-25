@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.EditText
@@ -63,7 +64,7 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		searchEditText.setOnEditorActionListener { _, actionId, _ ->
 			when (actionId) {
 				EditorInfo.IME_ACTION_SEARCH -> {
-					onSearchClicked(searchEditText.text.toString())
+					onSearchClicked()
 					true
 				}
 				else -> false
@@ -71,13 +72,13 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		}
 
 		searchEditText.setOnFocusChangeListener { _, hasFocus ->
-			searchClearButton.visibility = if (hasFocus && searchEditText.text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+			searchClearButton.visibility = if (hasFocus && searchEditText.text.isNotEmpty()) VISIBLE else INVISIBLE
 			navigationDrawerFragment.close()
 		}
 
 		searchEditText.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {
-				searchClearButton.visibility = if (searchEditText.text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+				searchClearButton.visibility = if (searchEditText.text.isNotEmpty()) VISIBLE else INVISIBLE
 				navigationDrawerFragment.close()
 			}
 
@@ -95,7 +96,11 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		}
 
 		searchButton.setOnClickListener {
-			onSearchClicked(searchEditText.text.toString())
+			if (presenter.searching) {
+				onStopSearchClicked()
+			} else {
+				onSearchClicked()
+			}
 		}
 
 		navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer)
@@ -148,10 +153,15 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 		adapter.notifyDataSetChanged()
 	}
 
-	private fun onSearchClicked(wordToSearch: String) {
+	private fun onSearchClicked() {
 		listView.requestFocus()
 		navigationDrawerFragment.close()
-		presenter.onSearchClicked(wordToSearch)
+		presenter.onSearchClicked(searchEditText.text.toString())
+	}
+
+	private fun onStopSearchClicked() {
+		navigationDrawerFragment.close()
+		presenter.onStopSearchClicked()
 	}
 
 	private fun updateArticlesAmount() {
@@ -184,6 +194,8 @@ class SlounikActivity : AppCompatActivity(), NavigationDrawerFragment.Navigation
 	private fun setSearchEnabled(enabled: Boolean) {
 		searchEditText.isEnabled = enabled
 		searchClearButton.isEnabled = enabled
-		searchButton.isEnabled = enabled
+		searchButton.setImageDrawable(
+			if (enabled) getDrawable(R.drawable.round_search_24) else getDrawable(R.drawable.round_cancel_24)
+		)
 	}
 }

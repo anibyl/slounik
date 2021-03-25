@@ -62,4 +62,11 @@ class SlounikActivityPresenter {
 			)
 		}
 	}
+
+	internal fun onStopSearchClicked() {
+		loader.cancel()
+
+		searching = false
+		activity?.searchEnded()
+	}
 }
