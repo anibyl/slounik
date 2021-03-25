@@ -107,7 +107,7 @@ class Skarnik : DictionarySiteCommunicator() {
 					   http search → https search → http page → https page.
 					   I skip first and third parts to get
 					   https search → https page. */
-					val location: String? = networkResponse.headers["Location"]
+					val location: String? = networkResponse.headers?.get("Location")
 					if (location != null) {
 						if (location.startsWith("http:")) {
 							loadPage(location.replace("http:", "https:"))
