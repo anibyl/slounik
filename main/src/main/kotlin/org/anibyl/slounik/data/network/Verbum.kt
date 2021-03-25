@@ -69,43 +69,50 @@ class Verbum : DictionarySiteCommunicator() {
 
 	private fun processPage(response: String, wordToSearch: String, callback: ArticlesCallback) {
 		doAsync {
-			val articles = JsonParser.parseString(response)
-				.asJsonArray
-				.map { e -> e.asJsonObject }
-				.mapNotNull { e ->
-					val description = e.get("Content").asString
+			val articles = try {
+				JsonParser.parseString(response)
+					.asJsonObject
+					.get("Articles")
+					.asJsonArray
+					.map { e -> e.asJsonObject }
+					.mapNotNull { e ->
+						val description = e.get("Content").asString
 
-					val parsedDescription: Document = Jsoup.parse(description)
+						val parsedDescription: Document = Jsoup.parse(description)
 
-					val vhws: Elements = parsedDescription.select("v-hw")
+						val vhws: Elements = parsedDescription.select("v-hw")
 
-					val title = if (vhws.isEmpty()) {
-						val ml0s: Elements = parsedDescription.select("p.ml-0")
+						val title = if (vhws.isEmpty()) {
+							val ml0s: Elements = parsedDescription.select("p.ml-0")
 
-						if (ml0s.isEmpty()) "" else ml0s[0].text()
-					} else {
-						vhws[0].text()
-					}.substringBefore(',')
+							if (ml0s.isEmpty()) "" else ml0s[0].text()
+						} else {
+							vhws[0].text()
+						}.substringBefore(',')
 
-					if (preferences.searchInTitles && !title.contains(wordToSearch)) {
-						return@mapNotNull null
+						if (preferences.searchInTitles && !title.contains(wordToSearch)) {
+							return@mapNotNull null
+						}
+
+						val dictionary = when (e.get("DictionaryID").asString) {
+							"bel-rus" -> context.resources.getString(R.string.verbum_bel_rus)
+							"krapiva" -> context.resources.getString(R.string.verbum_explanatory_krapiva)
+							"pashkievich" -> context.resources.getString(R.string.verbum_eng_bel)
+							"rus-bel" -> context.resources.getString(R.string.verbum_rus_bel)
+							"rvblr" -> context.resources.getString(R.string.verbum_explanatory_rvblr)
+							else -> ""
+						}
+
+						Article().apply {
+							this.title = title
+							this.description = description
+							this.dictionary = "$dictionary $url"
+						}
 					}
-
-					val dictionary = when (e.get("DictionaryID").asString) {
-						"bel-rus" -> context.resources.getString(R.string.verbum_bel_rus)
-						"krapiva" -> context.resources.getString(R.string.verbum_explanatory_krapiva)
-						"pashkievich" -> context.resources.getString(R.string.verbum_eng_bel)
-						"rus-bel" -> context.resources.getString(R.string.verbum_rus_bel)
-						"rvblr" -> context.resources.getString(R.string.verbum_explanatory_rvblr)
-						else -> ""
-					}
-
-					Article().apply {
-						this.title = title
-						this.description = description
-						this.dictionary = "$dictionary $url"
-					}
-				}
+			} catch (t: Throwable) {
+				notifier.log("Unable to parse Verbum response: ${t.message}")
+				emptyList()
+			}
 
 			uiThread {
 				callback.invoke(ArticlesInfo(articles))
