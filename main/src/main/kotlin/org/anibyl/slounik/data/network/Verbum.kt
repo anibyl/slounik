@@ -36,9 +36,20 @@ class Verbum : DictionarySiteCommunicator() {
 	}
 
 	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
-		val request: StringRequest = getLoadRequest(getRequestStr(wordToSearch), wordToSearch, callback)
-
-		queue.add(request)
+		queue.add(
+			getLoadRequest(
+				Uri.Builder()
+					.scheme("https")
+					.authority(url)
+					.appendPath("api")
+					.appendPath("search")
+					.appendQueryParameter("q", wordToSearch)
+					.build()
+					.toString(),
+				wordToSearch,
+				callback
+			)
+		)
 	}
 
 	override fun loadArticleDescription(article: Article, callback: ArticlesCallback) {
@@ -118,16 +129,5 @@ class Verbum : DictionarySiteCommunicator() {
 				callback.invoke(ArticlesInfo(articles))
 			}
 		}
-	}
-
-	private fun getRequestStr(wordToSearch: String): String {
-		return Uri.Builder()
-			.scheme("https")
-			.authority(url)
-			.appendPath("api")
-			.appendPath("search")
-			.appendQueryParameter("q", wordToSearch)
-			.build()
-			.toString()
 	}
 }
