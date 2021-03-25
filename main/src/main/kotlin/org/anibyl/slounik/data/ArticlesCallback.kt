@@ -6,6 +6,6 @@ package org.anibyl.slounik.data
  * @author Sieva Kimajeŭ
  * @created 2015-04-29
  */
-interface ArticlesCallback {
+fun interface ArticlesCallback {
 	fun invoke(info: ArticlesInfo)
 }

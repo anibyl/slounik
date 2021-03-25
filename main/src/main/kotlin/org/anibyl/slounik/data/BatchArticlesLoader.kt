@@ -1,7 +1,7 @@
 package org.anibyl.slounik.data
 
-import android.content.Context
-import java.util.ArrayList
+import org.anibyl.slounik.data.ArticlesInfo.Status.FINISHED
+import org.anibyl.slounik.data.ArticlesInfo.Status.IN_PROCESS
 
 /**
  * Batch loader for article loaders.
@@ -10,52 +10,81 @@ import java.util.ArrayList
  * @created 2015-12-23
  */
 class BatchArticlesLoader(private vararg val loaders: ArticlesLoader<ArticlesCallback>) {
-	fun loadArticles(wordToSearch: String, context: Context, callback: BatchArticlesCallback) {
-		var activeLoaders = 0
+	private var onProcess: OnProcess? = null
+	private var onFinish: OnFinish? = null
+	private var loaderCallbacks: HashSet<ArticlesCallback> = HashSet()
 
-		for (loader in loaders) {
-			if (loader.enabled()) {
-				activeLoaders++
-				val articlesCallback = object : ArticlesCallback {
-					override fun invoke(info: ArticlesInfo) {
-						callback.invoke(this, info)
-					}
-				}
-				callback.addCallback(articlesCallback)
-				loader.loadArticles(wordToSearch, context, articlesCallback)
-			}
+	fun loadArticles(wordToSearch: String, onProcess: OnProcess, onFinish: OnFinish) {
+		if (this.onFinish != null) {
+			cancel()
 		}
 
-		if (activeLoaders == 0) {
-			callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
+		this.onProcess = onProcess
+		this.onFinish = onFinish
+
+		for (loader in loaders) {
+			if (!loader.enabled()) {
+				continue
+			}
+
+			val articlesCallback = object : ArticlesCallback {
+				override fun invoke(info: ArticlesInfo) {
+					if (!loaderCallbacks.contains(this)) {
+						return
+					}
+
+					when (info.status) {
+						FINISHED -> {
+							loaderCallbacks.remove(this)
+
+							onProcess(info)
+
+							if (loaderCallbacks.size == 0) {
+								finish()
+							}
+						}
+
+						IN_PROCESS -> onProcess(info)
+					}
+				}
+			}
+
+			loaderCallbacks.add(articlesCallback)
+
+			loader.loadArticles(wordToSearch, articlesCallback)
+		}
+
+		if (loaderCallbacks.isEmpty()) {
+			finish()
 		}
 	}
 
-	abstract class BatchArticlesCallback : ArticlesCallback {
-		private var callbacks = ArrayList<ArticlesCallback>()
+	fun cancel() {
+		loaderCallbacks.clear()
 
-		internal operator fun invoke(callback: ArticlesCallback, info: ArticlesInfo) {
-			if (!callbacks.contains(callback)) {
-				// Should not happen, however, I had couple occurrences in production.
-				return
-			}
-
-			when (info.status) {
-				ArticlesInfo.Status.SUCCESS, ArticlesInfo.Status.FAILURE -> {
-					callbacks.remove(callback)
-
-					if (callbacks.size != 0) {
-						info.status = ArticlesInfo.Status.IN_PROCESS
-					}
-					invoke(info)
-				}
-
-				ArticlesInfo.Status.IN_PROCESS -> invoke(info)
-			}
+		for (loader in loaders) {
+			loader.cancel()
 		}
 
-		fun addCallback(callback: ArticlesCallback) {
-			callbacks.add(callback)
-		}
+		finish()
+	}
+
+	private fun onProcess(info: ArticlesInfo) {
+		onProcess?.accept(info.articles)
+	}
+
+	private fun finish() {
+		onFinish?.accept()
+
+		onProcess = null
+		onFinish = null
+	}
+
+	fun interface OnProcess {
+		fun accept(articles: List<Article>)
+	}
+
+	fun interface OnFinish {
+		fun accept()
 	}
 }

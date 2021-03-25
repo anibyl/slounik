@@ -1,7 +1,5 @@
 package org.anibyl.slounik.data
 
-import android.content.Context
-
 /**
  * Articles loader interface.
  *
@@ -9,7 +7,9 @@ import android.content.Context
  * @created 2015-12-23
  */
 interface ArticlesLoader<in T> where T : ArticlesCallback {
-	fun loadArticles(wordToSearch: String, context: Context, callback: T)
+	fun loadArticles(wordToSearch: String, callback: T)
+
+	fun cancel()
 
 	fun enabled(): Boolean
 }

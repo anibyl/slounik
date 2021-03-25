@@ -1,9 +1,7 @@
 package org.anibyl.slounik.data.network
 
-import android.content.Context
 import android.net.Uri
 import com.android.volley.NetworkResponse
-import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
@@ -12,6 +10,8 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.data.Article
 import org.anibyl.slounik.data.ArticlesCallback
 import org.anibyl.slounik.data.ArticlesInfo
+import org.anibyl.slounik.data.ArticlesInfo.Status.FINISHED
+import org.anibyl.slounik.data.ArticlesInfo.Status.IN_PROCESS
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
@@ -36,7 +36,7 @@ class Skarnik : DictionarySiteCommunicator() {
 		SlounikApplication.graph.inject(this)
 	}
 
-	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
 		val requests: List<StringRequest> = arrayListOf(
 				getLoadRequest(
 						getRBRequestStr(wordToSearch),
@@ -87,53 +87,51 @@ class Skarnik : DictionarySiteCommunicator() {
 	): StringRequest {
 		val completeDictionaryTitle = "$dictionaryTitle $url"
 
-		return StringRequest(requestString,
-				Response.Listener { response ->
-					// In the good old days I received correct page immediately but now it is empty page most likely.
-					processPage(response, wordToSearch, callback, completeDictionaryTitle)
-				},
-				Response.ErrorListener { error ->
-					notifier.log("Error response for $requestString: ${error.message}")
+		return StringRequest(
+			requestString,
+			{ response: String ->
+				// In the good old days I received correct page immediately but now it is empty page most likely.
+				processPage(response, wordToSearch, callback, completeDictionaryTitle)
+			},
+			{ error: VolleyError ->
+				notifier.log("Error response for $requestString: ${error.message}")
 
-					fun loadPage(url: String) {
-						queue.add(getPageRequest(url, wordToSearch, callback, completeDictionaryTitle))
-					}
+				fun loadPage(url: String) {
+					queue.add(getPageRequest(url, wordToSearch, callback, completeDictionaryTitle))
+				}
 
-					val networkResponse: NetworkResponse? = error.networkResponse
+				val networkResponse: NetworkResponse? = error.networkResponse
 
-					if (networkResponse != null && networkResponse.statusCode == 302) {
-						/* Skarnik has strange redirection behaviour:
-						   http search → https search → http page → https page.
-						   I skip first and third parts to get
-						   https search → https page. */
-						val location: String? = networkResponse.headers["Location"]
-						if (location != null) {
-							if (location.startsWith("http:")) {
-								loadPage(location.replace("http:", "https:"))
-							} else {
-								// Should not happen.
-								loadPage(location)
-							}
+				if (networkResponse != null && networkResponse.statusCode == 302) {
+					/* Skarnik has strange redirection behaviour:
+					   http search → https search → http page → https page.
+					   I skip first and third parts to get
+					   https search → https page. */
+					val location: String? = networkResponse.headers["Location"]
+					if (location != null) {
+						if (location.startsWith("http:")) {
+							loadPage(location.replace("http:", "https:"))
 						} else {
 							// Should not happen.
-							fail(requestString, error, callback)
+							loadPage(location)
 						}
 					} else {
+						// Should not happen.
 						fail(requestString, error, callback)
 					}
-				})
+				} else {
+					fail(requestString, error, callback)
+				}
+			})
 	}
 
 	private fun getPageRequest(
 			requestString: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
-		return StringRequest(requestString,
-				Response.Listener { response ->
-					processPage(response, wordToSearch, callback, dictionaryTitle)
-				},
-				Response.ErrorListener { error ->
-					fail(requestString, error, callback)
-				}
+		return StringRequest(
+			requestString,
+			{ response: String -> processPage(response, wordToSearch, callback, dictionaryTitle) },
+			{ error: VolleyError -> fail(requestString, error, callback) }
 		)
 	}
 
@@ -154,16 +152,13 @@ class Skarnik : DictionarySiteCommunicator() {
 			}
 
 			uiThread {
-				val status = if (--requestCount == 0)
-					ArticlesInfo.Status.SUCCESS
-				else
-					ArticlesInfo.Status.IN_PROCESS
-				val info: ArticlesInfo = if (article != null) {
-					ArticlesInfo(listOf(article), status)
+				if (--requestCount == 0) {
+					callback.invoke(ArticlesInfo(article, FINISHED))
 				} else {
-					ArticlesInfo(status)
+					if (article != null) {
+						callback.invoke(ArticlesInfo(article, IN_PROCESS))
+					}
 				}
-				callback.invoke(info)
 			}
 		}
 	}
@@ -195,11 +190,8 @@ class Skarnik : DictionarySiteCommunicator() {
 	private fun fail(requestString: String, error: VolleyError, callback: ArticlesCallback) {
 		notifier.log("Error response for $requestString: ${error.message}")
 
-		val status = if (--requestCount == 0)
-			ArticlesInfo.Status.FAILURE
-		else
-			ArticlesInfo.Status.IN_PROCESS
-
-		callback.invoke(ArticlesInfo(status))
+		if (--requestCount == 0) {
+			callback.invoke(ArticlesInfo(FINISHED))
+		}
 	}
 }

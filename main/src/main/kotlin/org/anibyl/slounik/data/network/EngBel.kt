@@ -1,6 +1,5 @@
 package org.anibyl.slounik.data.network
 
-import android.content.Context
 import android.net.Uri
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -30,7 +29,7 @@ class EngBel : DictionarySiteCommunicator() {
 //		SlounikApplication.graph.inject(this)
 	}
 
-	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
 		queue.add(
 				getLoadRequest(
 						getRequestUrl(wordToSearch),
@@ -71,7 +70,7 @@ class EngBel : DictionarySiteCommunicator() {
 				},
 				Response.ErrorListener { error ->
 					notifier.log("Error response for $requestString: ${error.message}")
-					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
+					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FINISHED))
 				}
 		)
 	}

@@ -4,7 +4,6 @@ import android.content.Context
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.data.Article
-import org.anibyl.slounik.data.ArticlesInfo
 import org.anibyl.slounik.data.BatchArticlesLoader
 import java.util.ArrayList
 import javax.inject.Inject
@@ -50,23 +49,17 @@ class SlounikActivityPresenter {
 			searching = true
 			activity?.searchStarted(preparedWord)
 
-			loader.loadArticles(preparedWord, context, object : BatchArticlesLoader.BatchArticlesCallback() {
-				override fun invoke(info: ArticlesInfo) {
-					val loadedArticles = info.articles
-					if (loadedArticles != null) {
-						articles.addAll(loadedArticles)
-					}
-
+			loader.loadArticles(
+				preparedWord,
+				onProcess = {
+					articles.addAll(it)
 					activity?.articlesUpdated()
-
-					when (info.status) {
-						ArticlesInfo.Status.SUCCESS, ArticlesInfo.Status.FAILURE -> {
-							searching = false
-							activity?.searchEnded()
-						}
-					}
+				},
+				onFinish = {
+					searching = false
+					activity?.searchEnded()
 				}
-			})
+			)
 		}
 	}
 }

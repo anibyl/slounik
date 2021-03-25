@@ -1,6 +1,5 @@
 package org.anibyl.slounik.data.network
 
-import android.content.Context
 import android.net.Uri
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.JsonParser
@@ -10,6 +9,7 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.data.Article
 import org.anibyl.slounik.data.ArticlesCallback
 import org.anibyl.slounik.data.ArticlesInfo
+import org.anibyl.slounik.data.ArticlesInfo.Status.FINISHED
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
@@ -35,7 +35,7 @@ class Verbum : DictionarySiteCommunicator() {
 		SlounikApplication.graph.inject(this)
 	}
 
-	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
 		val request: StringRequest = getLoadRequest(getRequestStr(wordToSearch), wordToSearch, callback)
 
 		queue.add(request)
@@ -62,7 +62,7 @@ class Verbum : DictionarySiteCommunicator() {
 			},
 			{ error ->
 				notifier.log("Error response for $requestString: ${error.message}")
-				callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
+				callback.invoke(ArticlesInfo(FINISHED))
 			}
 		)
 	}

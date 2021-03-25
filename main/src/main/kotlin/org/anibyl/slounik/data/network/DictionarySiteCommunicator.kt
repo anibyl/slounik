@@ -23,6 +23,10 @@ abstract class DictionarySiteCommunicator : ArticlesLoader<ArticlesCallback>, Fu
 	@Inject lateinit var preferences: Preferences
 	@Inject lateinit var context: Context
 
+	override fun cancel() {
+		queue.cancelAll { true }
+	}
+
 	protected val queue: RequestQueue
 		get() {
 			if (_queue == null) {

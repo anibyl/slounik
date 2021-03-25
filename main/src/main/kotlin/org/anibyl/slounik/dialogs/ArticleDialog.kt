@@ -16,6 +16,8 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.core.copyToClipboard
 import org.anibyl.slounik.data.Article
 import org.anibyl.slounik.data.ArticlesInfo
+import org.anibyl.slounik.data.ArticlesInfo.Status.FINISHED
+import org.anibyl.slounik.data.ArticlesInfo.Status.IN_PROCESS
 import org.anibyl.slounik.ui.ProgressBar
 import javax.inject.Inject
 
@@ -74,9 +76,9 @@ class ArticleDialog : DialogFragment() {
 					progressBar.progressiveStart()
 					article.loadArticleDescription { info: ArticlesInfo ->
 						when (info.status) {
-							ArticlesInfo.Status.SUCCESS -> description.text = article.spannedFullDescription
+							FINISHED -> description.text = article.spannedFullDescription
 
-							else -> loadButton.isEnabled = true
+							IN_PROCESS -> loadButton.isEnabled = true
 						}
 						progressBar.progressiveStop()
 					}

@@ -1,8 +1,7 @@
 package org.anibyl.slounik.data.network
 
-import android.content.Context
 import android.net.Uri
-import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
 import org.anibyl.slounik.R
@@ -10,6 +9,8 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.data.Article
 import org.anibyl.slounik.data.ArticlesCallback
 import org.anibyl.slounik.data.ArticlesInfo
+import org.anibyl.slounik.data.ArticlesInfo.Status.FINISHED
+import org.anibyl.slounik.data.ArticlesInfo.Status.IN_PROCESS
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
@@ -33,7 +34,7 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 		SlounikApplication.graph.inject(this)
 	}
 
-	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
 		val requests: List<StringRequest> = arrayListOf(
 				getLoadRequest(
 						getExplanatoryRequestString(wordToSearch),
@@ -121,47 +122,42 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 			requestString: String, wordToSearch: String, callback: ArticlesCallback, dictionaryTitle: String
 	): StringRequest {
 		return StringRequest(requestString,
-				Response.Listener { response ->
-					doAsync {
-						val page = Jsoup.parse(response)
-						val articleElements = page.select("table")
+			{ response: String? ->
+				doAsync {
+					val page = Jsoup.parse(response)
+					val articleElements = page.select("table")
 
-						val article: Article?
-						if (articleElements.size < 1) {
-							article = null
-						} else {
-							article = try {
-								parseElement(articleElements.first(), wordToSearch)
-							} catch (e: IncorrectTitleException) {
-								null
-							}
-
-							article?.dictionary = "$dictionaryTitle $url"
+					val article: Article?
+					if (articleElements.size < 1) {
+						article = null
+					} else {
+						article = try {
+							parseElement(articleElements.first(), wordToSearch)
+						} catch (e: IncorrectTitleException) {
+							null
 						}
 
-						uiThread {
-							val status = if (--requestCount == 0)
-								ArticlesInfo.Status.SUCCESS
-							else
-								ArticlesInfo.Status.IN_PROCESS
-							val info: ArticlesInfo = if (article != null) {
-								ArticlesInfo(listOf(article), status)
-							} else {
-								ArticlesInfo(status)
+						article?.dictionary = "$dictionaryTitle $url"
+					}
+
+					uiThread {
+						if (--requestCount == 0) {
+							callback.invoke(ArticlesInfo(article, FINISHED))
+						} else {
+							if (article != null) {
+								callback.invoke(ArticlesInfo(article, IN_PROCESS))
 							}
-							callback.invoke(info)
 						}
 					}
-				},
-				Response.ErrorListener { error ->
-					notifier.log("Error response for $requestString: ${error.message}")
-					// TODO fix it.
-					val status = if (--requestCount == 0)
-						ArticlesInfo.Status.FAILURE
-					else
-						ArticlesInfo.Status.IN_PROCESS
-					callback.invoke(ArticlesInfo(status))
 				}
+			},
+			{ error: VolleyError ->
+				notifier.log("Error response for $requestString: ${error.message}")
+
+				if (--requestCount == 0) {
+					callback.invoke(ArticlesInfo(FINISHED))
+				}
+			}
 		)
 	}
 
@@ -206,36 +202,36 @@ class RodnyjaVobrazy : DictionarySiteCommunicator() {
 			requestString: String, article: Article, callback: ArticlesCallback
 	): StringRequest {
 		return StringRequest(requestString,
-				Response.Listener { response ->
-					doAsync {
-						notifier.log("Response received for $requestString.")
-						val articlePage = Jsoup.parse(response)
+			{ response: String ->
+				doAsync {
+					notifier.log("Response received for $requestString.")
+					val articlePage = Jsoup.parse(response)
 
-						var fullArticleDescription = ""
+					var fullArticleDescription = ""
 
-						val titleTd: Element? = articlePage.select("td[class$=text_title]")?.first()
+					val titleTd: Element? = articlePage.select("td[class$=text_title]")?.first()
 
-						if (titleTd != null) {
-							var tr: Element? = titleTd.parent()
-							do {
-								fullArticleDescription += tr!!.html() + "<br>"
-								tr = tr.nextElementSibling()
-							} while (tr != null)
-						}
-
-						article.fullDescription = fullArticleDescription
-
-						val articles = arrayListOf(article)
-
-						uiThread {
-							callback.invoke(ArticlesInfo(articles))
-						}
+					if (titleTd != null) {
+						var tr: Element? = titleTd.parent()
+						do {
+							fullArticleDescription += tr!!.html() + "<br>"
+							tr = tr.nextElementSibling()
+						} while (tr != null)
 					}
-				},
-				Response.ErrorListener { error ->
-					notifier.log("Error response for $requestString: ${error.message}")
-					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
+
+					article.fullDescription = fullArticleDescription
+
+					val articles = arrayListOf(article)
+
+					uiThread {
+						callback.invoke(ArticlesInfo(articles))
+					}
 				}
+			},
+			{ error: VolleyError ->
+				notifier.log("Error response for $requestString: ${error.message}")
+				callback.invoke(ArticlesInfo(FINISHED))
+			}
 		)
 	}
 

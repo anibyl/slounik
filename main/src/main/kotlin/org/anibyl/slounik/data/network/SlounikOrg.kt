@@ -1,9 +1,9 @@
 package org.anibyl.slounik.data.network
 
-import android.content.Context
 import android.net.Uri
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import org.anibyl.slounik.Notifier
@@ -11,6 +11,8 @@ import org.anibyl.slounik.SlounikApplication
 import org.anibyl.slounik.data.Article
 import org.anibyl.slounik.data.ArticlesCallback
 import org.anibyl.slounik.data.ArticlesInfo
+import org.anibyl.slounik.data.ArticlesInfo.Status.FINISHED
+import org.anibyl.slounik.data.ArticlesInfo.Status.IN_PROCESS
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
@@ -36,11 +38,14 @@ class SlounikOrg : DictionarySiteCommunicator() {
 		SlounikApplication.graph.inject(this)
 	}
 
-	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
 		val requestString: String
 
 		val builder = Uri.Builder()
-		builder.scheme("http").authority(url).appendPath("search").appendQueryParameter("search", wordToSearch)
+			.scheme("http")
+			.authority(url)
+			.appendPath("search")
+			.appendQueryParameter("search", wordToSearch)
 
 		if (preferences.searchInTitles) {
 			builder.appendQueryParameter("un", "1")
@@ -54,9 +59,12 @@ class SlounikOrg : DictionarySiteCommunicator() {
 	}
 
 	override fun loadArticleDescription(article: Article, callback: ArticlesCallback) {
-		val builder = Uri.Builder()
-		builder.scheme("http").authority(url).appendPath(article.linkToFullDescription!!.substring(1))
-		val requestString = builder.build().toString()
+		val requestString = Uri.Builder()
+			.scheme("http")
+			.authority(url)
+			.appendPath(article.linkToFullDescription!!.substring(1))
+			.build()
+			.toString()
 
 		val request = getArticleDescriptionLoadRequest(requestString, article, callback)
 
@@ -69,66 +77,60 @@ class SlounikOrg : DictionarySiteCommunicator() {
 
 	private fun getLoadRequest(requestString: String, callback: ArticlesCallback): SlounikOrgRequest {
 		return SlounikOrgRequest(requestString,
-				Response.Listener { response ->
-					doAsync {
-						val page = Jsoup.parse(response)
-						val dicsElements = page.select("a.treeSearchDict")
-						var dicsAmount: Int = dicsElements.size
+			{ response: String ->
+				doAsync {
+					val page = Jsoup.parse(response)
+					val dicsElements = page.select("a.treeSearchDict")
+					var dicsAmount: Int = dicsElements.size
 
-						if (dicsAmount != 0) {
-							for (e in dicsElements) {
-								var dicRequestStr: String? = e.attr("href")
-								if (dicRequestStr != null) {
-									// Encode cyrillic word.
-									val startIndex = dicRequestStr.indexOf("search=") + "search=".length
-									var endIndex = dicRequestStr.indexOf("&", startIndex)
-									if (endIndex == -1) {
-										endIndex = dicRequestStr.length - 1
-									}
-									dicRequestStr = dicRequestStr.substring(0 until startIndex) +
-											URLEncoder.encode(
-													dicRequestStr.substring(startIndex until endIndex),
-													Charsets.UTF_8.toString()
-											) +
-											dicRequestStr.substring(endIndex)
-
-									val uri = Uri.Builder()
-											.scheme("http")
-											.authority(url)
-											.appendEncodedPath(dicRequestStr.substring(1))
-											.build()
-
-									val eachDicRequest = getPerDicLoadingRequest(uri.toString(),
-											object : ArticlesCallback {
-												override operator fun invoke(info: ArticlesInfo) {
-													val status = if (--dicsAmount == 0)
-														ArticlesInfo.Status.SUCCESS
-													else
-														ArticlesInfo.Status.IN_PROCESS
-													notifier.log("Callback invoked, " + (info.articles?.size
-															?: 0) + " articles added.")
-													callback.invoke(ArticlesInfo(info.articles, status))
-												}
-											})
-
-									queue.add(eachDicRequest)
-									notifier.log("Request added to queue: $eachDicRequest")
+					if (dicsAmount != 0) {
+						for (e in dicsElements) {
+							var dicRequestStr: String? = e.attr("href")
+							if (dicRequestStr != null) {
+								// Encode cyrillic word.
+								val startIndex = dicRequestStr.indexOf("search=") + "search=".length
+								var endIndex = dicRequestStr.indexOf("&", startIndex)
+								if (endIndex == -1) {
+									endIndex = dicRequestStr.length - 1
 								}
-							}
-						}
+								dicRequestStr = dicRequestStr.substring(0 until startIndex) +
+										URLEncoder.encode(
+												dicRequestStr.substring(startIndex until endIndex),
+												Charsets.UTF_8.toString()
+										) +
+										dicRequestStr.substring(endIndex)
 
-						uiThread {
-							if (dicsAmount == 0) {
-								notifier.log("Callback invoked: no dictionaries.")
-								callback.invoke(ArticlesInfo(articles = null, status = ArticlesInfo.Status.SUCCESS))
+								val uri = Uri.Builder()
+										.scheme("http")
+										.authority(url)
+										.appendEncodedPath(dicRequestStr.substring(1))
+										.build()
+
+								val eachDicRequest = getPerDicLoadingRequest(uri.toString()) { info: ArticlesInfo ->
+									callback.invoke(
+										ArticlesInfo(info.articles, if (--dicsAmount == 0) FINISHED else IN_PROCESS)
+									)
+									notifier.log("Callback invoked, ${info.articles.size} articles added.")
+								}
+
+								queue.add(eachDicRequest)
+								notifier.log("Request added to queue: $eachDicRequest")
 							}
 						}
 					}
-				},
-				Response.ErrorListener { error ->
-					notifier.log("Error response for $requestString: ${error.message}")
-					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
-				})
+
+					uiThread {
+						if (dicsAmount == 0) {
+							notifier.log("Callback invoked: no dictionaries.")
+							callback.invoke(ArticlesInfo(FINISHED))
+						}
+					}
+				}
+			},
+			{ error: VolleyError ->
+				notifier.log("Error response for $requestString: ${error.message}")
+				callback.invoke(ArticlesInfo(FINISHED))
+			})
 	}
 
 	override fun parseElement(element: Element, wordToSearch: String?): Article {
@@ -174,32 +176,33 @@ class SlounikOrg : DictionarySiteCommunicator() {
 	}
 
 	private fun getPerDicLoadingRequest(requestString: String, callback: ArticlesCallback): SlounikOrgRequest {
-		return SlounikOrgRequest(requestString,
-				Response.Listener { response ->
-					doAsync {
-						notifier.log("Response received for $requestString.")
-						val dicPage = Jsoup.parse(response)
-						val articleElements = dicPage.select("li#li_poszuk")
+		return SlounikOrgRequest(
+			requestString,
+			{ response: String ->
+				doAsync {
+					notifier.log("Response received for $requestString.")
+					val dicPage = Jsoup.parse(response)
+					val articleElements = dicPage.select("li#li_poszuk")
 
-						var dictionaryTitle: String? = null
-						val dictionaryTitles = dicPage.select("a.t3")
-						if (dictionaryTitles != null && dictionaryTitles.size != 0) {
-							dictionaryTitle = dictionaryTitles.first().html()
-						}
-
-						val list: List<Article> = articleElements.map {
-							e -> parseElement(e).apply { dictionary = "$dictionaryTitle $url" }
-						}
-
-						uiThread {
-							callback.invoke(ArticlesInfo(list))
-						}
+					var dictionaryTitle: String? = null
+					val dictionaryTitles = dicPage.select("a.t3")
+					if (dictionaryTitles != null && dictionaryTitles.size != 0) {
+						dictionaryTitle = dictionaryTitles.first().html()
 					}
-				},
-				Response.ErrorListener { error ->
-					notifier.log("Error response for $requestString: ${error.message}")
-					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
-				})
+
+					val list: List<Article> = articleElements.map {
+						e -> parseElement(e).apply { dictionary = "$dictionaryTitle $url" }
+					}
+
+					uiThread {
+						callback.invoke(ArticlesInfo(list))
+					}
+				}
+			},
+			{ error: VolleyError ->
+				notifier.log("Error response for $requestString: ${error.message}")
+				callback.invoke(ArticlesInfo(FINISHED))
+			})
 	}
 
 	private fun getArticleDescriptionLoadRequest(
@@ -207,30 +210,31 @@ class SlounikOrg : DictionarySiteCommunicator() {
 			article: Article,
 			callback: ArticlesCallback
 	): SlounikOrgRequest {
-		return SlounikOrgRequest(requestString,
-				Response.Listener { response ->
-					doAsync {
-						notifier.log("Response received for $requestString.")
-						val articlePage: Document = Jsoup.parse(response)
-						val articleElement: Element = articlePage.select("td.n12").first()
+		return SlounikOrgRequest(
+			requestString,
+			{ response: String ->
+				doAsync {
+					notifier.log("Response received for $requestString.")
+					val articlePage: Document = Jsoup.parse(response)
+					val articleElement: Element = articlePage.select("td.n12").first()
 
-						val htmlDescription:String = articleElement.html()
-						val descriptionWithOutExtraSpace: String = htmlDescription.trim { it <= ' ' }
+					val htmlDescription:String = articleElement.html()
+					val descriptionWithOutExtraSpace: String = htmlDescription.trim { it <= ' ' }
 
-						article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
-								as String
+					article.fullDescription = htmlDescription.subSequence(0, descriptionWithOutExtraSpace.length)
+						.toString()
 
-						val list = listOf(article)
+					val list = listOf(article)
 
-						uiThread {
-							callback.invoke(ArticlesInfo(list))
-						}
+					uiThread {
+						callback.invoke(ArticlesInfo(list))
 					}
-				},
-				Response.ErrorListener { error ->
-					notifier.log("Error response for $requestString: ${error.message}")
-					callback.invoke(ArticlesInfo(ArticlesInfo.Status.FAILURE))
-				})
+				}
+			},
+			{ error: VolleyError ->
+				notifier.log("Error response for $requestString: ${error.message}")
+				callback.invoke(ArticlesInfo(FINISHED))
+			})
 	}
 
 	private class SlounikOrgRequest(

@@ -1,6 +1,5 @@
 package org.anibyl.slounik.data.db.engbel
 
-import android.content.Context
 import android.content.res.Resources
 import androidx.sqlite.db.SimpleSQLiteQuery
 import org.anibyl.slounik.Notifier
@@ -35,7 +34,7 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 		deactivate()
 	}
 
-	override fun loadArticles(wordToSearch: String, context: Context, callback: ArticlesCallback) {
+	override fun loadArticles(wordToSearch: String, callback: ArticlesCallback) {
 		doAsync {
 			val engBelEntities: List<EngBelEntity> = try {
 				if (preferences.searchInTitles) {
@@ -48,7 +47,7 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 				emptyList()
 			}
 
-			val dictionaryTitle: String = context.resources.getString(R.string.db_engbel)
+			val dictionaryTitle: String = resources.getString(R.string.db_engbel)
 
 			val articles: List<Article> = engBelEntities.map { entity ->
 				Article().apply {
@@ -62,6 +61,9 @@ class EngBel : ArticlesLoader<ArticlesCallback> {
 				callback.invoke(ArticlesInfo(articles))
 			}
 		}
+	}
+
+	override fun cancel() {
 	}
 
 	override fun enabled(): Boolean {
